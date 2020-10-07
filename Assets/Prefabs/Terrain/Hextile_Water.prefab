@@ -53,14 +53,17 @@ MonoBehaviour:
   target: {fileID: 0}
   isStartPoint: 0
   rootCastle: {fileID: 0}
+  neutralsSpawner: 0
   isVillage: 0
   villageOwner:
-    clientName: 
+    id: 0
+    isServer: 0
+    name: 
     race: 0
     gold: 0
-    vilages: 0
+    villages: 0
   isMountain: 0
-  isWater: 1
+  isWater: 0
   itemObj: {fileID: 0}
   groundMove: 1
   airMove: 1

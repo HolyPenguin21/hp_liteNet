@@ -56,10 +56,12 @@ MonoBehaviour:
   neutralsSpawner: 0
   isVillage: 0
   villageOwner:
-    clientName: 
+    id: 0
+    isServer: 0
+    name: 
     race: 0
     gold: 0
-    vilages: 0
+    villages: 0
   isMountain: 0
   isWater: 0
   itemObj: {fileID: 0}
@@ -67,7 +69,7 @@ MonoBehaviour:
   airMove: 1
   neighbors: []
   moveCost: 2
-  dodge: 30
+  dodge: 20
 --- !u!135 &8893686628223095791
 SphereCollider:
   m_ObjectHideFlags: 0

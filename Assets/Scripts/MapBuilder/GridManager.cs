@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-// using UnityEditor; // COMMENT
 
-// [ExecuteInEditMode] // COMMENT
 public class GridManager : MonoBehaviour
 {
     public GridItem[] grids;

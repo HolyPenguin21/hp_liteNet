@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// using UnityEditor; // COMMENT
+//using UnityEditor; // COMMENT
 
-// [ExecuteInEditMode] // COMMENT
+//[ExecuteInEditMode] // COMMENT
 public class Builder_Grid : MonoBehaviour
 {
     private GridManager manager;
@@ -16,9 +16,9 @@ public class Builder_Grid : MonoBehaviour
         manager = GetComponent<GridManager>();
 
         // Must be OFF / COMMENTED at game start
-        // CreateGrid(); // COMMENT
-        // Assign_HexToGrid(); // COMMENT
-        // Assign_Neighbors(); // COMMENT
+        //CreateGrid(); // COMMENT
+        //Assign_HexToGrid(); // COMMENT
+        //Assign_Neighbors(); // COMMENT
     }
 
     private void CreateGrid()
@@ -125,7 +125,7 @@ public class Builder_Grid : MonoBehaviour
                 }
             }
 
-            // EditorUtility.SetDirty(manager.grids[x].hex); // COMMENT
+            //EditorUtility.SetDirty(manager.grids[x].hex); // COMMENT
         }
         Debug.Log("Builder > Neighbors are setted up");
     }

@@ -136,19 +136,22 @@ MonoBehaviour:
   target: {fileID: 0}
   isStartPoint: 0
   rootCastle: {fileID: 0}
+  neutralsSpawner: 0
   isVillage: 0
   villageOwner:
-    clientName: 
+    id: 0
+    isServer: 0
+    name: 
     race: 0
     gold: 0
-    vilages: 0
-  isMountain: 1
+    villages: 0
+  isMountain: 0
   isWater: 0
   itemObj: {fileID: 0}
   groundMove: 0
   airMove: 1
   neighbors: []
-  moveCost: 2
+  moveCost: 1
   dodge: 30
 --- !u!135 &7282848527003015706
 SphereCollider:

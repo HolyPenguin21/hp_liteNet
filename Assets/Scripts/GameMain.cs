@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using LiteNetLib;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 
 public class GameMain : MonoBehaviour
 {
@@ -35,6 +37,43 @@ public class GameMain : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         inst = this;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Scene_Map_Test")
+        {
+            gridManager = GameObject.Find("GridManager").GetComponent<GridManager>();
+            uiIngame = GameObject.Find("UI").GetComponent<UI_Ingame>();
+            //sOrders.gridManager = gridManager;
+            //sOrders.server = server;
+            //Setup_Fog();
+            //Setup_Pathfinding();
+            //Setup_PostProcessing();
+            //Setup_CharactersData();
+            //Setup_EffectsData();
+            //Setup_SpellData();
+
+            if (Utility.IsServer())
+            {
+                //server.serverMessenger.gridManager = gridManager;
+                //aiNeutrals = new AiNeutrals(this);
+
+                //if (load)
+                //    StartCoroutine(Load());
+                //else
+                //    StartCoroutine(StartNewGame());
+            }
+            else
+            {
+                //client.clientMessenger.gridManager = gridManager;
+            }
+        }
+        else
+        {
+            gridManager = null;
+            daytime.postProcess = null;
+        }
     }
 
     #region Race change
