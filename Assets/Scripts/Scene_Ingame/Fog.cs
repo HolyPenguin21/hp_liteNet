@@ -28,13 +28,13 @@ public class Fog
 			if (Utility.IsServer())
 			{
 				// Hide characters
-				if (hex.character != null && hex.character.owner.clientName != s.serverName)
+				if (hex.character != null && hex.character.owner.name != s.player.name)
 					hex.character.tr.gameObject.SetActive(false);
 
-				for (int x = 0; x < IngameManager.inst.allCharacters.Count; x++)
+				for (int x = 0; x < GameMain.inst.allCharacters.Count; x++)
 				{
-					Character character = IngameManager.inst.allCharacters[x];
-					if (character.owner.clientName == s.serverName &&
+					Character character = GameMain.inst.allCharacters[x];
+					if (character.owner.name == s.player.name &&
 					 Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.lookRange)
 					{
 						hex.Hide_Fog();
@@ -50,13 +50,13 @@ public class Fog
 			else
 			{
 				// Hide characters
-				if (hex.character != null && hex.character.owner.clientName != c.clientName)
+				if (hex.character != null && hex.character.owner.name != c.player.name)
 					hex.character.tr.gameObject.SetActive(false);
 
-				for (int x = 0; x < IngameManager.inst.allCharacters.Count; x++)
+				for (int x = 0; x < GameMain.inst.allCharacters.Count; x++)
 				{
-					Character character = IngameManager.inst.allCharacters[x];
-					if (character.owner.clientName == c.clientName && 
+					Character character = GameMain.inst.allCharacters[x];
+					if (character.owner.name == c.player.name && 
 					Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.lookRange)
 					{
 						hex.Hide_Fog();
@@ -106,13 +106,13 @@ public class Fog
 		{
 			if(hexesInRange[i].character != null) continue;
 
-			List<Hex> path = IngameManager.inst.pathfinding.Get_Path(character.hex, hexesInRange[i]);
+			List<Hex> path = GameMain.inst.pathfinding.Get_Path(character.hex, hexesInRange[i]);
 
 			if(path == null) continue;
 			path.RemoveAt(0);
 			if(path.Count == 0) continue;
 
-			int pathCost = IngameManager.inst.pathfinding.Get_PathCost_FromStart(path);
+			int pathCost = GameMain.inst.pathfinding.Get_PathCost_FromStart(path);
 
 			if(pathCost <= range_cur)
 				moveHexes.Add(hexesInRange[i]);

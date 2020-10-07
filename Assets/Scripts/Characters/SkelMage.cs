@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SkelMage : Character
 {
-    public SkelMage(Transform tr, GameClient owner, bool isHero)
+    public SkelMage(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;
@@ -78,7 +78,7 @@ public class SkelMage : Character
             }
 
             if(base.tr.gameObject.activeInHierarchy)
-                IngameManager.inst.effectsData.Effect_Lightning(target.transform.position);
+                GameMain.inst.effectsData.Effect_Lightning(target.transform.position);
 
             t = 0f;
             while (t < 1f)

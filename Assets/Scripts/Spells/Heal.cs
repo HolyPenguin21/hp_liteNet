@@ -16,12 +16,13 @@ public class Heal : Spell
 
     public override void Use(Vector3 pos)
     {
-        IngameManager.inst.effectsData.Effect_Heal(pos);
+        GameMain.inst.effectsData.Effect_Heal(pos);
         cooldown_cur = cooldown_max;
     }
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        yield return IngameManager.inst.Server_SpellHeal(hex, spellDmg); // Server is blocked
+        //yield return GameMain.inst.Server_SpellHeal(hex, spellDmg); // Server is blocked
+        yield return null;
     }
 }

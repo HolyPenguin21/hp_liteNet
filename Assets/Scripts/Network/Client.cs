@@ -20,6 +20,8 @@ public class Client : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         netProcessor = new NetPacketProcessor();
         cSubscription = new ClientSubscriptions(this, netProcessor);
         listener = new EventBasedNetListener();

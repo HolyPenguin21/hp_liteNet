@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class VeteranSpearman : Character
 {
-	public VeteranSpearman(Transform tr, GameClient owner, bool isHero)
+	public VeteranSpearman(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;

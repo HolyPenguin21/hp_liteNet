@@ -177,9 +177,9 @@ public class UI_Ingame : MonoBehaviour
 		ingameInput = GetComponent<Ingame_Input>();
 
 		if (Utility.IsServer())
-			server = IngameManager.inst.server;
+			server = GameMain.inst.server;
 		else
-			client = IngameManager.inst.client;
+			client = GameMain.inst.client;
 
 		hexInfo_Canvas.SetActive(false);
 		hexItem_Canvas.SetActive(false);
@@ -201,14 +201,15 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Button_EndTurn()
 	{
-		if (Utility.IsServer())
-		{
-			StartCoroutine(IngameManager.inst.Server_ChangeTurn());
-		}
-		else
-		{
-			IngameManager.inst.Request_EndTurn();
-		}
+		//if (Utility.IsServer())
+		//{
+		//	StartCoroutine(GameMain.inst.Server_ChangeTurn());
+		//}
+		//else
+		//{
+		//	GameMain.inst.Request_EndTurn();
+		//}
+
 		Recruit_CloseMenu();
 		Hide_AttackPanel();
 		Hide_HexInfo();
@@ -219,16 +220,16 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Update_PlayerInfoPanel()
 	{
-		GameClient player;
+		Player player;
         if (Utility.IsServer())
-            player = Utility.Get_Client_byString(server.serverName, server.gameClients);
+            player = Utility.Get_Client_byString(server.player.name, server.players);
         else
-            player = Utility.Get_Client_byString(client.clientName, client.gameClients);
+            player = Utility.Get_Client_byString(client.player.name, client.players);
 
         pInfo_Gold_Text.text = "" + player.gold;
-        pInfo_Vilage_Text.text = "" + player.vilages;
-        pInfo_Income_Text.text = "+" + player.vilages * 3;
-        pInfo_Daytime_Text.text = "" + IngameManager.inst.dayTime_cur;
+        pInfo_Vilage_Text.text = "" + player.villages;
+        pInfo_Income_Text.text = "+" + player.villages * 3;
+        pInfo_Daytime_Text.text = "" + GameMain.inst.dayTime_cur;
 
 		if(Utility.IsMyTurn())
 			endTurn.interactable = true;
@@ -255,7 +256,7 @@ public class UI_Ingame : MonoBehaviour
 		else if(hex.isWater) hexInfo_Image.sprite = waterHex_Sprite;
 
 		hexInfo_Title_Text.text = "Hex title : " + hex.gameObject.name;
-		if (hex.isVillage && hex.villageOwner.clientName != "") hexInfo_VillageOwner_Text.text = "Village owner : " + hex.villageOwner.clientName;
+		if (hex.isVillage && hex.villageOwner.name != "") hexInfo_VillageOwner_Text.text = "Village owner : " + hex.villageOwner.name;
 		else hexInfo_VillageOwner_Text.text = "";
 		hexInfo_MoveCost_Text.text = "Hex move cost : " + hex.moveCost;
 		hexInfo_HexDodge_Text.text = "Hex dodge : " + hex.dodge;
@@ -426,10 +427,10 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if(!Utility.IsMyTurn()) return;
         
-        if(Utility.IsServer())
-           StartCoroutine(IngameManager.inst.Server_PickupItem(ingameInput.selectedHex.character));
-        else
-           IngameManager.inst.Request_PickupItem(ingameInput.selectedHex.character);
+   //     if(Utility.IsServer())
+   //        StartCoroutine(GameMain.inst.Server_PickupItem(ingameInput.selectedHex.character));
+   //     else
+			//GameMain.inst.Request_PickupItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -439,10 +440,10 @@ public class UI_Ingame : MonoBehaviour
 		if(!Utility.IsMyTurn()) return;
 		if(!ingameInput.selectedHex.character.canAct) return;
         
-        if(Utility.IsServer())
-           StartCoroutine(IngameManager.inst.Server_UseItem_Logic(ingameInput.selectedHex.character));
-        else
-           IngameManager.inst.Request_UseItem(ingameInput.selectedHex.character);
+   //     if(Utility.IsServer())
+   //        StartCoroutine(GameMain.inst.Server_UseItem_Logic(ingameInput.selectedHex.character));
+   //     else
+			//GameMain.inst.Request_UseItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -451,10 +452,10 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if(!Utility.IsMyTurn()) return;
 
-        if(Utility.IsServer())
-           StartCoroutine(IngameManager.inst.Server_DropItem(ingameInput.selectedHex.character));
-        else
-           IngameManager.inst.Request_DropItem(ingameInput.selectedHex.character);
+   //     if(Utility.IsServer())
+   //        StartCoroutine(GameMain.inst.Server_DropItem(ingameInput.selectedHex.character));
+   //     else
+			//GameMain.inst.Request_DropItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -531,8 +532,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharPierceResist_Text.text = "";
 		rec_CharMagicResist_Text.text = "";
 
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		switch (gameClient.race)
 		{
 			case 0: // Humans
@@ -678,8 +679,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_1_button].charDef.magic_resistance;
 
 		charToRecruit = recrutable_dict[recruit_1_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_1_button].charCost)
 		{
@@ -702,8 +703,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_2_button].charDef.magic_resistance;
 
 		charToRecruit = recrutable_dict[recruit_2_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_2_button].charCost)
 		{
@@ -726,8 +727,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_3_button].charDef.magic_resistance;
 		
 		charToRecruit = recrutable_dict[recruit_3_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_3_button].charCost)
 		{
@@ -750,8 +751,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_4_button].charDef.magic_resistance;
 
 		charToRecruit = recrutable_dict[recruit_4_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_4_button].charCost)
 		{
@@ -774,8 +775,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_5_button].charDef.magic_resistance;
 
 		charToRecruit = recrutable_dict[recruit_5_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_5_button].charCost)
 		{
@@ -798,8 +799,8 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_6_button].charDef.magic_resistance;
 
 		charToRecruit = recrutable_dict[recruit_6_button];
-		GameClient gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.clientName, client.gameClients) : Utility.Get_Client_byString(server.serverName, server.gameClients));
+		Player gameClient = null;
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_6_button].charCost)
 		{
@@ -810,14 +811,14 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit()
 	{
 		Recruit_CloseMenu();
-		if (Utility.IsServer())
-		{
-			StartCoroutine(IngameManager.inst.Server_Recruit(recruitHex, charToRecruit.charId, server.serverName, charToRecruit.charCost));
-		}
-		else
-		{
-			IngameManager.inst.Request_Recruit(recruitHex, charToRecruit.charId, client.clientName, charToRecruit.charCost);
-		}
+		//if (Utility.IsServer())
+		//{
+		//	StartCoroutine(GameMain.inst.Server_Recruit(recruitHex, charToRecruit.charId, server.player.name, charToRecruit.charCost));
+		//}
+		//else
+		//{
+		//	GameMain.inst.Request_Recruit(recruitHex, charToRecruit.charId, client.player.name, charToRecruit.charCost);
+		//}
 	}
 	#endregion
 
@@ -948,14 +949,14 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Attack()
 	{
-		if (Utility.IsServer())
-		{
-			StartCoroutine(IngameManager.inst.Server_Attack(attackPath, selectedAttackId));
-		}
-		else
-		{
-			IngameManager.inst.Request_Attack(attackPath, selectedAttackId);
-		}
+		//if (Utility.IsServer())
+		//{
+		//	StartCoroutine(GameMain.inst.Server_Attack(attackPath, selectedAttackId));
+		//}
+		//else
+		//{
+		//	GameMain.inst.Request_Attack(attackPath, selectedAttackId);
+		//}
 		Hide_AttackPanel();
 	}
 
@@ -1099,11 +1100,11 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if (Utility.IsServer())
 		{
-			StartCoroutine(IngameManager.inst.Server_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
+			//StartCoroutine(GameMain.inst.Server_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
 		}
 		else
 		{
-			StartCoroutine(IngameManager.inst.Request_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
+			//StartCoroutine(GameMain.inst.Request_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
 		}
 
 		levelupPanel.SetActive(false);
@@ -1153,7 +1154,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Button_HideFog()
 	{
-		IngameManager.inst.fog.Hide_Fog();
+		GameMain.inst.fog.Hide_Fog();
 
 		ingameInput.mouseOverUI = false;
 	}

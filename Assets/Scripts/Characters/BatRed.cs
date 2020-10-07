@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BatRed : Character
 {
-    public BatRed(Transform tr, GameClient owner, bool isHero)
+    public BatRed(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;

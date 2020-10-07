@@ -19,6 +19,8 @@ public class Server : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         netProcessor = new NetPacketProcessor();
         sSubscription = new ServerSubscriptions(this, netProcessor);
         listener = new EventBasedNetListener();

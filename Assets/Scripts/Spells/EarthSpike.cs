@@ -16,12 +16,13 @@ public class EarthSpike : Spell
 
     public override void Use(Vector3 pos)
     {
-        IngameManager.inst.effectsData.Effect_EarthSpike(pos);
+        GameMain.inst.effectsData.Effect_EarthSpike(pos);
         cooldown_cur = cooldown_max;
     }
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        yield return IngameManager.inst.Server_SpellDamage(casterHex, hex, spellDmg); // Server is blocked
+        //yield return GameMain.inst.Server_SpellDamage(casterHex, hex, spellDmg); // Server is blocked
+        yield return null;
     }
 }

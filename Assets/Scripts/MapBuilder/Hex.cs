@@ -14,7 +14,7 @@ public class Hex : MonoBehaviour
 
     public bool neutralsSpawner;
     public bool isVillage;
-    public GameClient villageOwner;
+    public Player villageOwner;
 
     public bool isMountain;
     public bool isWater;

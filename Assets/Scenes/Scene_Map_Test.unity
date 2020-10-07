@@ -33616,7 +33616,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 614204403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 795487a6c106517449628b3f9c4b3fc6, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b5979d23ce8d57448dadb598ccbde43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &614204405
@@ -33628,123 +33628,120 @@ MonoBehaviour:
   m_GameObject: {fileID: 614204403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 747c598c609fc1a4a94fb9baa0987c8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 49a1a2c2fc2697546964f0638b8a2b27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charData: {fileID: 0}
   somePanelIsOn: 0
-  helpMenu: {fileID: 7823390059657487392}
-  save_Button: {fileID: 1845937548}
-  hexInfo_Canvas: {fileID: 530160221}
-  hexInfo_Image: {fileID: 1174339476}
-  grassHex_Sprite: {fileID: -1069567230143613075, guid: 61356f6d54b97d244b4a3e5f92866ae7,
-    type: 3}
-  villageHex_Sprite: {fileID: 21300000, guid: fa71f65302c45c5478c6a8894a8df69e, type: 3}
-  castleHex_Sprite: {fileID: 21300000, guid: 941261af553eb784aa83802993c0aecd, type: 3}
-  mountainHex_Sprite: {fileID: 2696584348351972896, guid: 61356f6d54b97d244b4a3e5f92866ae7,
-    type: 3}
-  waterHex_Sprite: {fileID: -3966947170738177347, guid: 61356f6d54b97d244b4a3e5f92866ae7,
-    type: 3}
-  hexInfo_Title_Text: {fileID: 7823390060951785555}
-  hexInfo_VillageOwner_Text: {fileID: 61838038}
-  hexInfo_MoveCost_Text: {fileID: 355922324}
-  hexInfo_HexDodge_Text: {fileID: 1518371628}
-  hexItem_Canvas: {fileID: 2139082052}
-  hItem_Image: {fileID: 1679625467}
-  hItem_Name_Text: {fileID: 2091426363}
-  hItem_Buffs_Text: {fileID: 788910875}
-  hItem_Pickup_Obj: {fileID: 2073438782}
-  cInfo_Canvas: {fileID: 368440692}
-  cInfo_Image: {fileID: 7823390060384204534}
-  cInfo_Name_Text: {fileID: 7823390059609149785}
-  cInfo_CanAct_Text: {fileID: 7823390060299902397}
-  cInfo_Hp_Text: {fileID: 7823390059272380569}
-  cInfo_Exp_Text: {fileID: 7823390060214074596}
-  cInfo_MP_Text: {fileID: 7823390059545697719}
-  cInfo_Dodge_Text: {fileID: 273906093}
-  cInfo_SlashResist_Text: {fileID: 1149435352}
-  cInfo_PierceResist_Text: {fileID: 878850265}
-  cInfo_MagicResist_Text: {fileID: 712177934}
-  cInfo_Spell1_Obj: {fileID: 94260588}
-  cInfo_Spell1_CD_Text: {fileID: 1197937880}
-  cInfo_Spell2_Obj: {fileID: 673623923}
-  cInfo_Spell2_CD_Text: {fileID: 391904316}
-  cInfo_Spell_Cancel: {fileID: 504297653}
-  cInfo_Attacks_Text: {fileID: 777208706}
-  cItem_Canvas: {fileID: 1446618472}
-  cItem_Image: {fileID: 728067048}
-  cItem_Name_Text: {fileID: 200027925}
-  cItem_Buffs_Text: {fileID: 1602148242}
-  cItem_ItemUse_Obj: {fileID: 2118301848}
-  cItem_ItemDrop_Obj: {fileID: 6778659}
-  charRecruitPanel: {fileID: 7823390060689566270}
-  closeRecruitMenu_button: {fileID: 7823390060133072740}
-  recruit_1_button: {fileID: 7823390060326493043}
-  recruit_2_button: {fileID: 7823390059672374197}
-  recruit_3_button: {fileID: 7823390061053245876}
-  recruit_4_button: {fileID: 965516456}
-  recruit_5_button: {fileID: 1415564129}
-  recruit_6_button: {fileID: 1392337894}
-  rec_Char_Image: {fileID: 7823390059075130784}
-  rec_CharName_Text: {fileID: 1162076401}
-  rec_CharCost_Text: {fileID: 1429111024}
-  rec_CharHp_Text: {fileID: 1323696402}
-  rec_CharExp_Text: {fileID: 486324860}
-  rec_CharMP_Text: {fileID: 1800407183}
-  rec_CharDodge_Text: {fileID: 182645741}
-  rec_CharSlashResist_Text: {fileID: 644346609}
-  rec_CharPierceResist_Text: {fileID: 1196107022}
-  rec_CharMagicResist_Text: {fileID: 1827194224}
-  recruitButton: {fileID: 7823390059625085538}
-  attackPanel: {fileID: 7823390060790677678}
-  attackerImage: {fileID: 7823390061044572335}
-  targetImage: {fileID: 7823390059149782507}
-  attack1: {fileID: 7823390060970257190}
-  attack1_Image_a: {fileID: 7823390060216396210}
-  attack1_Text_a: {fileID: 7823390060811238656}
-  attack1_Image_t: {fileID: 7823390060013112492}
-  attack1_Text_t: {fileID: 7823390060627993773}
-  attack2: {fileID: 7823390060547939528}
-  attack2_Image_a: {fileID: 7823390060929225305}
-  attack2_Text_a: {fileID: 7823390059924327093}
-  attack2_Image_t: {fileID: 7823390060284278557}
-  attack2_Text_t: {fileID: 7823390059400219773}
-  attack3: {fileID: 7823390060909246928}
-  attack3_Image_a: {fileID: 7823390059944054075}
-  attack3_Text_a: {fileID: 7823390060482254846}
-  attack3_Image_t: {fileID: 7823390060491505591}
-  attack3_Text_t: {fileID: 7823390059472975001}
-  attack_button: {fileID: 7823390060689023935}
-  closeAttackPanel: {fileID: 7823390060125101246}
-  levelupPanel: {fileID: 7823390059584623693}
-  levelupOption_1: {fileID: 7823390059527048916}
-  levelupOption_2: {fileID: 7823390059223580869}
-  levelupOption_3: {fileID: 7823390060412098344}
-  upg_curChar_Image: {fileID: 7823390061071291093}
-  upg_curName_Text: {fileID: 7823390059343875396}
-  upg_curHp_Text: {fileID: 211824046}
-  upg_curExp_Text: {fileID: 909162254}
-  upg_curMP_Text: {fileID: 358632926}
-  upg_curDodge_Text: {fileID: 431917464}
-  upg_curSlashResist_Text: {fileID: 1008190044}
-  upg_curPierceResist_Text: {fileID: 1891480300}
-  upg_curMagicResist_Text: {fileID: 1284646071}
-  upg_Char_Image: {fileID: 7823390059049598035}
-  upg_CharName_Text: {fileID: 7823390059841018914}
-  upg_Hp_Text: {fileID: 510133837}
-  upg_Exp_Text: {fileID: 118471059}
-  upg_MP_Text: {fileID: 232338573}
-  upg_Dodge_Text: {fileID: 177257170}
-  upg_SlashResist_Text: {fileID: 2047041966}
-  upg_PierceResist_Text: {fileID: 1486737305}
-  upg_MagicResist_Text: {fileID: 509312722}
-  levelupButton: {fileID: 7823390059473497153}
-  playerInfoPanel: {fileID: 7823390059750599683}
-  pInfo_Gold_Text: {fileID: 7823390060448440659}
-  pInfo_Vilage_Text: {fileID: 7823390059196570543}
-  pInfo_Income_Text: {fileID: 7823390060385680184}
-  pInfo_Daytime_Text: {fileID: 195833984}
-  endTurn: {fileID: 7823390060444994004}
+  helpMenu: {fileID: 0}
+  save_Button: {fileID: 0}
+  hexInfo_Canvas: {fileID: 0}
+  hexInfo_Image: {fileID: 0}
+  grassHex_Sprite: {fileID: 0}
+  villageHex_Sprite: {fileID: 0}
+  castleHex_Sprite: {fileID: 0}
+  mountainHex_Sprite: {fileID: 0}
+  waterHex_Sprite: {fileID: 0}
+  hexInfo_Title_Text: {fileID: 0}
+  hexInfo_VillageOwner_Text: {fileID: 0}
+  hexInfo_MoveCost_Text: {fileID: 0}
+  hexInfo_HexDodge_Text: {fileID: 0}
+  hexItem_Canvas: {fileID: 0}
+  hItem_Image: {fileID: 0}
+  hItem_Name_Text: {fileID: 0}
+  hItem_Buffs_Text: {fileID: 0}
+  hItem_Pickup_Obj: {fileID: 0}
+  cInfo_Canvas: {fileID: 0}
+  cInfo_Image: {fileID: 0}
+  cInfo_Name_Text: {fileID: 0}
+  cInfo_CanAct_Text: {fileID: 0}
+  cInfo_Hp_Text: {fileID: 0}
+  cInfo_Exp_Text: {fileID: 0}
+  cInfo_MP_Text: {fileID: 0}
+  cInfo_Dodge_Text: {fileID: 0}
+  cInfo_SlashResist_Text: {fileID: 0}
+  cInfo_PierceResist_Text: {fileID: 0}
+  cInfo_MagicResist_Text: {fileID: 0}
+  cInfo_Spell1_Obj: {fileID: 0}
+  cInfo_Spell1_CD_Text: {fileID: 0}
+  cInfo_Spell2_Obj: {fileID: 0}
+  cInfo_Spell2_CD_Text: {fileID: 0}
+  cInfo_Spell_Cancel: {fileID: 0}
+  cInfo_Attacks_Text: {fileID: 0}
+  cItem_Canvas: {fileID: 0}
+  cItem_Image: {fileID: 0}
+  cItem_Name_Text: {fileID: 0}
+  cItem_Buffs_Text: {fileID: 0}
+  cItem_ItemUse_Obj: {fileID: 0}
+  cItem_ItemDrop_Obj: {fileID: 0}
+  charRecruitPanel: {fileID: 0}
+  closeRecruitMenu_button: {fileID: 0}
+  recruit_1_button: {fileID: 0}
+  recruit_2_button: {fileID: 0}
+  recruit_3_button: {fileID: 0}
+  recruit_4_button: {fileID: 0}
+  recruit_5_button: {fileID: 0}
+  recruit_6_button: {fileID: 0}
+  rec_Char_Image: {fileID: 0}
+  rec_CharName_Text: {fileID: 0}
+  rec_CharCost_Text: {fileID: 0}
+  rec_CharHp_Text: {fileID: 0}
+  rec_CharExp_Text: {fileID: 0}
+  rec_CharMP_Text: {fileID: 0}
+  rec_CharDodge_Text: {fileID: 0}
+  rec_CharSlashResist_Text: {fileID: 0}
+  rec_CharPierceResist_Text: {fileID: 0}
+  rec_CharMagicResist_Text: {fileID: 0}
+  recruitButton: {fileID: 0}
+  attackPanel: {fileID: 0}
+  attackerImage: {fileID: 0}
+  targetImage: {fileID: 0}
+  attack1: {fileID: 0}
+  attack1_Image_a: {fileID: 0}
+  attack1_Text_a: {fileID: 0}
+  attack1_Image_t: {fileID: 0}
+  attack1_Text_t: {fileID: 0}
+  attack2: {fileID: 0}
+  attack2_Image_a: {fileID: 0}
+  attack2_Text_a: {fileID: 0}
+  attack2_Image_t: {fileID: 0}
+  attack2_Text_t: {fileID: 0}
+  attack3: {fileID: 0}
+  attack3_Image_a: {fileID: 0}
+  attack3_Text_a: {fileID: 0}
+  attack3_Image_t: {fileID: 0}
+  attack3_Text_t: {fileID: 0}
+  attack_button: {fileID: 0}
+  closeAttackPanel: {fileID: 0}
+  levelupPanel: {fileID: 0}
+  levelupOption_1: {fileID: 0}
+  levelupOption_2: {fileID: 0}
+  levelupOption_3: {fileID: 0}
+  upg_curChar_Image: {fileID: 0}
+  upg_curName_Text: {fileID: 0}
+  upg_curHp_Text: {fileID: 0}
+  upg_curExp_Text: {fileID: 0}
+  upg_curMP_Text: {fileID: 0}
+  upg_curDodge_Text: {fileID: 0}
+  upg_curSlashResist_Text: {fileID: 0}
+  upg_curPierceResist_Text: {fileID: 0}
+  upg_curMagicResist_Text: {fileID: 0}
+  upg_Char_Image: {fileID: 0}
+  upg_CharName_Text: {fileID: 0}
+  upg_Hp_Text: {fileID: 0}
+  upg_Exp_Text: {fileID: 0}
+  upg_MP_Text: {fileID: 0}
+  upg_Dodge_Text: {fileID: 0}
+  upg_SlashResist_Text: {fileID: 0}
+  upg_PierceResist_Text: {fileID: 0}
+  upg_MagicResist_Text: {fileID: 0}
+  levelupButton: {fileID: 0}
+  playerInfoPanel: {fileID: 0}
+  pInfo_Gold_Text: {fileID: 0}
+  pInfo_Vilage_Text: {fileID: 0}
+  pInfo_Income_Text: {fileID: 0}
+  pInfo_Daytime_Text: {fileID: 0}
+  endTurn: {fileID: 0}
 --- !u!114 &614204406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33754,7 +33751,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 614204403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238c1d5d17da0b242af08e5970fd1703, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b12c65d392c86840b087ccdc9974fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mouseOverHex: {fileID: 0}
@@ -33762,10 +33759,8 @@ MonoBehaviour:
   mouseOverUI: 0
   castingSpell: 0
   spell_HexConcerned: []
-  hexHover_pref: {fileID: 1846426187791406180, guid: 64712a6170539a8419873e3eae771460,
-    type: 3}
-  hexSelected_pref: {fileID: 6970848292335995281, guid: d13597ee051644f41aeaa039bf231e3a,
-    type: 3}
+  hexHover_pref: {fileID: 0}
+  hexSelected_pref: {fileID: 0}
 --- !u!4 &614204407
 Transform:
   m_ObjectHideFlags: 0
@@ -33789,7 +33784,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 614204403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6bd2c0a86ef654458d3da4d4659426a, type: 3}
+  m_Script: {fileID: 11500000, guid: 172c01e7cf5bda140b7109a379768e6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   clickCount: 0
@@ -63022,7 +63017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 3368c86a8b4b30845853a0c198fa3ebf, type: 2}
+  sharedProfile: {fileID: 0}
   isGlobal: 1
   blendDistance: 0
   weight: 1

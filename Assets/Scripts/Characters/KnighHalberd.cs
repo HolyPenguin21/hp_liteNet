@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KnightHalberd : Character
 {
-    public KnightHalberd(Transform tr, GameClient owner, bool isHero)
+    public KnightHalberd(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;

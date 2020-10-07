@@ -11,4 +11,7 @@ public class Player
     public bool isServer;
     public string name;
     public int race;
+    public int gold;
+    public int villages;
+    public Character heroCharacter;
 }

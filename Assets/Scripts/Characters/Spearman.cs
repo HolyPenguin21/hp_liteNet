@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spearman : Character
 {
-    public Spearman(Transform tr, GameClient owner, bool isHero)
+    public Spearman(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;

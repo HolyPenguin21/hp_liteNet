@@ -53,7 +53,7 @@ public class Ingame_Input : MonoBehaviour
 
     private void Start()
     {
-        pathfinding = IngameManager.inst.pathfinding;
+        pathfinding = GameMain.inst.pathfinding;
     }
 
     private void Update()
@@ -78,14 +78,14 @@ public class Ingame_Input : MonoBehaviour
     public void OnDoubleClick()
     {
         if (mouseOverUI) return;
-        if (Utility.IsServer())
-		{
-			if (!IngameManager.inst.taskManager.serverReady.ready) return;
-		}
-		else
-		{
-            if (IngameManager.inst.client.currentTask != 0) return;
-		}
+  //      if (Utility.IsServer())
+		//{
+		//	if (!GameMain.inst.taskManager.serverReady.ready) return;
+		//}
+		//else
+		//{
+  //          if (GameMain.inst.client.currentTask != 0) return;
+		//}
 
         MouseInput_DoubleClick();
     }
@@ -94,14 +94,14 @@ public class Ingame_Input : MonoBehaviour
     {
         if (mouseOverUI) return;
         if (castingSpell) return;
-        if (Utility.IsServer())
-		{
-			if (!IngameManager.inst.taskManager.serverReady.ready) return;
-		}
-		else
-		{
-            if (IngameManager.inst.client.currentTask != 0) return;
-		}
+  //      if (Utility.IsServer())
+		//{
+		//	if (!GameMain.inst.taskManager.serverReady.ready) return;
+		//}
+		//else
+		//{
+  //          if (GameMain.inst.client.currentTask != 0) return;
+		//}
 
         Hex clickedHex = HittedObject();
         if (clickedHex == null) return;
@@ -196,12 +196,12 @@ public class Ingame_Input : MonoBehaviour
 
         if(castingSpell)
         {
-            if(IngameManager.inst.spellData.InRange(selectedHex, spell_HexConcerned[0], spell_Active))
+            if(GameMain.inst.spellData.InRange(selectedHex, spell_HexConcerned[0], spell_Active))
             {
-                if (Utility.IsServer())
-                    StartCoroutine(IngameManager.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
-                else
-                    IngameManager.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
+                //if (Utility.IsServer())
+                //    StartCoroutine(GameMain.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
+                //else
+                //    GameMain.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
             }
 
             Spellcasting_Cancel();
@@ -221,7 +221,7 @@ public class Ingame_Input : MonoBehaviour
                         {
                             if (character.canAct)
                             {
-                                IngameManager.inst.Try_Attack(selectedHex, clickedHex);
+                                //GameMain.inst.Try_Attack(selectedHex, clickedHex);
                                 pathfinding.Hide_Path();
                             }
                             else
@@ -234,10 +234,11 @@ public class Ingame_Input : MonoBehaviour
                         {
                             if (character.charMovement.movePoints_cur > 0)
                             {
-                                if (Utility.IsServer())
-                                    StartCoroutine(IngameManager.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
-                                else
-                                    IngameManager.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+                                //if (Utility.IsServer())
+                                //    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
+                                //else
+                                //    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+
                                 pathfinding.Hide_Path();
                             }
                             else
@@ -255,10 +256,11 @@ public class Ingame_Input : MonoBehaviour
                 }
                 else if (character.charMovement.movePoints_cur > 0)
                 {
-                    if (Utility.IsServer())
-                        StartCoroutine(IngameManager.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
-                    else
-                        IngameManager.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+                    //if (Utility.IsServer())
+                    //    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
+                    //else
+                    //    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+
                     pathfinding.Hide_Path();
                 }
                 else
@@ -288,11 +290,11 @@ public class Ingame_Input : MonoBehaviour
 
         if (Utility.IsServer())
         {
-            if (IngameManager.inst.currentTurn.clientName != IngameManager.inst.server.serverName) return;
+            if (GameMain.inst.currentTurn.name != GameMain.inst.server.player.name) return;
         }
         else
         {
-            if (IngameManager.inst.currentTurn.clientName != IngameManager.inst.client.clientName) return;
+            if (GameMain.inst.currentTurn.name != GameMain.inst.client.player.name) return;
         }        
 
         if(clickedHex.rootCastle == null) return;
@@ -305,7 +307,7 @@ public class Ingame_Input : MonoBehaviour
     private void Spellcasting_Constant(Hex someHex)
     {
         Set_HoverImage(0);
-        IngameManager.inst.fog.Update_Fog();
+        GameMain.inst.fog.Update_Fog();
 
         // Clear previos visuals
         foreach(Hex h in spell_HexConcerned)
@@ -313,10 +315,10 @@ public class Ingame_Input : MonoBehaviour
         spell_HexConcerned.Clear();
 
         // Get new hexes to draw visuals
-        spell_HexConcerned = IngameManager.inst.spellData.Get_ConcernedHexes(someHex, spell_Active.spellId);
+        spell_HexConcerned = GameMain.inst.spellData.Get_ConcernedHexes(someHex, spell_Active.spellId);
 
         // Check range
-        if(IngameManager.inst.spellData.InRange(selectedHex, someHex, spell_Active))
+        if(GameMain.inst.spellData.InRange(selectedHex, someHex, spell_Active))
         {
             foreach(Hex h in spell_HexConcerned)
                 h.target.transform.GetComponent<SpriteRenderer>().color = Color.white;
@@ -342,7 +344,7 @@ public class Ingame_Input : MonoBehaviour
 
         if(selectedHex != null)
             if(Utility.CharacterIsVisible(selectedHex.character))
-                IngameManager.inst.fog.Show_MoveHexes(selectedHex.character);
+                GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
 
         GameObject.Find("UI").GetComponent<UI_Ingame>().cInfo_Spell_Cancel.SetActive(false);
     }
@@ -353,7 +355,7 @@ public class Ingame_Input : MonoBehaviour
         if (Physics.Raycast(mouseRay, out mouseHit, 50.0f))
         {
             if (mouseHit.collider.CompareTag("Hex"))
-                return IngameManager.inst.gridManager.Get_GridItem_ByTransform(mouseHit.collider.transform).hex;
+                return GameMain.inst.gridManager.Get_GridItem_ByTransform(mouseHit.collider.transform).hex;
         }
 
         return null;
@@ -370,25 +372,25 @@ public class Ingame_Input : MonoBehaviour
 
         if(selectedHex.character != null)
         {
-            IngameManager.inst.fog.Update_Fog();
+            GameMain.inst.fog.Update_Fog();
 
             if(Utility.CharacterIsVisible(selectedHex.character))
-                IngameManager.inst.fog.Show_MoveHexes(selectedHex.character);
+                GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
         }
     }
     public void SelectHex(Transform clickedHex)
 	{
-		selectedHex = IngameManager.inst.gridManager.Get_GridItem_ByTransform(clickedHex).hex;
+		selectedHex = GameMain.inst.gridManager.Get_GridItem_ByTransform(clickedHex).hex;
 
 		hexSelected_tr.gameObject.SetActive(true);
 		hexSelected_tr.position = clickedHex.position;
 
 		GameObject.Find("UI").GetComponent<UI_Ingame>().Show_HexInfo(selectedHex);
 
-        IngameManager.inst.fog.Update_Fog();
+        GameMain.inst.fog.Update_Fog();
 
         if(selectedHex.character != null)
-            IngameManager.inst.fog.Show_MoveHexes(selectedHex.character);
+            GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
 	}
 
     public void Reset_All()
@@ -408,7 +410,7 @@ public class Ingame_Input : MonoBehaviour
 
         mouseOverUI = false;
 
-        IngameManager.inst.fog.Update_Fog();
+        GameMain.inst.fog.Update_Fog();
     }
     private void Reset_Hover()
     {

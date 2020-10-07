@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Pikeman : Character
 {
-    public Pikeman(Transform tr, GameClient owner, bool isHero)
+    public Pikeman(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;

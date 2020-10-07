@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SkelArcher : Character
 {
-    public SkelArcher(Transform tr, GameClient owner, bool isHero)
+    public SkelArcher(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;

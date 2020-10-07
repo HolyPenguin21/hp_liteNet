@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Swordman : Character
 {
-    public Swordman(Transform tr, GameClient owner, bool isHero)
+    public Swordman(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;

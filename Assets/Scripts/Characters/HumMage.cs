@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HumMage : Character
 {
-    public HumMage(Transform tr, GameClient owner, bool isHero)
+    public HumMage(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;
@@ -78,7 +78,7 @@ public class HumMage : Character
             }
 
             if(base.tr.gameObject.activeInHierarchy)
-                IngameManager.inst.effectsData.Effect_Flame(target.transform.position);
+				GameMain.inst.effectsData.Effect_Flame(target.transform.position);
 
             t = 0.0f;
             while (t < 1.2f)

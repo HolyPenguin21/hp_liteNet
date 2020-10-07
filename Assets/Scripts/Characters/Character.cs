@@ -137,7 +137,7 @@ public abstract class Character
 			charHp.hp_cur += Utility.villageHeal;
 
 			if (tr.gameObject.activeInHierarchy)
-				IngameManager.inst.effectsData.Effect_VillageHeal(hex.transform.position, Utility.villageHeal);
+				GameMain.inst.effectsData.Effect_VillageHeal(hex.transform.position, Utility.villageHeal);
 
 			if (charHp.hp_cur > charHp.hp_max)
 				charHp.hp_cur = charHp.hp_max;
@@ -243,7 +243,7 @@ public abstract class Character
 		charHp.hp_cur -= dmgToRecieve;
 
 		if (tr.gameObject.activeInHierarchy)
-			IngameManager.inst.effectsData.Effect_Damage(hex.transform.position, dmgToRecieve);
+			GameMain.inst.effectsData.Effect_Damage(hex.transform.position, dmgToRecieve);
 	}
 
 	public void RecieveHeal(int amount)
@@ -254,6 +254,6 @@ public abstract class Character
 			charHp.hp_cur = charHp.hp_max;
 
 		if (tr.gameObject.activeInHierarchy)
-			IngameManager.inst.effectsData.Effect_VillageHeal(hex.transform.position, amount);
+			GameMain.inst.effectsData.Effect_VillageHeal(hex.transform.position, amount);
 	}
 }

@@ -11,14 +11,29 @@ public class GameMain : MonoBehaviour
     [HideInInspector] public Server server;
     [HideInInspector] public Client client;
 
+    #region Game data vars
+    public Player currentTurn;
+    public List<Character> allCharacters = new List<Character>();
     // Daytime
     private Daytime daytime;
     public Utility.dayTime dayTime_cur = Utility.dayTime.night2;
+    #endregion
 
+    public TaskManager taskManager;
+    //private ServerOrders sOrders;
+    public GridManager gridManager;
+    private UI_Ingame uiIngame;
+
+    public CharactersData charactersData;
+    public EffectsData effectsData;
+    public SpellData spellData;
+    public Pathfinding pathfinding;
+    private AiNeutrals aiNeutrals;
     public Fog fog;
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         inst = this;
     }
 

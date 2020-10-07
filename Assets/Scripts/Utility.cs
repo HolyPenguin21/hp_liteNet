@@ -86,50 +86,50 @@ public static class Utility
         return false;
     }
 
-    //public static void Set_OwnerColor(Transform tr, GameClient owner)
-    //{
-    //    if (IsServer())
-    //    {
-    //        if(owner == GameMain.inst.server.gameClients[0])
-    //            tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.blue;
+    public static void Set_OwnerColor(Transform tr, Player owner)
+    {
+        if (IsServer())
+        {
+            if (owner == GameMain.inst.server.players[0])
+                tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.blue;
 
-    //        if(owner == GameMain.inst.server.gameClients[1])
-    //            tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.red;
-    //    }
-    //    else
-    //    {
-    //        if (owner == GameMain.inst.client.gameClients[0])
-    //            tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.blue;
+            if (owner == GameMain.inst.server.players[1])
+                tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.red;
+        }
+        else
+        {
+            if (owner == GameMain.inst.client.players[0])
+                tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.blue;
 
-    //        if (owner == GameMain.inst.client.gameClients[1])
-    //            tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.red;
-    //    }
-    //}
+            if (owner == GameMain.inst.client.players[1])
+                tr.Find("playerColor").GetComponent<SpriteRenderer>().color = Color.red;
+        }
+    }
 
-    //public static bool EnemyInNeighbors(Character character, Hex current)
-    //{
-    //    for (int x = 0; x < current.neighbors.Count; x++)
-    //    {
-    //        if (current.neighbors[x].character != null && current.neighbors[x].character.tr.gameObject.activeInHierarchy && character.owner != current.neighbors[x].character.owner)
-    //            return true;
-    //    }
-    //    return false;
-    //}
+    public static bool EnemyInNeighbors(Character character, Hex current)
+    {
+        for (int x = 0; x < current.neighbors.Count; x++)
+        {
+            if (current.neighbors[x].character != null && current.neighbors[x].character.tr.gameObject.activeInHierarchy && character.owner != current.neighbors[x].character.owner)
+                return true;
+        }
+        return false;
+    }
 
-    //public static bool HexIsVisible(Hex hex)
-    //{
-    //    if(hex.fog.activeInHierarchy)
-    //        return false;
+    public static bool HexIsVisible(Hex hex)
+    {
+        if (hex.fog.activeInHierarchy)
+            return false;
 
-    //    return true;
-    //}
-    //public static bool CharacterIsVisible(Character character)
-    //{
-    //    if(character.tr.gameObject.activeInHierarchy)
-    //        return true;
+        return true;
+    }
+    public static bool CharacterIsVisible(Character character)
+    {
+        if (character.tr.gameObject.activeInHierarchy)
+            return true;
 
-    //    return false;
-    //}
+        return false;
+    }
 
     public static bool IsMyCharacter(Character someCharacter)
     {
@@ -146,30 +146,30 @@ public static class Utility
         return false;
     }
 
-    //  public static bool IsEmeny(Character char1, Character char2)
-    //  {
-    //      if (char1.owner != char2.owner)
-    //{
-    //	return true;
-    //}
-    //return false;
-    //  }
+    public static bool IsEmeny(Character char1, Character char2)
+    {
+        if (char1.owner != char2.owner)
+        {
+            return true;
+        }
+        return false;
+    }
 
-    //public static bool IsMyTurn()
-    //{
-    //    if(Utility.IsServer())
-    //    {
-    //        if(GameMain.inst.currentTurn.clientName != GameMain.inst.server.serverName)
-    //            return false;
-    //    }
-    //    else
-    //    {
-    //        if(GameMain.inst.currentTurn.clientName != GameMain.inst.client.clientName)
-    //            return false;
-    //    }
+    public static bool IsMyTurn()
+    {
+        if (IsServer())
+        {
+            if (GameMain.inst.currentTurn.name != GameMain.inst.server.player.name)
+                return false;
+        }
+        else
+        {
+            if (GameMain.inst.currentTurn.name != GameMain.inst.client.player.name)
+                return false;
+        }
 
-    //    return true;
-    //}
+        return true;
+    }
 
     //public static bool InAttackRange(Hex hex_a, Hex hex_b)
     //{

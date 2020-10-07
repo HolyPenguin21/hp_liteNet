@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Skeleton : Character
 {
-    public Skeleton(Transform tr, GameClient owner, bool isHero)
+    public Skeleton(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;

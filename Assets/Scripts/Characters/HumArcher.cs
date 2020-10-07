@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HumArcher : Character
 {
-    public HumArcher(Transform tr, GameClient owner, bool isHero)
+    public HumArcher(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;
