@@ -99,7 +99,19 @@ public class GameMain : MonoBehaviour
             }
         }
 
-        yield return null;
+        Hex hex2 = gridManager.Get_GridItem_ByCoords(3, 6).hex;
+        yield return Server_CreateItem(hex2, 1); // Server is blocked
+
+        hex2 = gridManager.Get_GridItem_ByCoords(1, 19).hex;
+        yield return Server_CreateItem(hex2, 2); // Server is blocked
+
+        hex2 = gridManager.Get_GridItem_ByCoords(6, 24).hex;
+        yield return Server_CreateItem(hex2, 1); // Server is blocked
+
+        hex2 = gridManager.Get_GridItem_ByCoords(8, 10).hex;
+        yield return Server_CreateItem(hex2, 2); // Server is blocked
+
+        yield return Server_UpdateData();
     }
 
     private IEnumerator Load()
@@ -110,10 +122,104 @@ public class GameMain : MonoBehaviour
 
         yield return SaveLoad.Load();
 
-        //yield return Server_UpdateData();
+        yield return Server_UpdateData();
 
         yield return null;
     }
+
+    #region Update data
+    public IEnumerator Server_UpdateData()
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        uiIngame.Update_PlayerInfoPanel();
+        fog.Update_Fog();
+
+        UpdateData updateData = new UpdateData();
+        for (int i = 0; i < server.players.Count; i++)
+        {
+            Player gameClient = server.players[i];
+            updateData.data += "|";
+            updateData.data += gameClient.name + ";";
+            updateData.data += gameClient.race + ";";
+            updateData.data += gameClient.gold + ";";
+            updateData.data += gameClient.villages;
+        }
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, updateData, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_UpdateData(UpdateData updateData)
+    {
+        List<Player> updatedPlayersData = new List<Player>();
+        string[] playerData = updateData.data.Split('|');
+        for (int x = 1; x < playerData.Length; x++)
+        {
+            string[] playerVars = playerData[x].Split(';');
+            Player player = new Player();
+            player.name = playerVars[0];
+            player.race = int.Parse(playerVars[1]);
+            player.gold = int.Parse(playerVars[2]);
+            player.villages = int.Parse(playerVars[3]);
+            updatedPlayersData.Add(player);
+        }
+
+        for (int i = 0; i < updatedPlayersData.Count; i++)
+        {
+            Player gameClient = Utility.Get_Client_byString(updatedPlayersData[i].name, client.players);
+            gameClient.race = updatedPlayersData[i].race;
+            gameClient.gold = updatedPlayersData[i].gold;
+            gameClient.villages = updatedPlayersData[i].villages;
+        }
+
+        uiIngame.Update_PlayerInfoPanel();
+        fog.Update_Fog();
+
+        yield return Reply_TaskDone("Data updated");
+    }
+    #endregion
+
+    #region Item - Create
+    public IEnumerator Server_CreateItem(Hex createAt, int itemId)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        createAt.Add_Item(Get_Item_ById(itemId));
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(createAt);
+        CreateItem someItem = new CreateItem();
+        someItem.coord_x = gridCoord.coord_x;
+        someItem.coord_y = gridCoord.coord_y;
+        someItem.itemId = itemId;
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, someItem, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_CreateItem(CreateItem someItem)
+    {
+        Hex createAt = gridManager.Get_GridItem_ByCoords(someItem.coord_x, someItem.coord_y).hex;
+
+        createAt.Add_Item(Get_Item_ById(someItem.itemId));
+
+        yield return Reply_TaskDone("Create item");
+    }
+    #endregion
 
     #region Create character
     public IEnumerator Server_CreateCharacter(Hex createAt, int characterId, string ownerName, bool isHero)
@@ -139,7 +245,6 @@ public class GameMain : MonoBehaviour
             somePlayer.isAvailable = false;
             yield return server.netProcessor.Send(server.players[x].address, someCharacter, DeliveryMethod.ReliableOrdered);
         }
-
         yield return new WaitUntil(() => server.player.isAvailable);
     }
 
@@ -226,16 +331,6 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
-    private IEnumerator Reply_TaskDone(string message)
-    {
-        TaskDone taskDone = new TaskDone();
-        taskDone.playerName = client.player.name;
-        taskDone.task = message;
-
-        yield return client.netProcessor.Send(client.network.GetPeerById(0), taskDone, DeliveryMethod.ReliableOrdered);
-        client.player.isAvailable = true;
-    }
-
     #region Chat message
     public void Request_ChatMessage(ChatMessage chatMessage)
     {
@@ -300,6 +395,34 @@ public class GameMain : MonoBehaviour
         client.player.isAvailable = true;
     }
     #endregion
+
+    private IEnumerator Reply_TaskDone(string message)
+    {
+        TaskDone taskDone = new TaskDone();
+        taskDone.playerName = client.player.name;
+        taskDone.task = message;
+
+        yield return client.netProcessor.Send(client.network.GetPeerById(0), taskDone, DeliveryMethod.ReliableOrdered);
+        client.player.isAvailable = true;
+    }
+
+    private Item Get_Item_ById(int itemId)
+    {
+        Item item = null;
+
+        switch (itemId)
+        {
+            case 1:
+                item = new Item_Belt();
+                break;
+
+            case 2:
+                item = new Item_HealthPotion();
+                break;
+        }
+
+        return item;
+    }
 
     #region Setup scene
     private void Setup_Pathfinding()

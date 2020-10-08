@@ -14,6 +14,26 @@ public class ClientSubscriptions
         this.client = client;
         this.netProcessor = netPacketProcessor;
     }
+
+
+    public void UpdData()
+    {
+        netProcessor.SubscribeReusable<UpdateData>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_UpdateData(data));
+        });
+    }
+
+    public void CrItem()
+    {
+        netProcessor.SubscribeReusable<CreateItem>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CreateItem(data));
+        });
+    }
+
     public void CrCharacter()
     {
         netProcessor.SubscribeReusable<CreateCharacter>((data) => {
