@@ -35,7 +35,6 @@ public class CharactersData : MonoBehaviour
 		Vector3 position = createAt.transform.position;
 		Character character = null;
 		Player gameClient = null;
-
 		if (Utility.IsServer())
 		{
 			gameClient = Utility.Get_Client_byString(ownerName, server.players);

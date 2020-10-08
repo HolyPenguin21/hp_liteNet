@@ -100211,7 +100211,7 @@ MonoBehaviour:
   - 10
   BoundsZ:
   - -4
-  - 8
+  - 12
   ZoomBounds:
   - 1.25
   - 5

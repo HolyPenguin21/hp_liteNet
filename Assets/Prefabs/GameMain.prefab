@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2875865744938875444}
   - component: {fileID: 2875865744938875443}
-  - component: {fileID: 2875865744938875445}
+  - component: {fileID: -8758041537907791415}
+  - component: {fileID: 3490742488040442251}
+  - component: {fileID: 4898994044667058996}
   m_Layer: 0
   m_Name: GameMain
   m_TagString: Untagged
@@ -47,7 +49,26 @@ MonoBehaviour:
   loadGame: 0
   server: {fileID: 0}
   client: {fileID: 0}
---- !u!114 &2875865744938875445
+  currentTurn:
+    id: 0
+    isServer: 0
+    name: 
+    race: 0
+    gold: 0
+    villages: 0
+  dayTime_cur: 5
+  taskManager:
+    delayedTasks: []
+    serverReady:
+      ready: 0
+      taskId: 0
+  gridManager: {fileID: 0}
+  charactersData: {fileID: 0}
+  effectsData: {fileID: 0}
+  spellData: {fileID: 0}
+  movePathVisual: {fileID: 5024291021502148436, guid: 33896a9c50fce4d4f82e6ec58af4654d,
+    type: 3}
+--- !u!114 &-8758041537907791415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,9 +77,70 @@ MonoBehaviour:
   m_GameObject: {fileID: 2875865744938875442}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d434594f2a97cc34b9ae4c29384180b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 52dd6de75213c394a8e9c6c119bdc258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadGame: 0
-  server: {fileID: 0}
-  client: {fileID: 0}
+  spearman: {fileID: 813385900582852865, guid: 9d266abb46ac1e844a42bfffb9909fc0, type: 3}
+  veteranSpearman: {fileID: 1998121727568639576, guid: d7f5a9608bc80d64ebaf37324f482af8,
+    type: 3}
+  swordman: {fileID: 6934696929566613636, guid: 7bb42f993364de4418b8038b2ee351a0,
+    type: 3}
+  pikeman: {fileID: 5081544297305505078, guid: 55381dfd2f649784280f7c00aec09a80, type: 3}
+  grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
+  skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
+    type: 3}
+  skelMage: {fileID: 7936884735807693186, guid: 402cd41adf027314ebadd875e6255ba4,
+    type: 3}
+  humArcher: {fileID: 4145327562660652325, guid: 5ca67dc8a798edd4c88df8a7eb4969a3,
+    type: 3}
+  humMage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
+  batWhite: {fileID: 1857760588051744421, guid: da0e073c9dd49964a80d15a3e9a98a86,
+    type: 3}
+  batRed: {fileID: 5945952312710855031, guid: bc9d838c3069e3d40b66ad8d43e0726b, type: 3}
+  skelArcher: {fileID: 2193709298504832577, guid: e646241f46d343c42b726410fbbb9abf,
+    type: 3}
+  knight: {fileID: 1844222379328976759, guid: 7a860bfc3a43201499804bf9a5b06a5f, type: 3}
+  knightHalberd: {fileID: 7940948817180614613, guid: 580c40c034983ad4f9c89a7e4022e70c,
+    type: 3}
+--- !u!114 &3490742488040442251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875865744938875442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0209aef76ae30994fbe565a6d2344d5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectVillageHeal: {fileID: 3507293823950594168, guid: e927d3bf94cc5024a98e6a947f1442cb,
+    type: 3}
+  effectDamage: {fileID: 403927145994982876, guid: eaa91b7dc6bd59e479a5f8819d38eb69,
+    type: 3}
+  effectLightning: {fileID: 6411232009399712237, guid: fccf101f2249c774ea4c44f75bc9f63d,
+    type: 3}
+  effectEarthMedium: {fileID: 7264658283717665654, guid: 511408a85c088c447823b31de55ae7db,
+    type: 3}
+  effectEarthWeak: {fileID: 2463772058387354923, guid: 0cb7178c358f70e40bf6bff68ef02d26,
+    type: 3}
+  effectEarthSpike: {fileID: 1919729268961327432, guid: e583e26d40e5f444eaabc18895f02159,
+    type: 3}
+  effectFlame: {fileID: 3322118991871818486, guid: 8528807ca19da494188d4104e328f38c,
+    type: 3}
+  effectMassHeal: {fileID: 2671154312338219200, guid: 2b9d0afc454feb043bdeff1dea2d6786,
+    type: 3}
+  effectHeal: {fileID: 1341147665099077446, guid: f437ae6cc2f6f4f498d897940456a71e,
+    type: 3}
+--- !u!114 &4898994044667058996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875865744938875442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe60ba6a9995e54f8b4dcc50b0b382b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

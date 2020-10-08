@@ -32,6 +32,7 @@ public class Client : MonoBehaviour
     {
         // Client player
         player.isServer = false;
+        player.isAvailable = true;
         player.name = playerName;
 
         network.Start();
@@ -50,6 +51,8 @@ public class Client : MonoBehaviour
         cSubscription.PlayersList();
         cSubscription.ChatMessage();
         cSubscription.SceneChange();
+        cSubscription.CrNeutralPlayer();
+        cSubscription.CrCharacter();
     }
 
     private void Update()

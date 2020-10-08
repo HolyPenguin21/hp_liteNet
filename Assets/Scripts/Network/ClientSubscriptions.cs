@@ -14,20 +14,48 @@ public class ClientSubscriptions
         this.client = client;
         this.netProcessor = netPacketProcessor;
     }
+    public void CrCharacter()
+    {
+        netProcessor.SubscribeReusable<CreateCharacter>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CreateCharacter(data));
+        });
+    }
+
+    public void CrNeutralPlayer()
+    {
+        netProcessor.SubscribeReusable<CreateNeutralPlayer>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CreateNeutralPlayer(data));
+        });
+    }
+
+    public void SceneChange()
+    {
+        netProcessor.SubscribeReusable<SceneToLoad>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_LoadScene(data));
+        });
+    }
 
     public void RaceChange()
     {
         netProcessor.SubscribeReusable<RaceChange>((data) => {
+            client.player.isAvailable = false;
+
             client.StartCoroutine(GameMain.inst.Client_RaceChange(data));
         });
     }
 
-    public void OnLogin()
+    public void ChatMessage()
     {
-        netProcessor.SubscribeReusable<LoginData>((data) => {
-            Debug.Log("Client > Login request from Server.");
+        netProcessor.SubscribeReusable<ChatMessage>((data) => {
+            client.player.isAvailable = false;
 
-            netProcessor.Send(client.network.GetPeerById(0), new LoginData() { clientId = data.clientId, clientName = client.player.name }, DeliveryMethod.ReliableOrdered);
+            client.StartCoroutine(GameMain.inst.Client_ChatMessage(data));
         });
     }
 
@@ -48,20 +76,12 @@ public class ClientSubscriptions
             GameObject.FindObjectOfType<UI_MainMenu>().Setup_RacePicker();
         });
     }
-
-    public void ChatMessage()
+    public void OnLogin()
     {
-        netProcessor.SubscribeReusable<ChatMessage>((data) => {
-            //Debug.Log("Client > message from Server : ChatMessage : cName=" + data.name + ", cMessage=" + data.message);
-            client.StartCoroutine(GameMain.inst.Client_ChatMessage(data));
-        });
-    }
+        netProcessor.SubscribeReusable<LoginData>((data) => {
+            Debug.Log("Client > Login request from Server.");
 
-    public void SceneChange()
-    {
-        netProcessor.SubscribeReusable<SceneToLoad>((data) => {
-            //Debug.Log("Server > message from Client : ChatMessage : cName=" + data.name + ", cMessage=" + data.message);
-            client.StartCoroutine(GameMain.inst.Client_LoadScene(data));
+            netProcessor.Send(client.network.GetPeerById(0), new LoginData() { clientId = data.clientId, clientName = client.player.name }, DeliveryMethod.ReliableOrdered);
         });
     }
 }

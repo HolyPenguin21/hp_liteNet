@@ -144,7 +144,7 @@ public static class SaveLoad
                 bool isHero = someHexData.charIsHero;
                 
                 //yield return GameMain.inst.Server_CreateCharacter(hex, charId, ownerName, isHero);
-		        yield return new WaitUntil(() => GameMain.inst.taskManager.serverReady.ready);
+		        yield return new WaitUntil(() => GameMain.inst.server.player.isAvailable);
 
                 // Character Items
                 if(someHexData.charItemId != 0)

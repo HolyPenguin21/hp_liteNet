@@ -199,6 +199,19 @@ public static class Utility
         return initialList.Find(x => x.name == someName);
     }
 
+    public static bool AreAllPlayersAvailable()
+    {
+        for (int x = 0; x < GameMain.inst.server.players.Count; x++)
+        {
+            Player somePlayer = GameMain.inst.server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            if (!somePlayer.isAvailable) return false;
+        }
+
+        return true;
+    }
+
     //public static void LoadScene_byString(string sceneName)
     //{
     //    SceneManager.LoadScene(sceneName);

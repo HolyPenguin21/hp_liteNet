@@ -59,4 +59,23 @@ public class ServerSubscriptions
             server.StartCoroutine(GameMain.inst.Server_ChatMessage(data));
         });
     }
+
+    public void ResponsOnTaskDone()
+    {
+        netProcessor.SubscribeReusable<TaskDone>((data) => {
+            Debug.Log("Server > " + data.playerName + " finished task : " + data.task);
+
+            for (int x = 0; x < server.players.Count; x++)
+            {
+                Player somePlayer = server.players[x];
+                if (somePlayer.isServer) continue;
+
+                if (somePlayer.name == data.playerName)
+                    somePlayer.isAvailable = true;
+            }
+
+            if (Utility.AreAllPlayersAvailable())
+                server.player.isAvailable = true;
+        });
+    }
 }

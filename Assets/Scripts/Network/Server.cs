@@ -32,6 +32,7 @@ public class Server : MonoBehaviour
         // Add server player
         player.id = 0;
         player.isServer = true;
+        player.isAvailable = true;
         player.name = hostName;
         players.Add(player);
 
@@ -81,6 +82,7 @@ public class Server : MonoBehaviour
         sSubscription.RaceChange();
         sSubscription.ResponceOnLogin();
         sSubscription.ChatMessage();
+        sSubscription.ResponsOnTaskDone();
     }
 
     private void Update()
