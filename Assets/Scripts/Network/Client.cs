@@ -53,8 +53,14 @@ public class Client : MonoBehaviour
         cSubscription.SceneChange();
         cSubscription.CrNeutralPlayer();
         cSubscription.CrCharacter();
-        cSubscription.CrItem();
         cSubscription.UpdData();
+        cSubscription.SetCameraToHero();
+        cSubscription.EndTurn();
+        cSubscription.Move();
+        cSubscription.CapVillage();
+        cSubscription.ItemCreate();
+        cSubscription.ItemPickup();
+        cSubscription.ItemDrop();
     }
 
     private void Update()

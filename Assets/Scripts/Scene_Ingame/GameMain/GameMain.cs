@@ -112,6 +112,10 @@ public class GameMain : MonoBehaviour
         yield return Server_CreateItem(hex2, 2); // Server is blocked
 
         yield return Server_UpdateData();
+
+        yield return Server_ChangeTurn();
+
+        yield return Server_SetCamera_ToHero();
     }
 
     private IEnumerator Load()
@@ -126,6 +130,315 @@ public class GameMain : MonoBehaviour
 
         yield return null;
     }
+
+    #region Capture village
+    public IEnumerator Server_Village_SetOwner(Hex someHex, Player owner)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        if (someHex.villageOwner.name == "")
+        {
+            someHex.villageOwner = owner;
+            Utility.Get_Client_byString(owner.name, server.players).villages++;
+        }
+        else
+        {
+            Utility.Get_Client_byString(someHex.villageOwner.name, server.players).villages--;
+            someHex.villageOwner = owner;
+            Utility.Get_Client_byString(owner.name, server.players).villages++;
+        }
+
+        Utility.Set_OwnerColor(someHex.transform, owner);
+
+        CaptureVillage captureVillage = new CaptureVillage();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(someHex);
+        captureVillage.coord_x = gridCoord.coord_x;
+        captureVillage.coord_y = gridCoord.coord_y;
+        captureVillage.ownerName = someHex.villageOwner.name;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, captureVillage, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    private IEnumerator Server_CaptureVillage(Hex someHex)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character character = someHex.character;
+        character.charMovement.movePoints_cur = 0;
+
+        if (Utility.IsMyCharacter(character))
+            GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(someHex);
+
+        if (someHex.villageOwner.name == "")
+        {
+            someHex.villageOwner = character.owner;
+            Utility.Get_Client_byString(character.owner.name, server.players).villages++;
+        }
+        else
+        {
+            Utility.Get_Client_byString(someHex.villageOwner.name, server.players).villages--;
+            someHex.villageOwner = character.owner;
+            Utility.Get_Client_byString(character.owner.name, server.players).villages++;
+        }
+
+        Utility.Set_OwnerColor(someHex.transform, character.owner);
+
+        CaptureVillage captureVillage = new CaptureVillage();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(someHex);
+        captureVillage.coord_x = gridCoord.coord_x;
+        captureVillage.coord_y = gridCoord.coord_y;
+        captureVillage.ownerName = someHex.villageOwner.name;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, captureVillage, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_CaptureVillage(CaptureVillage capVillage)
+    {
+        Hex someHex = gridManager.Get_GridItem_ByCoords(capVillage.coord_x, capVillage.coord_y).hex;
+        if (someHex.character != null)
+        {
+            someHex.character.charMovement.movePoints_cur = 0;
+
+            if (Utility.IsMyCharacter(someHex.character))
+                GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(someHex);
+        }
+
+        someHex.villageOwner = Utility.Get_Client_byString(capVillage.ownerName, client.players);
+        Utility.Set_OwnerColor(someHex.transform, someHex.villageOwner);
+
+        yield return Reply_TaskDone("Village owner changed");
+    }
+    #endregion
+
+    #region Move
+    public void Request_Move(List<Hex> somePath)
+    {
+        if (somePath == null) return;
+        if (somePath.Count == 0) return;
+
+        Character character = somePath[0].character;
+        if (!character.canAct || character.charMovement.movePoints_cur < 1) return;
+
+        Move move = new Move();
+        List<Utility.GridCoord> list = gridManager.Get_CoordPath(somePath);
+        for (int i = 0; i < list.Count; i++)
+        {
+            move.pathData += "|";
+            move.pathData += list[i].coord_x + ";";
+            move.pathData += list[i].coord_y;
+        }
+
+        client.netProcessor.Send(client.network.GetPeerById(0), move, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_Move(List<Hex> somePath)
+    {
+        if (somePath == null) yield break;
+
+        Character someCharacter = somePath[0].character;
+        yield return On_Move(someCharacter, somePath);
+
+        if (someCharacter.hex.isVillage && someCharacter.hex.villageOwner != someCharacter.owner)
+        {
+            yield return Server_CaptureVillage(someCharacter.hex);
+            yield return Server_UpdateData(); // Server is blocked
+        }
+
+        if (someCharacter.hex.item != null && someCharacter.charItem == null)
+        {
+            yield return Server_PickupItem(someCharacter); // Server is blocked
+        }
+    }
+
+    private IEnumerator On_Move(Character someCharacter, List<Hex> somePath)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        List<Hex> realPath = pathfinding.Get_RealPath(somePath);
+        someCharacter.charMovement.movePoints_cur -= pathfinding.Get_PathCost_FromNext(realPath);
+
+        Move move = new Move();
+        move.mpLeft = someCharacter.charMovement.movePoints_cur;
+        List<Utility.GridCoord> list = gridManager.Get_CoordPath(somePath);
+        for (int i = 0; i < list.Count; i++)
+        {
+            move.pathData += "|";
+            move.pathData += list[i].coord_x + ";";
+            move.pathData += list[i].coord_y;
+        }
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, move, DeliveryMethod.ReliableOrdered);
+        }
+
+        yield return someCharacter.Move(realPath);
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_Move(int mpLeft, List<Hex> somePath)
+    {
+        Character character = somePath[0].character;
+        character.charMovement.movePoints_cur = mpLeft;
+        yield return character.Move(somePath);
+
+        yield return Reply_TaskDone("Character move");
+    }
+    #endregion
+
+    #region End turn
+    public void Request_EndTurn(EndTurn endTurn)
+    {
+        client.netProcessor.Send(client.network.GetPeerById(0), endTurn, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_ChangeTurn()
+    {
+        yield return Server_EndTurn();
+
+        yield return NeutralsTurn();
+    }
+
+    private IEnumerator Server_EndTurn()
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        if (currentTurn.name == "")
+        {
+            currentTurn = server.players[Random.Range(0, server.players.Count)];
+        }
+        else
+        {
+            int curTurnPlayerId = server.players.FindIndex((Player x) => x.name == currentTurn.name);
+            curTurnPlayerId++;
+            if (curTurnPlayerId > server.players.Count - 1)
+            {
+                curTurnPlayerId = 0;
+            }
+            currentTurn = server.players[curTurnPlayerId];
+
+            int incomeOnTurn = server.players[curTurnPlayerId].villages * Utility.villageIncome;
+            server.players[curTurnPlayerId].gold += incomeOnTurn;
+
+            yield return Server_UpdateData();
+        }
+
+        yield return End_Turn(currentTurn.name);
+
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        EndTurn endTurn = new EndTurn();
+        endTurn.playerName = currentTurn.name;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, endTurn, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_EndTurn(string clientName)
+    {
+        yield return End_Turn(clientName);
+
+        yield return Reply_TaskDone("End turn");
+    }
+
+    private IEnumerator End_Turn(string clientName)
+    {
+        if (Utility.IsServer())
+        {
+            currentTurn = Utility.Get_Client_byString(clientName, server.players);
+            if (currentTurn == server.players[0])
+                daytime.Update_DayTime();
+        }
+        else
+        {
+            currentTurn = Utility.Get_Client_byString(clientName, client.players);
+            if (currentTurn == client.players[0])
+                daytime.Update_DayTime();
+        }
+
+        uiIngame.Update_PlayerInfoPanel();
+
+        for (int i = 0; i < allCharacters.Count; i++)
+        {
+            Character character = allCharacters[i];
+            if (character.owner == currentTurn)
+            {
+                character.OnMyTurnUpdate();
+            }
+            else
+            {
+                character.OnEnemyTurnUpdate();
+            }
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator NeutralsTurn()
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        if (currentTurn.name != "Neutrals") yield break;
+
+        yield return aiNeutrals.Ai_Logic();
+        yield return Server_EndTurn();
+
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+    #endregion
+
+    #region Set camera
+    private IEnumerator Server_SetCamera_ToHero()
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Vector3 camPos_Hero = server.players[0].heroCharacter.hex.transform.position;
+        GameObject.Find("Main Camera").transform.position = camPos_Hero;
+
+        SetCameraToHero camToHero = new SetCameraToHero();
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, camToHero, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_SetCamera_ToHero()
+    {
+        Vector3 camPos_Hero = client.players[1].heroCharacter.hex.transform.position;
+        GameObject.Find("Main Camera").transform.position = camPos_Hero;
+
+        yield return Reply_TaskDone("Set camera to hero");
+    }
+    #endregion
 
     #region Update data
     public IEnumerator Server_UpdateData()
@@ -195,7 +508,7 @@ public class GameMain : MonoBehaviour
         createAt.Add_Item(Get_Item_ById(itemId));
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(createAt);
-        CreateItem someItem = new CreateItem();
+        ItemCreate someItem = new ItemCreate();
         someItem.coord_x = gridCoord.coord_x;
         someItem.coord_y = gridCoord.coord_y;
         someItem.itemId = itemId;
@@ -211,13 +524,95 @@ public class GameMain : MonoBehaviour
         yield return new WaitUntil(() => server.player.isAvailable);
     }
 
-    public IEnumerator Client_CreateItem(CreateItem someItem)
+    public IEnumerator Client_CreateItem(ItemCreate someItem)
     {
         Hex createAt = gridManager.Get_GridItem_ByCoords(someItem.coord_x, someItem.coord_y).hex;
 
         createAt.Add_Item(Get_Item_ById(someItem.itemId));
 
         yield return Reply_TaskDone("Create item");
+    }
+    #endregion
+
+    #region Item - Pickup
+    public void Request_PickupItem(Character character)
+    {
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemPickup pickItem = new ItemPickup();
+        pickItem.coord_x = gridCoord.coord_x;
+        pickItem.coord_y = gridCoord.coord_y;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), pickItem, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_PickupItem(Character character)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        character.Item_PickUp(character.hex);
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemPickup pickItem = new ItemPickup();
+        pickItem.coord_x = gridCoord.coord_x;
+        pickItem.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, pickItem, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_PickupItem(ItemPickup pickItem)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(pickItem.coord_x, pickItem.coord_y).hex.character;
+        character.Item_PickUp(character.hex);
+
+        yield return Reply_TaskDone("Item picked up");
+    }
+    #endregion
+
+    #region Item - Drop
+    public void Request_DropItem(Character character)
+    {
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemDrop itemDrop = new ItemDrop();
+        itemDrop.coord_x = gridCoord.coord_x;
+        itemDrop.coord_y = gridCoord.coord_y;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), itemDrop, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_DropItem(Character character)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        character.Item_Drop();
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemDrop itemDrop = new ItemDrop();
+        itemDrop.coord_x = gridCoord.coord_x;
+        itemDrop.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, itemDrop, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_DropItem(ItemDrop itemDrop)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(itemDrop.coord_x, itemDrop.coord_y).hex.character;
+        character.Item_Drop();
+
+        yield return Reply_TaskDone("Item droped");
     }
     #endregion
 

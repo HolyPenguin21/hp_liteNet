@@ -201,14 +201,10 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Button_EndTurn()
 	{
-		//if (Utility.IsServer())
-		//{
-		//	StartCoroutine(GameMain.inst.Server_ChangeTurn());
-		//}
-		//else
-		//{
-		//	GameMain.inst.Request_EndTurn();
-		//}
+		if (Utility.IsServer())
+			StartCoroutine(GameMain.inst.Server_ChangeTurn());
+		else
+			GameMain.inst.Request_EndTurn(new EndTurn());
 
 		Recruit_CloseMenu();
 		Hide_AttackPanel();
@@ -228,7 +224,7 @@ public class UI_Ingame : MonoBehaviour
 
         pInfo_Gold_Text.text = "" + player.gold;
         pInfo_Vilage_Text.text = "" + player.villages;
-        pInfo_Income_Text.text = "+" + player.villages * 3;
+        pInfo_Income_Text.text = "+" + player.villages * Utility.villageIncome;
         pInfo_Daytime_Text.text = "" + GameMain.inst.dayTime_cur;
 
 		if(Utility.IsMyTurn())

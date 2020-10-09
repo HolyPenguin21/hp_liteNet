@@ -15,6 +15,45 @@ public class ServerSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void ItemDrop()
+    {
+        netProcessor.SubscribeReusable<ItemDrop>((data) => {
+            Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.coord_x, data.coord_y).hex.character;
+            server.StartCoroutine(GameMain.inst.Server_DropItem(character));
+        });
+    }
+
+    public void ItemPickup()
+    {
+        netProcessor.SubscribeReusable<ItemPickup>((data) => {
+            Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.coord_x, data.coord_y).hex.character;
+            server.StartCoroutine(GameMain.inst.Server_PickupItem(character));
+        });
+    }
+
+    public void Move()
+    {
+        netProcessor.SubscribeReusable<Move>((data) => {
+            List<Hex> somePath = new List<Hex>();
+            string[] pathData = data.pathData.Split('|');
+            for (int j = 1; j < pathData.Length; j++)
+            {
+                string[] hexCoords = pathData[j].Split(';');
+                int posX = int.Parse(hexCoords[0]);
+                int posY = int.Parse(hexCoords[1]);
+                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX, posY).hex);
+            }
+            server.StartCoroutine(GameMain.inst.Server_Move(somePath));
+        });
+    }
+
+    public void EndTurn()
+    {
+        netProcessor.SubscribeReusable<EndTurn>((data) => {
+            server.StartCoroutine(GameMain.inst.Server_ChangeTurn());
+        });
+    }
+
     public void RaceChange()
     {
         netProcessor.SubscribeReusable<RaceChange>((data) => {

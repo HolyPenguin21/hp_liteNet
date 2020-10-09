@@ -83,6 +83,10 @@ public class Server : MonoBehaviour
         sSubscription.ResponceOnLogin();
         sSubscription.ChatMessage();
         sSubscription.ResponsOnTaskDone();
+        sSubscription.EndTurn();
+        sSubscription.Move();
+        sSubscription.ItemPickup();
+        sSubscription.ItemDrop();
     }
 
     private void Update()

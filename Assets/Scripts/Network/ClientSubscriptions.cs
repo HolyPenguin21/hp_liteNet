@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -15,6 +16,68 @@ public class ClientSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void ItemDrop()
+    {
+        netProcessor.SubscribeReusable<ItemDrop>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_DropItem(data));
+        });
+    }
+
+    public void ItemPickup()
+    {
+        netProcessor.SubscribeReusable<ItemPickup>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_PickupItem(data));
+        });
+    }
+
+    public void CapVillage()
+    {
+        netProcessor.SubscribeReusable<CaptureVillage>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CaptureVillage(data));
+        });
+    }
+
+    public void Move()
+    {
+        netProcessor.SubscribeReusable<Move>((data) => {
+            client.player.isAvailable = false;
+
+            string[] pathData = data.pathData.Split('|');
+            List<Hex> somePath = new List<Hex>();
+            for (int j = 1; j < pathData.Length; j++)
+            {
+                string[] hexCoords = pathData[j].Split(';');
+                int posX3 = int.Parse(hexCoords[0]);
+                int posY3 = int.Parse(hexCoords[1]);
+                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX3, posY3).hex);
+            }
+            client.StartCoroutine(GameMain.inst.Client_Move(data.mpLeft, somePath));
+        });
+    }
+
+    public void EndTurn()
+    {
+        netProcessor.SubscribeReusable<EndTurn>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_EndTurn(data.playerName));
+        });
+    }
+
+    public void SetCameraToHero()
+    {
+        netProcessor.SubscribeReusable<SetCameraToHero>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_SetCamera_ToHero());
+        });
+    }
 
     public void UpdData()
     {
@@ -25,9 +88,9 @@ public class ClientSubscriptions
         });
     }
 
-    public void CrItem()
+    public void ItemCreate()
     {
-        netProcessor.SubscribeReusable<CreateItem>((data) => {
+        netProcessor.SubscribeReusable<ItemCreate>((data) => {
             client.player.isAvailable = false;
 
             client.StartCoroutine(GameMain.inst.Client_CreateItem(data));

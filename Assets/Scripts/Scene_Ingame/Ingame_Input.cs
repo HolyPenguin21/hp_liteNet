@@ -78,14 +78,14 @@ public class Ingame_Input : MonoBehaviour
     public void OnDoubleClick()
     {
         if (mouseOverUI) return;
-  //      if (Utility.IsServer())
-		//{
-		//	if (!GameMain.inst.taskManager.serverReady.ready) return;
-		//}
-		//else
-		//{
-  //          if (GameMain.inst.client.currentTask != 0) return;
-		//}
+        if (Utility.IsServer())
+        {
+            if (!GameMain.inst.server.player.isAvailable) return;
+        }
+        else
+        {
+            if (!GameMain.inst.client.player.isAvailable) return;
+        }
 
         MouseInput_DoubleClick();
     }
@@ -94,14 +94,14 @@ public class Ingame_Input : MonoBehaviour
     {
         if (mouseOverUI) return;
         if (castingSpell) return;
-  //      if (Utility.IsServer())
-		//{
-		//	if (!GameMain.inst.taskManager.serverReady.ready) return;
-		//}
-		//else
-		//{
-  //          if (GameMain.inst.client.currentTask != 0) return;
-		//}
+        if (Utility.IsServer())
+        {
+            if (!GameMain.inst.server.player.isAvailable) return;
+        }
+        else
+        {
+            if (!GameMain.inst.client.player.isAvailable) return;
+        }
 
         Hex clickedHex = HittedObject();
         if (clickedHex == null) return;
@@ -234,10 +234,10 @@ public class Ingame_Input : MonoBehaviour
                         {
                             if (character.charMovement.movePoints_cur > 0)
                             {
-                                //if (Utility.IsServer())
-                                //    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
-                                //else
-                                //    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+                                if (Utility.IsServer())
+                                    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
+                                else
+                                    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
 
                                 pathfinding.Hide_Path();
                             }
@@ -256,10 +256,10 @@ public class Ingame_Input : MonoBehaviour
                 }
                 else if (character.charMovement.movePoints_cur > 0)
                 {
-                    //if (Utility.IsServer())
-                    //    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
-                    //else
-                    //    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+                    if (Utility.IsServer())
+                        StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
+                    else
+                        GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
 
                     pathfinding.Hide_Path();
                 }
