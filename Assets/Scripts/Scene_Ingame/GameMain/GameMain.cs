@@ -131,6 +131,35 @@ public class GameMain : MonoBehaviour
         yield return null;
     }
 
+    #region Recruit
+    public void Request_Recruit(Hex createAt, int characterId, string ownerName, int cost)
+    {
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(createAt);
+        RecruitCharacter recruit = new RecruitCharacter();
+        recruit.coord_x = gridCoord.coord_x;
+        recruit.coord_y = gridCoord.coord_y;
+        recruit.characterId = characterId;
+        recruit.ownerName = ownerName;
+        recruit.characterCost = cost;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), recruit, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_Recruit(Hex createAt, int characterId, string ownerName, int cost)
+    {
+        yield return Server_RemoveGold(ownerName, cost);
+        yield return Server_CreateCharacter(createAt, characterId, ownerName, isHero: false);
+    }
+    #endregion
+
+    #region Remove gold
+    public IEnumerator Server_RemoveGold(string clientName, int amount)
+    {
+        Utility.Get_Client_byString(clientName, server.players).gold -= amount;
+        yield return Server_UpdateData();
+    }
+    #endregion
+
     #region Capture village
     public IEnumerator Server_Village_SetOwner(Hex someHex, Player owner)
     {
@@ -273,7 +302,7 @@ public class GameMain : MonoBehaviour
 
         Move move = new Move();
         move.mpLeft = someCharacter.charMovement.movePoints_cur;
-        List<Utility.GridCoord> list = gridManager.Get_CoordPath(somePath);
+        List<Utility.GridCoord> list = gridManager.Get_CoordPath(realPath);
         for (int i = 0; i < list.Count; i++)
         {
             move.pathData += "|";
@@ -408,6 +437,32 @@ public class GameMain : MonoBehaviour
         yield return Server_EndTurn();
 
         yield return new WaitUntil(() => server.player.isAvailable);
+    }
+    #endregion
+
+    #region Set current turn
+    public IEnumerator Server_SetCurTurn()
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        SetCurrentTurn setTurn = new SetCurrentTurn();
+        setTurn.name = currentTurn.name;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, setTurn, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_SetCurTurn(SetCurrentTurn setTurn)
+    {
+        currentTurn = Utility.Get_Client_byString(setTurn.name, client.players);
+
+        yield return Reply_TaskDone("Current turn is setted.");
     }
     #endregion
 
@@ -616,6 +671,130 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
+    #region Item - Use
+    public void Request_UseItem(Character character)
+    {
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemUse itemUse = new ItemUse();
+        itemUse.coord_x = gridCoord.coord_x;
+        itemUse.coord_y = gridCoord.coord_y;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), itemUse, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_UseItem_Logic(Character character)
+    {
+        yield return Server_UseItem(character);
+
+        yield return Server_BlockActions(character);
+
+        if (character.charItem.itemOneTime)
+            yield return Server_RemoveItem(character);
+
+        yield return null;
+    }
+
+    private IEnumerator Server_UseItem(Character character)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        character.Item_Use();
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemUse itemUse = new ItemUse();
+        itemUse.coord_x = gridCoord.coord_x;
+        itemUse.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, itemUse, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_UseItem(ItemUse itemUse)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(itemUse.coord_x, itemUse.coord_y).hex.character;
+        character.Item_Use();
+
+        yield return Reply_TaskDone("Item used");
+    }
+    #endregion
+
+    #region Item - Remove
+    private IEnumerator Server_RemoveItem(Character character)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        character.Item_Remove();
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        ItemRemove itemRemove = new ItemRemove();
+        itemRemove.coord_x = gridCoord.coord_x;
+        itemRemove.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, itemRemove, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_RemoveItem(ItemRemove itemRemove)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(itemRemove.coord_x, itemRemove.coord_y).hex.character;
+        character.Item_Remove();
+
+        yield return Reply_TaskDone("Item removed");
+    }
+    #endregion
+
+    #region Block actions
+    public IEnumerator Server_BlockActions(Character someCharacter)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        someCharacter.canAct = false;
+        someCharacter.charMovement.movePoints_cur = 0;
+
+        if (Utility.IsMyCharacter(someCharacter))
+            fog.Show_MoveHexes(someCharacter);
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(someCharacter.hex);
+        BlockActions blockActions = new BlockActions();
+        blockActions.coord_x = gridCoord.coord_x;
+        blockActions.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, blockActions, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_BlockActions(BlockActions blockActions)
+    {
+        Character someCharacter = gridManager.Get_GridItem_ByCoords(blockActions.coord_x, blockActions.coord_y).hex.character;
+
+        someCharacter.canAct = false;
+        someCharacter.charMovement.movePoints_cur = 0;
+
+        if (Utility.IsMyCharacter(someCharacter))
+            fog.Show_MoveHexes(someCharacter);
+
+        yield return Reply_TaskDone("Character actions are blocked");
+    }
+    #endregion
+
     #region Create character
     public IEnumerator Server_CreateCharacter(Hex createAt, int characterId, string ownerName, bool isHero)
     {
@@ -651,6 +830,49 @@ public class GameMain : MonoBehaviour
         fog.Update_Fog();
 
         yield return Reply_TaskDone("Create character");
+    }
+    #endregion
+
+    #region Character - Set Vars
+    public IEnumerator Server_Character_SetVars(Hex hex, bool canAct, int hp, int mp, int exp)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character character = hex.character;
+        character.canAct = canAct;
+        character.charHp.hp_cur = hp;
+        character.charMovement.movePoints_cur = mp;
+        character.charExp.exp_cur = exp;
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(hex);
+        SetCharacterVars setVars = new SetCharacterVars();
+        setVars.coord_x = gridCoord.coord_x;
+        setVars.coord_y = gridCoord.coord_y;
+        setVars.canAct = canAct;
+        setVars.curHp = hp;
+        setVars.curMp = mp;
+        setVars.curExp = exp;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, setVars, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_Character_SetVars(SetCharacterVars setVars)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(setVars.coord_x, setVars.coord_y).hex.character;
+
+        character.canAct = setVars.canAct;
+        character.charHp.hp_cur = setVars.curHp;
+        character.charMovement.movePoints_cur = setVars.curMp;
+        character.charExp.exp_cur = setVars.curExp;
+
+        yield return Reply_TaskDone("Character stats are set");
     }
     #endregion
 

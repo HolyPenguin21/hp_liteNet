@@ -16,6 +16,33 @@ public class ClientSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void BlockActions()
+    {
+        netProcessor.SubscribeReusable<BlockActions>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_BlockActions(data));
+        });
+    }
+
+    public void ItemRemove()
+    {
+        netProcessor.SubscribeReusable<ItemRemove>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_RemoveItem(data));
+        });
+    }
+
+    public void ItemUse()
+    {
+        netProcessor.SubscribeReusable<ItemUse>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_UseItem(data));
+        });
+    }
+
     public void ItemDrop()
     {
         netProcessor.SubscribeReusable<ItemDrop>((data) => {
@@ -61,6 +88,15 @@ public class ClientSubscriptions
         });
     }
 
+    public void SetCurrentTurn()
+    {
+        netProcessor.SubscribeReusable<SetCurrentTurn>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_SetCurTurn(data));
+        });
+    }
+
     public void EndTurn()
     {
         netProcessor.SubscribeReusable<EndTurn>((data) => {
@@ -103,6 +139,15 @@ public class ClientSubscriptions
             client.player.isAvailable = false;
 
             client.StartCoroutine(GameMain.inst.Client_CreateCharacter(data));
+        });
+    }
+
+    public void SetCharVars()
+    {
+        netProcessor.SubscribeReusable<SetCharacterVars>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_Character_SetVars(data));
         });
     }
 

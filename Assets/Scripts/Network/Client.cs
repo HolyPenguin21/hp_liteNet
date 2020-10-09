@@ -56,11 +56,16 @@ public class Client : MonoBehaviour
         cSubscription.UpdData();
         cSubscription.SetCameraToHero();
         cSubscription.EndTurn();
+        cSubscription.SetCurrentTurn();
         cSubscription.Move();
         cSubscription.CapVillage();
         cSubscription.ItemCreate();
         cSubscription.ItemPickup();
         cSubscription.ItemDrop();
+        cSubscription.ItemUse();
+        cSubscription.ItemRemove();
+        cSubscription.BlockActions();
+        cSubscription.SetCharVars();
     }
 
     private void Update()

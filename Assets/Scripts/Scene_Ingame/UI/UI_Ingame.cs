@@ -422,11 +422,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Button_Item_Pickup()
 	{
 		if(!Utility.IsMyTurn()) return;
-        
-   //     if(Utility.IsServer())
-   //        StartCoroutine(GameMain.inst.Server_PickupItem(ingameInput.selectedHex.character));
-   //     else
-			//GameMain.inst.Request_PickupItem(ingameInput.selectedHex.character);
+
+		if (Utility.IsServer())
+			StartCoroutine(GameMain.inst.Server_PickupItem(ingameInput.selectedHex.character));
+		else
+			GameMain.inst.Request_PickupItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -435,11 +435,11 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if(!Utility.IsMyTurn()) return;
 		if(!ingameInput.selectedHex.character.canAct) return;
-        
-   //     if(Utility.IsServer())
-   //        StartCoroutine(GameMain.inst.Server_UseItem_Logic(ingameInput.selectedHex.character));
-   //     else
-			//GameMain.inst.Request_UseItem(ingameInput.selectedHex.character);
+
+		if (Utility.IsServer())
+			StartCoroutine(GameMain.inst.Server_UseItem_Logic(ingameInput.selectedHex.character));
+		else
+			GameMain.inst.Request_UseItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -448,10 +448,10 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if(!Utility.IsMyTurn()) return;
 
-   //     if(Utility.IsServer())
-   //        StartCoroutine(GameMain.inst.Server_DropItem(ingameInput.selectedHex.character));
-   //     else
-			//GameMain.inst.Request_DropItem(ingameInput.selectedHex.character);
+		if (Utility.IsServer())
+			StartCoroutine(GameMain.inst.Server_DropItem(ingameInput.selectedHex.character));
+		else
+			GameMain.inst.Request_DropItem(ingameInput.selectedHex.character);
 
 		ingameInput.mouseOverUI = false;
 	}
@@ -807,14 +807,14 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit()
 	{
 		Recruit_CloseMenu();
-		//if (Utility.IsServer())
-		//{
-		//	StartCoroutine(GameMain.inst.Server_Recruit(recruitHex, charToRecruit.charId, server.player.name, charToRecruit.charCost));
-		//}
-		//else
-		//{
-		//	GameMain.inst.Request_Recruit(recruitHex, charToRecruit.charId, client.player.name, charToRecruit.charCost);
-		//}
+		if (Utility.IsServer())
+		{
+			StartCoroutine(GameMain.inst.Server_Recruit(recruitHex, charToRecruit.charId, server.player.name, charToRecruit.charCost));
+		}
+		else
+		{
+			GameMain.inst.Request_Recruit(recruitHex, charToRecruit.charId, client.player.name, charToRecruit.charCost);
+		}
 	}
 	#endregion
 

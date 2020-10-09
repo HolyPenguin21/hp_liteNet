@@ -15,6 +15,22 @@ public class ServerSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void RecruitCharacter()
+    {
+        netProcessor.SubscribeReusable<RecruitCharacter>((data) => {
+            Hex createAt = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.coord_x, data.coord_y).hex;
+            server.StartCoroutine(GameMain.inst.Server_Recruit(createAt, data.characterId, data.ownerName, data.characterCost));
+        });
+    }
+
+    public void ItemUse()
+    {
+        netProcessor.SubscribeReusable<ItemUse>((data) => {
+            Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.coord_x, data.coord_y).hex.character;
+            server.StartCoroutine(GameMain.inst.Server_UseItem_Logic(character));
+        });
+    }
+
     public void ItemDrop()
     {
         netProcessor.SubscribeReusable<ItemDrop>((data) => {

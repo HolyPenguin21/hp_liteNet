@@ -87,6 +87,8 @@ public class Server : MonoBehaviour
         sSubscription.Move();
         sSubscription.ItemPickup();
         sSubscription.ItemDrop();
+        sSubscription.ItemUse();
+        sSubscription.RecruitCharacter();
     }
 
     private void Update()

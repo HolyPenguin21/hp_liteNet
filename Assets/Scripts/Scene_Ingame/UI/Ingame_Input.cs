@@ -298,7 +298,7 @@ public class Ingame_Input : MonoBehaviour
         }        
 
         if(clickedHex.rootCastle == null) return;
-        if(clickedHex.rootCastle.character == null || !clickedHex.rootCastle.character.heroCharacter) return;
+        if(clickedHex.rootCastle.character == null || !clickedHex.rootCastle.character.heroCharacter || !Utility.IsMyCharacter(clickedHex.rootCastle.character)) return;
         if(clickedHex.character != null) return;
 
         GameObject.Find("UI").GetComponent<UI_Ingame>().Recruit_OpenMenu(clickedHex);
