@@ -198,10 +198,10 @@ public class Ingame_Input : MonoBehaviour
         {
             if(GameMain.inst.spellData.InRange(selectedHex, spell_HexConcerned[0], spell_Active))
             {
-                //if (Utility.IsServer())
-                //    StartCoroutine(GameMain.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
-                //else
-                //    GameMain.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
+                if (Utility.IsServer())
+                    StartCoroutine(GameMain.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
+                else
+                    GameMain.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
             }
 
             Spellcasting_Cancel();
@@ -221,7 +221,7 @@ public class Ingame_Input : MonoBehaviour
                         {
                             if (character.canAct)
                             {
-                                //GameMain.inst.Try_Attack(selectedHex, clickedHex);
+                                GameMain.inst.Try_Attack(selectedHex, clickedHex);
                                 pathfinding.Hide_Path();
                             }
                             else

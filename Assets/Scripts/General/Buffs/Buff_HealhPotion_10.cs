@@ -15,8 +15,9 @@ public class Buff_HealhPotion_10 : Buff
     public override void Buff_Activate(Character character)
     {
         character.charHp.hp_cur += 10;
+        GameMain.inst.effectsData.Effect_VillageHeal(character.tr.position, 10);
 
-        if(character.charHp.hp_cur > character.charHp.hp_max)
+        if (character.charHp.hp_cur > character.charHp.hp_max)
             character.charHp.hp_cur = character.charHp.hp_max;
     }
 

@@ -22,7 +22,6 @@ public class EarthSpike : Spell
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        //yield return GameMain.inst.Server_SpellDamage(casterHex, hex, spellDmg); // Server is blocked
-        yield return null;
+        yield return GameMain.inst.Server_SpellDamage(casterHex, hex, spellDmg);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LiteNetLib;
 using UnityEngine;
@@ -21,7 +22,6 @@ public class GameMain : MonoBehaviour
     public Utility.dayTime dayTime_cur = Utility.dayTime.night2;
     #endregion
 
-    //private ServerOrders sOrders;
     public GridManager gridManager;
     private UI_Ingame uiIngame;
 
@@ -111,6 +111,7 @@ public class GameMain : MonoBehaviour
         hex2 = gridManager.Get_GridItem_ByCoords(8, 10).hex;
         yield return Server_CreateItem(hex2, 2); // Server is blocked
 
+
         yield return Server_UpdateData();
 
         yield return Server_ChangeTurn();
@@ -130,6 +131,522 @@ public class GameMain : MonoBehaviour
 
         yield return null;
     }
+
+    #region Attack
+    public void Try_Attack(Hex attacker, Hex target)
+    {
+        List<Hex> list = new List<Hex>(pathfinding.Get_Path(attacker, target));
+        Character character = attacker.character;
+        if (list.Count <= 2 || (character.charMovement.movePoints_cur != 0 && character.charMovement.movePoints_cur >= list[1].moveCost))
+        {
+            uiIngame.Show_AttackPanel(list);
+        }
+    }
+
+    public void Request_Attack(List<Hex> somePath, int attackId)
+    {
+        Attack attack = new Attack();
+        attack.attackId = attackId;
+        List<Utility.GridCoord> coordPath = gridManager.Get_CoordPath(somePath);
+        for (int i = 0; i < coordPath.Count; i++)
+        {
+            attack.path += "|";
+            attack.path += coordPath[i].coord_x + ";";
+            attack.path += coordPath[i].coord_y;
+        }
+
+        client.netProcessor.Send(client.network.GetPeerById(0), attack, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_Attack(List<Hex> somePath, int attackId)
+    {
+        Character a_Character = somePath[0].character;
+        List<Utility.char_Attack> a_Attack = a_Character.charAttacks;
+
+        Character t_Character = somePath[somePath.Count - 1].character;
+        List<Utility.char_Attack> t_Attack = t_Character.charAttacks;
+
+        somePath.RemoveAt(somePath.Count - 1);
+        if (somePath.Count > 1)
+        {
+            yield return Server_Move(somePath);
+        }
+
+        if (!Utility.InAttackRange(a_Character.hex, t_Character.hex)) yield break;
+
+        yield return Server_BlockActions(a_Character); // server blocked
+
+        int attacksCount_attacker = 0;
+        if (a_Attack.Count > attackId)
+            attacksCount_attacker = a_Attack[attackId].attackCount;
+
+        int attacksCount_target = 0;
+        if (t_Attack.Count > attackId)
+            attacksCount_target = t_Attack[attackId].attackCount;
+
+        while (attacksCount_attacker > 0 || attacksCount_target > 0)
+        {
+            if (attacksCount_attacker > 0)
+            {
+                attacksCount_attacker--;
+                yield return Server_AttackAnim(a_Character.hex, t_Character.hex, attackId);
+                yield return Server_AttackResult(a_Character, t_Character, attackId);
+
+                if (t_Character.charHp.hp_cur <= 0)
+                {
+                    yield return Server_Die(t_Character.hex);
+                    yield return Server_AddExp(a_Character.hex, 3);
+                    break;
+                }
+                yield return Server_AddExp(a_Character.hex, 1);
+            }
+            if (attacksCount_target > 0)
+            {
+                attacksCount_target--;
+                yield return Server_AttackAnim(t_Character.hex, a_Character.hex, attackId);
+                yield return Server_AttackResult(t_Character, a_Character, attackId);
+
+                if (a_Character.charHp.hp_cur <= 0)
+                {
+                    yield return Server_Die(a_Character.hex);
+                    yield return Server_AddExp(t_Character.hex, 3);
+                    break;
+                }
+                yield return Server_AddExp(t_Character.hex, 1);
+            }
+            yield return null;
+        }
+        if (a_Character.charHp.hp_cur > 0 && a_Character.charExp.exp_cur >= a_Character.charExp.exp_max)
+        {
+            yield return Server_LevelUp(a_Character);
+        }
+        if (t_Character.charHp.hp_cur > 0 && t_Character.charExp.exp_cur >= t_Character.charExp.exp_max)
+        {
+            yield return Server_LevelUp(t_Character);
+        }
+        yield return null;
+    }
+    #endregion
+
+    #region Attack anim
+    private IEnumerator Server_AttackAnim(Hex attackerHex, Hex targetHex, int attackId)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        AttackAnimation attackAnimation = new AttackAnimation();
+        Utility.GridCoord aCoords = gridManager.Get_GridCoord_ByHex(attackerHex);
+        Utility.GridCoord tCoords = gridManager.Get_GridCoord_ByHex(targetHex);
+        attackAnimation.a_coord_x = aCoords.coord_x;
+        attackAnimation.a_coord_y = aCoords.coord_y;
+        attackAnimation.t_coord_x = tCoords.coord_x;
+        attackAnimation.t_coord_y = tCoords.coord_y;
+        attackAnimation.attackId = attackId;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, attackAnimation, DeliveryMethod.ReliableOrdered);
+        }
+
+        yield return attackerHex.character.AttackAnimation(targetHex, attackId);
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_AttackAnim(AttackAnimation attackAnimation)
+    {
+        Character a_Character = gridManager.Get_GridItem_ByCoords(attackAnimation.a_coord_x, attackAnimation.a_coord_y).hex.character;
+        Hex tHex = gridManager.Get_GridItem_ByCoords(attackAnimation.t_coord_x, attackAnimation.t_coord_y).hex;
+
+        yield return a_Character.AttackAnimation(tHex, attackAnimation.attackId);
+
+        yield return Reply_TaskDone("Attack animation");
+    }
+    #endregion
+
+    #region Level up
+    private IEnumerator Server_LevelUp(Character character)
+    {
+        if (character.owner.name == "Neutrals" || character.owner != currentTurn || character.upgradeList.Count < 2)
+        {
+            if (character.upgradeList.Count >= 2)
+            {
+                yield return Server_UpgradeCharacter(character, character.upgradeList[UnityEngine.Random.Range(0, character.upgradeList.Count)]);
+            }
+            else if (character.upgradeList.Count == 1)
+            {
+                yield return Server_UpgradeCharacter(character, character.upgradeList[0]);
+            }
+            else
+            {
+                yield return Server_UpgradeCharacter(character, character.charId);
+            }
+        }
+        else if (character.owner.name == server.player.name)
+        {
+            uiIngame.Show_LevelupPanel(character);
+            yield return null;
+        }
+        else
+        {
+            if (server.players.Count > 2) server.player.isAvailable = false;
+
+            OpenUpgradeMenu upgradeMenu = new OpenUpgradeMenu();
+            Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+            upgradeMenu.coord_x = gridCoord.coord_x;
+            upgradeMenu.coord_y = gridCoord.coord_y;
+            for (int x = 0; x < server.players.Count; x++)
+            {
+                Player somePlayer = server.players[x];
+                if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+                somePlayer.isAvailable = false;
+                yield return server.netProcessor.Send(server.players[x].address, upgradeMenu, DeliveryMethod.ReliableOrdered);
+            }
+
+            yield return new WaitUntil(() => server.player.isAvailable);
+        }
+    }
+
+    public IEnumerator Server_UpgradeCharacter(Character character, int upgradeId)
+    {
+        string ownerName = character.owner.name;
+        Hex someHex = character.hex;
+        int itemId = 0;
+        if (character.charItem != null)
+        {
+            itemId = character.charItem.itemId;
+        }
+        if (character.charId != upgradeId)
+        {
+            yield return Server_Die(someHex);
+            yield return Server_CreateCharacter(someHex, upgradeId, ownerName, character.heroCharacter);
+            if (itemId != 0)
+            {
+                yield return Server_CreateItem(someHex, itemId);
+                yield return Server_PickupItem(someHex.character);
+            }
+        }
+        else
+        {
+            yield return Server_StatsUp(someHex); // Server is blocked
+        }
+        yield return null;
+    }
+
+    public IEnumerator Client_OpenUpgradeMenu(OpenUpgradeMenu upgradeMenu)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(upgradeMenu.coord_x, upgradeMenu.coord_y).hex.character;
+
+        uiIngame.Show_LevelupPanel(character);
+
+        yield return Reply_TaskDone("Upgrade menu opened");
+    }
+
+    public void Request_UpgradeCharacter(Character character, int upgradeId)
+    {
+        UpgradeCharacter upgrade = new UpgradeCharacter();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
+        upgrade.coord_x = gridCoord.coord_x;
+        upgrade.coord_y = gridCoord.coord_y;
+        upgrade.upgId = upgradeId;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), upgrade, DeliveryMethod.ReliableOrdered);
+    }
+    #endregion
+
+    #region Stats up
+    private IEnumerator Server_StatsUp(Hex hex)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        hex.character.StatsUp();
+
+        StatsUp statsUp = new StatsUp();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(hex);
+        statsUp.coord_x = gridCoord.coord_x;
+        statsUp.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, statsUp, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_StatsUp(StatsUp statsUp)
+    {
+        Character character = gridManager.Get_GridItem_ByCoords(statsUp.coord_x, statsUp.coord_y).hex.character;
+
+        character.StatsUp();
+
+        yield return Reply_TaskDone("Character stats are up");
+    }
+    #endregion
+
+    #region Spellcasting
+    public void Request_CastSpell(Hex charactersHex, Hex spellTargetHex, int spellId)
+    {
+        Utility.GridCoord characterCoords = gridManager.Get_GridCoord_ByHex(charactersHex);
+        Utility.GridCoord targetCoords = gridManager.Get_GridCoord_ByHex(spellTargetHex);
+
+        CastSpell castSpell = new CastSpell();
+        castSpell.casterCoord_x = characterCoords.coord_x;
+        castSpell.casterCoord_y = characterCoords.coord_y;
+        castSpell.targetCoord_x = targetCoords.coord_x;
+        castSpell.targetCoord_y = targetCoords.coord_y;
+        castSpell.spellId = spellId;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), castSpell, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_CastSpell(Hex charactersHex, Hex spellTargetHex, int spellId)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character character = charactersHex.character;
+        Spell spell = spellData.Get_Spell_ById(character, spellId);
+        spell.Use(spellTargetHex.transform.position);
+
+        Utility.GridCoord characterCoords = gridManager.Get_GridCoord_ByHex(charactersHex);
+        Utility.GridCoord targetCoords = gridManager.Get_GridCoord_ByHex(spellTargetHex);
+        CastSpell castSpell = new CastSpell();
+        castSpell.casterCoord_x = characterCoords.coord_x;
+        castSpell.casterCoord_y = characterCoords.coord_y;
+        castSpell.targetCoord_x = targetCoords.coord_x;
+        castSpell.targetCoord_y = targetCoords.coord_y;
+        castSpell.spellId = spellId;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, castSpell, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+
+        yield return Server_BlockActions(character);
+
+        List<Hex> concernedHexes = spellData.Get_ConcernedHexes(spellTargetHex, spellId);
+        for (int x = 0; x < concernedHexes.Count; x++)
+        {
+            yield return spell.ResultingEffect(charactersHex, concernedHexes[x]);
+        }
+    }
+
+    public IEnumerator Client_CastSpell(CastSpell castSpell)
+    {
+        Hex casterHex = gridManager.Get_GridItem_ByCoords(castSpell.casterCoord_x, castSpell.casterCoord_y).hex;
+        Hex targetHex = gridManager.Get_GridItem_ByCoords(castSpell.targetCoord_x, castSpell.targetCoord_y).hex;
+
+        spellData.Get_Spell_ById(casterHex.character, castSpell.spellId).Use(targetHex.transform.position);
+
+        yield return Reply_TaskDone("Cast spell");
+    }
+    #endregion
+
+    #region Spell resulting effect
+    public IEnumerator Server_SpellDamage(Hex casterHex, Hex targetHex, int amount)
+    {
+        if (targetHex.character == null) yield break;
+
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character c = targetHex.character;
+        int resultDmg = Convert.ToInt32((float)amount - (float)amount * c.charDef.magic_resistance);
+        c.RecieveDmg(resultDmg);
+
+        AttackResult attackResult = new AttackResult();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(targetHex);
+        attackResult.coord_x = gridCoord.coord_x;
+        attackResult.coord_y = gridCoord.coord_y;
+        attackResult.amount = resultDmg;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+
+        if (c.charHp.hp_cur <= 0)
+        {
+            yield return Server_Die(targetHex); // Server is blocked
+            yield return Server_AddExp(casterHex, 3); // Server is blocked
+        }
+    }
+
+    public IEnumerator Server_SpellHeal(Hex targetHex, int amount)
+    {
+        if (targetHex.character == null) yield break;
+
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character c = targetHex.character;
+        c.RecieveHeal(amount);
+
+        SpellHeal spellHeal = new SpellHeal();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(targetHex);
+        spellHeal.coord_x = gridCoord.coord_x;
+        spellHeal.coord_y = gridCoord.coord_y;
+        spellHeal.amount = amount;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, spellHeal, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_SpellHeal(SpellHeal spellHeal)
+    {
+        Character c = gridManager.Get_GridItem_ByCoords(spellHeal.coord_x, spellHeal.coord_y).hex.character;
+
+        c.RecieveHeal(spellHeal.amount);
+
+        yield return Reply_TaskDone("Healing done");
+    }
+    #endregion
+
+    #region Add exp
+    private IEnumerator Server_AddExp(Hex charactersHex, int expAmount)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        charactersHex.character.Add_Exp(expAmount);
+
+        AddExp addExp = new AddExp();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charactersHex);
+        addExp.coord_x = gridCoord.coord_x;
+        addExp.coord_y = gridCoord.coord_y;
+        addExp.amount = expAmount;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, addExp, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_AddExp(AddExp addExp)
+    {
+        Character c = gridManager.Get_GridItem_ByCoords(addExp.coord_x, addExp.coord_y).hex.character;
+
+        c.Add_Exp(addExp.amount);
+
+        yield return Reply_TaskDone("Exp added");
+    }
+    #endregion
+
+    #region Die
+    private IEnumerator Server_Die(Hex dieAtHex)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character character = dieAtHex.character;
+        if (character.charItem != null)
+        {
+            yield return Server_DropItem(character);
+        }
+
+        allCharacters.Remove(character);
+        character.hex = null;
+        dieAtHex.character = null;
+        Destroy(character.tr.gameObject);
+
+        CharacterDie characterDie = new CharacterDie();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(dieAtHex);
+        characterDie.coord_x = gridCoord.coord_x;
+        characterDie.coord_y = gridCoord.coord_y;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, characterDie, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_Die(CharacterDie characterDie)
+    {
+        Hex dieAtHex = gridManager.Get_GridItem_ByCoords(characterDie.coord_x, characterDie.coord_y).hex;
+        Character character = dieAtHex.character;
+
+        allCharacters.Remove(character);
+        character.hex = null;
+        dieAtHex.character = null;
+        Destroy(character.tr.gameObject);
+
+        yield return Reply_TaskDone("Character died");
+    }
+    #endregion
+
+    #region Attack result
+    private IEnumerator Server_AttackResult(Character a_Character, Character t_Character, int attackId)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        int attackDmg_cur = a_Character.charAttacks[attackId].attackDmg_cur;
+        int resultDmg = 0;
+        int dodge = t_Character.charDef.dodgeChance + t_Character.hex.dodge;
+        if (UnityEngine.Random.Range(0, 101) > dodge)
+        {
+            resultDmg = attackDmg_cur;
+            switch (a_Character.charAttacks[attackId].attackDmgType)
+            {
+                case Utility.char_attackDmgType.slash:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.slash_resistance);
+                    break;
+                case Utility.char_attackDmgType.pierce:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.pierce_resistance);
+                    break;
+                case Utility.char_attackDmgType.magic:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.magic_resistance);
+                    break;
+            }
+        }
+        t_Character.RecieveDmg(resultDmg);
+
+        AttackResult attackResult = new AttackResult();
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(t_Character.hex);
+        attackResult.coord_x = gridCoord.coord_x;
+        attackResult.coord_y = gridCoord.coord_y;
+        attackResult.amount = resultDmg;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_AttackResult(AttackResult attackResult)
+    {
+        Character t_Character = gridManager.Get_GridItem_ByCoords(attackResult.coord_x, attackResult.coord_y).hex.character;
+
+        t_Character.RecieveDmg(attackResult.amount);
+
+        yield return Reply_TaskDone("Attack result");
+    }
+    #endregion
 
     #region Recruit
     public void Request_Recruit(Hex createAt, int characterId, string ownerName, int cost)
@@ -352,7 +869,7 @@ public class GameMain : MonoBehaviour
 
         if (currentTurn.name == "")
         {
-            currentTurn = server.players[Random.Range(0, server.players.Count)];
+            currentTurn = server.players[UnityEngine.Random.Range(0, server.players.Count)];
         }
         else
         {

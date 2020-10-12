@@ -66,6 +66,14 @@ public class Client : MonoBehaviour
         cSubscription.ItemRemove();
         cSubscription.BlockActions();
         cSubscription.SetCharVars();
+        cSubscription.CastSpell();
+        cSubscription.SpellHeal();
+        cSubscription.AttackResult();
+        cSubscription.CharacterDie();
+        cSubscription.AddExp();
+        cSubscription.AttackAnimation();
+        cSubscription.OpenUpgradeMenu();
+        cSubscription.StatsUp();
     }
 
     private void Update()

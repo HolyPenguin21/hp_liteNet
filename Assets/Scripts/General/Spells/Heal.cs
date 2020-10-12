@@ -22,7 +22,6 @@ public class Heal : Spell
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        //yield return GameMain.inst.Server_SpellHeal(hex, spellDmg); // Server is blocked
-        yield return null;
+        yield return GameMain.inst.Server_SpellHeal(hex, spellDmg);
     }
 }

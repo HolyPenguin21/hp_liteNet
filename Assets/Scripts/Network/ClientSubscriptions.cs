@@ -16,6 +16,78 @@ public class ClientSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void StatsUp()
+    {
+        netProcessor.SubscribeReusable<StatsUp>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_StatsUp(data));
+        });
+    }
+
+    public void AddExp()
+    {
+        netProcessor.SubscribeReusable<AddExp>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_AddExp(data));
+        });
+    }
+
+    public void CharacterDie()
+    {
+        netProcessor.SubscribeReusable<CharacterDie>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_Die(data));
+        });
+    }
+
+    public void OpenUpgradeMenu()
+    {
+        netProcessor.SubscribeReusable<OpenUpgradeMenu>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_OpenUpgradeMenu(data));
+        });
+    }
+
+    public void AttackAnimation()
+    {
+        netProcessor.SubscribeReusable<AttackAnimation>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_AttackAnim(data));
+        });
+    }
+
+    public void AttackResult()
+    {
+        netProcessor.SubscribeReusable<AttackResult>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_AttackResult(data));
+        });
+    }
+
+    public void CastSpell()
+    {
+        netProcessor.SubscribeReusable<CastSpell>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CastSpell(data));
+        });
+    }
+
+    public void SpellHeal()
+    {
+        netProcessor.SubscribeReusable<SpellHeal>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_SpellHeal(data));
+        });
+    }
+
     public void BlockActions()
     {
         netProcessor.SubscribeReusable<BlockActions>((data) => {

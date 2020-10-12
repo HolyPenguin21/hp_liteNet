@@ -291,7 +291,7 @@ public class UI_Ingame : MonoBehaviour
 
 		if (hex.character != null)
 		{
-			if (hex.character.charItem != null)
+			if (hex.character.charItem != null || !Utility.IsMyCharacter(hex.character))
 				hItem_Pickup_Obj.SetActive(false);
 			else
 				hItem_Pickup_Obj.SetActive(true);
@@ -945,14 +945,14 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Attack()
 	{
-		//if (Utility.IsServer())
-		//{
-		//	StartCoroutine(GameMain.inst.Server_Attack(attackPath, selectedAttackId));
-		//}
-		//else
-		//{
-		//	GameMain.inst.Request_Attack(attackPath, selectedAttackId);
-		//}
+		if (Utility.IsServer())
+		{
+			StartCoroutine(GameMain.inst.Server_Attack(attackPath, selectedAttackId));
+		}
+		else
+		{
+			GameMain.inst.Request_Attack(attackPath, selectedAttackId);
+		}
 		Hide_AttackPanel();
 	}
 
@@ -1095,13 +1095,9 @@ public class UI_Ingame : MonoBehaviour
 	public void Button_Upgrade()
 	{
 		if (Utility.IsServer())
-		{
-			//StartCoroutine(GameMain.inst.Server_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
-		}
+			StartCoroutine(GameMain.inst.Server_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
 		else
-		{
-			//StartCoroutine(GameMain.inst.Request_UpgradeCharacter(levelupCharacter, selectedUpgradeId));
-		}
+			GameMain.inst.Request_UpgradeCharacter(levelupCharacter, selectedUpgradeId);
 
 		levelupPanel.SetActive(false);
 		endTurn.interactable = true;

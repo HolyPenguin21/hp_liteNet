@@ -154,7 +154,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2463772058387354923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cf3dfefda73da945af5d4bd8d0f0c84, type: 3}
+  m_Script: {fileID: 11500000, guid: 1515be1b52ee6ee4a8062df2dbbd02c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationLenght: 3
+  animationLenght: 1.5

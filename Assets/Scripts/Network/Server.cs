@@ -89,6 +89,9 @@ public class Server : MonoBehaviour
         sSubscription.ItemDrop();
         sSubscription.ItemUse();
         sSubscription.RecruitCharacter();
+        sSubscription.CastSpell();
+        sSubscription.Attack();
+        sSubscription.UpgradeCharacter();
     }
 
     private void Update()

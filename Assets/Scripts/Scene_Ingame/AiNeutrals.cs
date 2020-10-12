@@ -25,7 +25,7 @@ public class AiNeutrals
             if(spawnChance < 80) continue;
 
             int charId = Random.Range(1, 15);
-            //yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
+            yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
         }
 
         // Movement / Attack
@@ -74,7 +74,7 @@ public class AiNeutrals
                     }
                 }
 
-                //yield return manager.Server_Attack(path, attackId);
+                yield return manager.Server_Attack(path, attackId);
             }
 		}
 
@@ -91,14 +91,14 @@ public class AiNeutrals
         Hex randomEnemy = enemysInRange[Random.Range(0, enemysInRange.Count)];
         List<Hex> path = manager.pathfinding.Get_Path(character.hex, randomEnemy);
         path.RemoveAt(path.Count - 1);
-        //yield return manager.Server_Move(path);
+        yield return manager.Server_Move(path);
     }
 
     private IEnumerator Move_Random(Character character)
     {
         if(!character.canAct || character.charMovement.movePoints_cur == 0) yield break;
 
-        //yield return manager.Server_Move(manager.pathfinding.Get_Path(character.hex, Get_RandomNeighborMoveHex(character)));
+        yield return manager.Server_Move(manager.pathfinding.Get_Path(character.hex, Get_RandomNeighborMoveHex(character)));
     }
     #endregion
 

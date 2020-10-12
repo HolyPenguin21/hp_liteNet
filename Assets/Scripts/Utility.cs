@@ -171,14 +171,14 @@ public static class Utility
         return true;
     }
 
-    //public static bool InAttackRange(Hex hex_a, Hex hex_b)
-    //{
-    //    float dist = Vector3.Distance(hex_a.transform.position, hex_b.transform.position);
+    public static bool InAttackRange(Hex hex_a, Hex hex_b)
+    {
+        float dist = Vector3.Distance(hex_a.transform.position, hex_b.transform.position);
 
-    //    if(dist > distHexes) return false;
+        if (dist > distHexes) return false;
 
-    //    return true;
-    //}
+        return true;
+    }
 
     public static List<T> Swap_ListItems<T>(List<T> initialList)
     {

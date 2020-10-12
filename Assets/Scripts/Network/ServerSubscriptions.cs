@@ -15,6 +15,42 @@ public class ServerSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void UpgradeCharacter()
+    {
+        netProcessor.SubscribeReusable<UpgradeCharacter>((data) => {
+            Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.coord_x, data.coord_y).hex.character;
+
+            server.StartCoroutine(GameMain.inst.Server_UpgradeCharacter(character, data.upgId));
+        });
+    }
+
+    public void Attack()
+    {
+        netProcessor.SubscribeReusable<Attack>((data) => {
+            List<Hex> somePath = new List<Hex>();
+            string[] pathData = data.path.Split('|');
+            for (int j = 1; j < pathData.Length; j++)
+            {
+                string[] hexCoords = pathData[j].Split(';');
+                int posX = int.Parse(hexCoords[0]);
+                int posY = int.Parse(hexCoords[1]);
+                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX, posY).hex);
+            }
+
+            server.StartCoroutine(GameMain.inst.Server_Attack(somePath, data.attackId));
+        });
+    }
+
+    public void CastSpell()
+    {
+        netProcessor.SubscribeReusable<CastSpell>((data) => {
+            Hex charactersHex = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.casterCoord_x, data.casterCoord_y).hex;
+            Hex spellTargetHex = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.targetCoord_x, data.targetCoord_y).hex;
+
+            server.StartCoroutine(GameMain.inst.Server_CastSpell(charactersHex, spellTargetHex, data.spellId));
+        });
+    }
+
     public void RecruitCharacter()
     {
         netProcessor.SubscribeReusable<RecruitCharacter>((data) => {
