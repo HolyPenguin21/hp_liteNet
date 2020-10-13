@@ -187,9 +187,9 @@ public class UI_Ingame : MonoBehaviour
 		cInfo_Spell_Cancel.SetActive(false);
 		cItem_Canvas.SetActive(false);
 
-		charRecruitPanel.SetActive(value: false);
-		attackPanel.SetActive(value: false);
-		levelupPanel.SetActive(value: false);
+		charRecruitPanel.SetActive(false);
+		attackPanel.SetActive(false);
+		levelupPanel.SetActive(false);
 	}
 
 	private void Update()
@@ -318,7 +318,7 @@ public class UI_Ingame : MonoBehaviour
 		cInfo_Attacks_Text.text = "";
 		for (int y = 0; y < c.charAttacks.Count; y++)
 		{
-			cInfo_Attacks_Text.text = cInfo_Attacks_Text.text + c.charAttacks[y].attackType + ", " + c.charAttacks[y].attackDmgType + " - " + c.charAttacks[y].attackCount + " x " + c.charAttacks[y].attackDmg_cur + "\n";
+			cInfo_Attacks_Text.text = cInfo_Attacks_Text.text + Get_AttackTooltip(c.charAttacks[y]) + "\n";
 		}
 
 		// Spells
@@ -654,7 +654,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Recruit_CloseMenu()
 	{
-		charRecruitPanel.SetActive(value: false);
+		charRecruitPanel.SetActive(false);
 
 		somePanelIsOn = false;
 		ingameInput.mouseOverUI = false;
@@ -663,20 +663,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_1()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_1_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_1_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_1_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_1_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_1_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_1_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_1_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_1_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_1_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_1_button].charDef.magic_resistance;
+		Set_RecruitTooltip(recrutable_dict[recruit_1_button]);
 
 		charToRecruit = recrutable_dict[recruit_1_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_1_button].charCost)
 		{
@@ -687,20 +678,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_2()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_2_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_2_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_2_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_2_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_2_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_2_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_2_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_2_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_2_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_2_button].charDef.magic_resistance;
+		Set_RecruitTooltip(recrutable_dict[recruit_2_button]);
 
 		charToRecruit = recrutable_dict[recruit_2_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_2_button].charCost)
 		{
@@ -711,20 +693,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_3()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_3_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_3_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_3_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_3_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_3_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_3_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_3_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_3_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_3_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_3_button].charDef.magic_resistance;
-		
+		Set_RecruitTooltip(recrutable_dict[recruit_3_button]);
+
 		charToRecruit = recrutable_dict[recruit_3_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_3_button].charCost)
 		{
@@ -735,20 +708,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_4()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_4_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_4_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_4_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_4_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_4_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_4_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_4_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_4_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_4_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_4_button].charDef.magic_resistance;
+		Set_RecruitTooltip(recrutable_dict[recruit_4_button]);
 
 		charToRecruit = recrutable_dict[recruit_4_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_4_button].charCost)
 		{
@@ -759,20 +723,11 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_5()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_5_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_5_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_5_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_5_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_5_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_5_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_5_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_5_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_5_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_5_button].charDef.magic_resistance;
+		Set_RecruitTooltip(recrutable_dict[recruit_5_button]);
 
 		charToRecruit = recrutable_dict[recruit_5_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_5_button].charCost)
 		{
@@ -783,25 +738,30 @@ public class UI_Ingame : MonoBehaviour
 	public void Recruit_Character_6()
 	{
 		rec_Char_Image.enabled = true;
-		rec_Char_Image.sprite = recrutable_dict[recruit_6_button].charImage;
-		rec_CharName_Text.text = recrutable_dict[recruit_6_button].charName;
-		rec_CharCost_Text.text = "Cost : " + recrutable_dict[recruit_6_button].charCost;
-		rec_CharHp_Text.text = "Health : " + recrutable_dict[recruit_6_button].charHp.hp_max;
-		rec_CharExp_Text.text = "Exp : " + recrutable_dict[recruit_6_button].charExp.exp_max;
-		rec_CharMP_Text.text = "MovePoints : " + recrutable_dict[recruit_6_button].charMovement.movePoints_max;
-		rec_CharDodge_Text.text = "Dodge : " + recrutable_dict[recruit_6_button].charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + recrutable_dict[recruit_6_button].charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + recrutable_dict[recruit_6_button].charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + recrutable_dict[recruit_6_button].charDef.magic_resistance;
+		Set_RecruitTooltip(recrutable_dict[recruit_6_button]);
 
 		charToRecruit = recrutable_dict[recruit_6_button];
-		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_6_button].charCost)
 		{
 			recruitButton.interactable = true;
 		}
+	}
+
+	private void Set_RecruitTooltip(Character character)
+	{
+		rec_Char_Image.sprite = character.charImage;
+		rec_CharName_Text.text = character.charName;
+		rec_CharCost_Text.text = "Cost : " + character.charCost;
+		rec_CharHp_Text.text = "Health : " + character.charHp.hp_max;
+		rec_CharExp_Text.text = "Exp : " + character.charExp.exp_max;
+		rec_CharMP_Text.text = "MovePoints : " + character.charMovement.movePoints_max;
+		rec_CharDodge_Text.text = "Dodge : " + character.charDef.dodgeChance;
+		rec_CharSlashResist_Text.text = "SlashRes : " + character.charDef.slash_resistance;
+		rec_CharPierceResist_Text.text = "PierceRes : " + character.charDef.pierce_resistance;
+		rec_CharMagicResist_Text.text = "MagicRes : " + character.charDef.magic_resistance;
 	}
 
 	public void Recruit()
@@ -823,97 +783,130 @@ public class UI_Ingame : MonoBehaviour
 	{
 		somePanelIsOn = true;
 
-		attack1.gameObject.SetActive(value: false);
-		attack2.gameObject.SetActive(value: false);
-		attack3.gameObject.SetActive(value: false);
+		attack1.gameObject.SetActive(false);
+		attack2.gameObject.SetActive(false);
+		attack3.gameObject.SetActive(false);
+
 		attack1.interactable = true;
 		attack2.interactable = true;
 		attack3.interactable = true;
+
 		attack_button.interactable = false;
-		attackPanel.SetActive(value: true);
+
+		attackPanel.SetActive(true);
+
 		this.attackPath = new List<Hex>(attackPath);
-		List<Utility.char_Attack> charAttacks = attackPath[0].character.charAttacks;
-		List<Utility.char_Attack> charAttacks2 = attackPath[attackPath.Count - 1].character.charAttacks;
+
+		List<Utility.char_Attack> a_Attacks = attackPath[0].character.charAttacks;
+		List<Utility.char_Attack> t_Attacks = attackPath[attackPath.Count - 1].character.charAttacks;
+
 		attackerImage.sprite = attackPath[0].character.charImage;
 		targetImage.sprite = attackPath[attackPath.Count - 1].character.charImage;
-		if (charAttacks.Count > 0 || charAttacks2.Count > 0)
+
+		if (a_Attacks.Count > 0 || t_Attacks.Count > 0)
 		{
-			attack1.gameObject.SetActive(value: true);
-			if (charAttacks.Count > 0)
+			attack1.gameObject.SetActive(true);
+			if (a_Attacks.Count > 0)
 			{
-				attack1_Image_a.gameObject.SetActive(value: true);
-				attack1_Image_a.sprite = Get_AttackTypeImage(charAttacks[0].attackDmgType);
-				attack1_Text_a.text = charAttacks[0].attackType + ", " + charAttacks[0].attackDmgType + " " + charAttacks[0].attackCount + " x " + charAttacks[0].attackDmg_cur;
+				attack1_Image_a.gameObject.SetActive(true);
+				attack1_Image_a.sprite = Get_AttackTypeImage(a_Attacks[0].attackDmgType);
+				attack1_Text_a.text = Get_AttackTooltip(a_Attacks[0]);
 			}
 			else
 			{
-				attack1_Image_a.gameObject.SetActive(value: false);
+				attack1_Image_a.gameObject.SetActive(false);
 				attack1_Text_a.text = "";
 			}
-			if (charAttacks2.Count > 0)
+
+			if (t_Attacks.Count > 0)
 			{
-				attack1_Image_t.gameObject.SetActive(value: true);
-				attack1_Image_t.sprite = Get_AttackTypeImage(charAttacks2[0].attackDmgType);
-				attack1_Text_t.text = charAttacks2[0].attackType + ", " + charAttacks2[0].attackDmgType + " " + charAttacks2[0].attackCount + " x " + charAttacks2[0].attackDmg_cur;
+				attack1_Image_t.gameObject.SetActive(true);
+				attack1_Image_t.sprite = Get_AttackTypeImage(t_Attacks[0].attackDmgType);
+				attack1_Text_t.text = Get_AttackTooltip(t_Attacks[0]);
 			}
 			else
 			{
-				attack1_Image_t.gameObject.SetActive(value: false);
-				GameObject.Find("Attack1").transform.Find("TargetInfo_Text").GetComponent<Text>().text = "";
+				attack1_Image_t.gameObject.SetActive(false);
+				attack1_Text_t.text = "";
 			}
 		}
-		if (charAttacks.Count > 1 || charAttacks2.Count > 1)
+		if (a_Attacks.Count > 1 || t_Attacks.Count > 1)
 		{
-			attack2.gameObject.SetActive(value: true);
-			if (charAttacks.Count > 1)
+			attack2.gameObject.SetActive(true);
+			if (a_Attacks.Count > 1)
 			{
-				attack2_Image_a.gameObject.SetActive(value: true);
-				attack2_Image_a.sprite = Get_AttackTypeImage(charAttacks[1].attackDmgType);
-				attack2_Text_a.text = charAttacks[1].attackType + ", " + charAttacks[1].attackDmgType + " " + charAttacks[1].attackCount + " x " + charAttacks[1].attackDmg_cur;
+				attack2_Image_a.gameObject.SetActive(true);
+				attack2_Image_a.sprite = Get_AttackTypeImage(a_Attacks[1].attackDmgType);
+				attack2_Text_a.text = Get_AttackTooltip(a_Attacks[1]);
 			}
 			else
 			{
-				attack2_Image_a.gameObject.SetActive(value: false);
+				attack2_Image_a.gameObject.SetActive(false);
 				attack2_Text_a.text = "";
 			}
-			if (charAttacks2.Count > 1)
+
+			if (t_Attacks.Count > 1)
 			{
-				attack2_Image_t.gameObject.SetActive(value: true);
-				attack2_Image_t.sprite = Get_AttackTypeImage(charAttacks2[1].attackDmgType);
-				attack2_Text_t.text = charAttacks2[1].attackType + ", " + charAttacks2[1].attackDmgType + " " + charAttacks2[1].attackCount + " x " + charAttacks2[1].attackDmg_cur;
+				attack2_Image_t.gameObject.SetActive(true);
+				attack2_Image_t.sprite = Get_AttackTypeImage(t_Attacks[1].attackDmgType);
+				attack2_Text_t.text = Get_AttackTooltip(t_Attacks[1]);
 			}
 			else
 			{
-				attack2_Image_t.gameObject.SetActive(value: false);
+				attack2_Image_t.gameObject.SetActive(false);
 				attack2_Text_t.text = "";
 			}
 		}
-		if (charAttacks.Count > 2 || charAttacks2.Count > 2)
+		if (a_Attacks.Count > 2 || t_Attacks.Count > 2)
 		{
-			attack3.gameObject.SetActive(value: true);
-			if (charAttacks.Count > 2)
+			attack3.gameObject.SetActive(true);
+			if (a_Attacks.Count > 2)
 			{
-				attack3_Image_a.gameObject.SetActive(value: true);
-				attack3_Image_a.sprite = Get_AttackTypeImage(charAttacks[2].attackDmgType);
-				attack3_Text_a.text = charAttacks[2].attackType + ", " + charAttacks[2].attackDmgType + " " + charAttacks[2].attackCount + " x " + charAttacks[2].attackDmg_cur;
+				attack3_Image_a.gameObject.SetActive(true);
+				attack3_Image_a.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
+				attack3_Text_a.text = Get_AttackTooltip(a_Attacks[2]);
 			}
 			else
 			{
-				attack3_Image_a.gameObject.SetActive(value: false);
+				attack3_Image_a.gameObject.SetActive(false);
 				attack3_Text_a.text = "";
 			}
-			if (charAttacks2.Count > 2)
+
+			if (t_Attacks.Count > 2)
 			{
-				attack3_Image_t.gameObject.SetActive(value: true);
-				attack3_Image_t.sprite = Get_AttackTypeImage(charAttacks[2].attackDmgType);
-				attack3_Text_t.text = charAttacks2[2].attackType + ", " + charAttacks2[2].attackDmgType + " " + charAttacks2[2].attackCount + " x " + charAttacks2[2].attackDmg_cur;
+				attack3_Image_t.gameObject.SetActive(true);
+				attack3_Image_t.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
+				attack3_Text_t.text = Get_AttackTooltip(t_Attacks[2]);
 			}
 			else
 			{
-				attack3_Image_t.gameObject.SetActive(value: false);
+				attack3_Image_t.gameObject.SetActive(false);
 				attack3_Text_t.text = "";
 			}
 		}
+	}
+
+	private Sprite Get_AttackTypeImage(Utility.char_attackDmgType attackDmgType)
+	{
+		Sprite result = null;
+		switch (attackDmgType)
+		{
+			case Utility.char_attackDmgType.slash:
+				result = Resources.Load<Sprite>("DamageType/IronSword");
+				break;
+			case Utility.char_attackDmgType.pierce:
+				result = Resources.Load<Sprite>("DamageType/Arrow");
+				break;
+			case Utility.char_attackDmgType.magic:
+				result = Resources.Load<Sprite>("DamageType/RubyStaff");
+				break;
+		}
+		return result;
+	}
+
+	private string Get_AttackTooltip(Utility.char_Attack attack)
+	{
+		return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
 	}
 
 	public void SelectAttack1()
@@ -958,7 +951,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Hide_AttackPanel()
 	{
-		attackPanel.SetActive(value: false);
+		attackPanel.SetActive(false);
 
 		somePanelIsOn = false;
 		ingameInput.mouseOverUI = false;
@@ -991,7 +984,7 @@ public class UI_Ingame : MonoBehaviour
 		}
 		if (levelupCharacter.upgradeList.Count > 1)
 		{
-			levelupOption_2.gameObject.SetActive(value: true);
+			levelupOption_2.gameObject.SetActive(true);
 			levelupOption_2.interactable = true;
 
 			levelup_dict[levelupOption_2] = charData.Get_CharacterById(levelupCharacter.upgradeList[1]);
@@ -1001,9 +994,11 @@ public class UI_Ingame : MonoBehaviour
 		}
 		if (levelupCharacter.upgradeList.Count > 2)
 		{
-			levelupOption_3.gameObject.SetActive(value: true);
+			levelupOption_3.gameObject.SetActive(true);
 			levelupOption_3.interactable = true;
+
 			levelup_dict[levelupOption_3] = charData.Get_CharacterById(levelupCharacter.upgradeList[2]);
+
 			GameObject.Find("upg3Image").GetComponent<Image>().sprite = levelup_dict[levelupOption_3].charImage;
 			GameObject.Find("upg3Name").GetComponent<Text>().text = levelup_dict[levelupOption_3].charName;
 		}
@@ -1034,15 +1029,7 @@ public class UI_Ingame : MonoBehaviour
 		selectedUpgradeId = levelup_dict[levelupOption_1].charId;
 
 		upg_Char_Image.gameObject.SetActive(true);
-		upg_Char_Image.sprite = levelup_dict[levelupOption_1].charImage;
-		upg_CharName_Text.text = levelup_dict[levelupOption_1].charName;
-		upg_Hp_Text.text = "Health : " + levelup_dict[levelupOption_1].charHp.hp_max;
-		upg_Exp_Text.text = "Exp : " + levelup_dict[levelupOption_1].charExp.exp_max;
-		upg_MP_Text.text = "MovePoints : " + levelup_dict[levelupOption_1].charMovement.movePoints_max;
-		upg_Dodge_Text.text = "Dodge : " + levelup_dict[levelupOption_1].charDef.dodgeChance;
-		upg_SlashResist_Text.text = "SlashRes : " + levelup_dict[levelupOption_1].charDef.slash_resistance;
-		upg_PierceResist_Text.text = "PierceRes : " + levelup_dict[levelupOption_1].charDef.pierce_resistance;
-		upg_MagicResist_Text.text = "MagicRes : " + levelup_dict[levelupOption_1].charDef.magic_resistance;
+		Set_UpgradeTooltip(levelup_dict[levelupOption_1]);
 
 		levelupOption_1.interactable = false;
 		levelupOption_2.interactable = true;
@@ -1055,15 +1042,7 @@ public class UI_Ingame : MonoBehaviour
 		selectedUpgradeId = levelup_dict[levelupOption_2].charId;
 
 		upg_Char_Image.gameObject.SetActive(true);
-		upg_Char_Image.sprite = levelup_dict[levelupOption_2].charImage;
-		upg_CharName_Text.text = levelup_dict[levelupOption_2].charName;
-		upg_Hp_Text.text = "Health : " + levelup_dict[levelupOption_2].charHp.hp_max;
-		upg_Exp_Text.text = "Exp : " + levelup_dict[levelupOption_2].charExp.exp_max;
-		upg_MP_Text.text = "MovePoints : " + levelup_dict[levelupOption_2].charMovement.movePoints_max;
-		upg_Dodge_Text.text = "Dodge : " + levelup_dict[levelupOption_2].charDef.dodgeChance;
-		upg_SlashResist_Text.text = "SlashRes : " + levelup_dict[levelupOption_2].charDef.slash_resistance;
-		upg_PierceResist_Text.text = "PierceRes : " + levelup_dict[levelupOption_2].charDef.pierce_resistance;
-		upg_MagicResist_Text.text = "MagicRes : " + levelup_dict[levelupOption_2].charDef.magic_resistance;
+		Set_UpgradeTooltip(levelup_dict[levelupOption_2]);
 
 		levelupOption_1.interactable = true;
 		levelupOption_2.interactable = false;
@@ -1076,20 +1055,25 @@ public class UI_Ingame : MonoBehaviour
 		selectedUpgradeId = levelup_dict[levelupOption_3].charId;
 
 		upg_Char_Image.gameObject.SetActive(true);
-		upg_Char_Image.sprite = levelup_dict[levelupOption_3].charImage;
-		upg_CharName_Text.text = levelup_dict[levelupOption_3].charName;
-		upg_Hp_Text.text = "Health : " + levelup_dict[levelupOption_3].charHp.hp_max;
-		upg_Exp_Text.text = "Exp : " + levelup_dict[levelupOption_3].charExp.exp_max;
-		upg_MP_Text.text = "MovePoints : " + levelup_dict[levelupOption_3].charMovement.movePoints_max;
-		upg_Dodge_Text.text = "Dodge : " + levelup_dict[levelupOption_3].charDef.dodgeChance;
-		upg_SlashResist_Text.text = "SlashRes : " + levelup_dict[levelupOption_3].charDef.slash_resistance;
-		upg_PierceResist_Text.text = "PierceRes : " + levelup_dict[levelupOption_3].charDef.pierce_resistance;
-		upg_MagicResist_Text.text = "MagicRes : " + levelup_dict[levelupOption_3].charDef.magic_resistance;
+		Set_UpgradeTooltip(levelup_dict[levelupOption_3]);
 
 		levelupOption_1.interactable = true;
 		levelupOption_2.interactable = true;
 		levelupOption_3.interactable = false;
 		levelupButton.interactable = true;
+	}
+
+	private void Set_UpgradeTooltip(Character character)
+	{
+		upg_Char_Image.sprite = character.charImage;
+		upg_CharName_Text.text = character.charName;
+		upg_Hp_Text.text = "Health : " + character.charHp.hp_max;
+		upg_Exp_Text.text = "Exp : " + character.charExp.exp_max;
+		upg_MP_Text.text = "MovePoints : " + character.charMovement.movePoints_max;
+		upg_Dodge_Text.text = "Dodge : " + character.charDef.dodgeChance;
+		upg_SlashResist_Text.text = "SlashRes : " + character.charDef.slash_resistance;
+		upg_PierceResist_Text.text = "PierceRes : " + character.charDef.pierce_resistance;
+		upg_MagicResist_Text.text = "MagicRes : " + character.charDef.magic_resistance;
 	}
 
 	public void Button_Upgrade()
@@ -1106,24 +1090,6 @@ public class UI_Ingame : MonoBehaviour
 		ingameInput.mouseOverUI = false;
 	}
 	#endregion
-
-	private Sprite Get_AttackTypeImage(Utility.char_attackDmgType attackDmgType)
-	{
-		Sprite result = null;
-		switch (attackDmgType)
-		{
-		case Utility.char_attackDmgType.slash:
-			result = Resources.Load<Sprite>("DamageType/IronSword");
-			break;
-		case Utility.char_attackDmgType.pierce:
-			result = Resources.Load<Sprite>("DamageType/Arrow");
-			break;
-		case Utility.char_attackDmgType.magic:
-			result = Resources.Load<Sprite>("DamageType/RubyStaff");
-			break;
-		}
-		return result;
-	}
 
 	#region Menu
 	public void Button_Menu()

@@ -38,7 +38,7 @@ public class Knight : Character
 		charExp.exp_max = 25;
 
 		charMovement.moveType = Utility.char_moveType.ground;
-		charMovement.movePoints_max = 3;
+		charMovement.movePoints_max = 4;
 		base.lookRange = 3;
 
 		// upgradeList.Add(2);

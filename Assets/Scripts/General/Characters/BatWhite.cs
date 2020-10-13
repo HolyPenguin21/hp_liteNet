@@ -39,7 +39,7 @@ public class BatWhite : Character
         charExp.exp_max = 10;
 
         charMovement.moveType = Utility.char_moveType.air;
-        charMovement.movePoints_max = 4;
+        charMovement.movePoints_max = 5;
         base.lookRange = 4;
 
         // Upgrades

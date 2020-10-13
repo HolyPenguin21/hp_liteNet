@@ -39,7 +39,7 @@ public class HumArcher : Character
 		charExp.exp_max = 15;
 
 		charMovement.moveType = Utility.char_moveType.ground;
-		charMovement.movePoints_max = 4;
+		charMovement.movePoints_max = 5;
 		base.lookRange = 4;
 
 		// upgradeList.Add(2);

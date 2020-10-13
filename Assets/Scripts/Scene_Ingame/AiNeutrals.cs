@@ -14,19 +14,19 @@ public class AiNeutrals
     public IEnumerator Ai_Logic()
     {
         // Spawn
-        for(int x = 0; x < manager.gridManager.neutralsSpawners.Count; x++)
-        {
-            Hex spawnPoint = manager.gridManager.neutralsSpawners[x].hex;
+        //for(int x = 0; x < manager.gridManager.neutralsSpawners.Count; x++)
+        //{
+        //    Hex spawnPoint = manager.gridManager.neutralsSpawners[x].hex;
 
-            if(spawnPoint.character != null) continue;
-            if(spawnPoint.isVillage && spawnPoint.villageOwner.name != "" && spawnPoint.villageOwner.name != "Neutrals") continue;
+        //    if(spawnPoint.character != null) continue;
+        //    if(spawnPoint.isVillage && spawnPoint.villageOwner.name != "" && spawnPoint.villageOwner.name != "Neutrals") continue;
 
-            int spawnChance = Random.Range(1, 101);
-            if(spawnChance < 80) continue;
+        //    int spawnChance = Random.Range(1, 101);
+        //    if(spawnChance < 80) continue;
 
-            int charId = Random.Range(1, 15);
-            yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
-        }
+        //    int charId = Random.Range(1, 15);
+        //    yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
+        //}
 
         // Movement / Attack
         for (int i = 0; i < manager.allCharacters.Count; i++)
