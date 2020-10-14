@@ -72,7 +72,7 @@ public class UI_Ingame : MonoBehaviour
 
     #region Recruit panel
 	[Header("Recruit panel")]
-    public GameObject charRecruitPanel;
+    public GameObject recruit_Canvas;
 	public Button closeRecruitMenu_button;
 	private Dictionary<Button, Character> recrutable_dict = new Dictionary<Button, Character>();
 	public Button recruit_1_button;
@@ -100,7 +100,7 @@ public class UI_Ingame : MonoBehaviour
 
 	#region Attack panel
 	[Header("Attack panel")]
-	public GameObject attackPanel;
+	public GameObject attack_Canvas;
 	public Image attackerImage;
 	public Image targetImage;
 	
@@ -128,10 +128,10 @@ public class UI_Ingame : MonoBehaviour
 	public Button closeAttackPanel;
 	#endregion
 
-	#region Upgrade panel
-	[Header("Upgrade panel")]
+	#region Upgrade panel	
 	private Dictionary<Button, Character> levelup_dict = new Dictionary<Button, Character>();
-	public GameObject levelupPanel;
+	[Header("Upgrade panel")]
+	public GameObject upgrade_Canvas;
 	public Button levelupOption_1;
 	public Button levelupOption_2;
 	public Button levelupOption_3;
@@ -187,9 +187,9 @@ public class UI_Ingame : MonoBehaviour
 		cInfo_Spell_Cancel.SetActive(false);
 		cItem_Canvas.SetActive(false);
 
-		charRecruitPanel.SetActive(false);
-		attackPanel.SetActive(false);
-		levelupPanel.SetActive(false);
+		recruit_Canvas.SetActive(false);
+		attack_Canvas.SetActive(false);
+		upgrade_Canvas.SetActive(false);
 	}
 
 	private void Update()
@@ -512,7 +512,7 @@ public class UI_Ingame : MonoBehaviour
 		recruit_5_button.gameObject.SetActive(false);
 		recruit_6_button.gameObject.SetActive(false);
 
-		charRecruitPanel.SetActive(true);
+		recruit_Canvas.SetActive(true);
 
 		recruitButton.interactable = false;
 		this.recruitHex = recruitHex;
@@ -654,7 +654,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Recruit_CloseMenu()
 	{
-		charRecruitPanel.SetActive(false);
+		recruit_Canvas.SetActive(false);
 
 		somePanelIsOn = false;
 		ingameInput.mouseOverUI = false;
@@ -793,7 +793,7 @@ public class UI_Ingame : MonoBehaviour
 
 		attack_button.interactable = false;
 
-		attackPanel.SetActive(true);
+		attack_Canvas.SetActive(true);
 
 		this.attackPath = new List<Hex>(attackPath);
 
@@ -951,7 +951,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Hide_AttackPanel()
 	{
-		attackPanel.SetActive(false);
+		attack_Canvas.SetActive(false);
 
 		somePanelIsOn = false;
 		ingameInput.mouseOverUI = false;
@@ -964,7 +964,7 @@ public class UI_Ingame : MonoBehaviour
 		somePanelIsOn = true;
 
 		endTurn.interactable = false;
-		levelupPanel.SetActive(true);
+		upgrade_Canvas.SetActive(true);
 		levelupButton.interactable = false;
 
 		levelupOption_1.gameObject.SetActive(false);
@@ -1083,7 +1083,7 @@ public class UI_Ingame : MonoBehaviour
 		else
 			GameMain.inst.Request_UpgradeCharacter(levelupCharacter, selectedUpgradeId);
 
-		levelupPanel.SetActive(false);
+		upgrade_Canvas.SetActive(false);
 		endTurn.interactable = true;
 
 		somePanelIsOn = false;
