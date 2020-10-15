@@ -22,7 +22,7 @@ public class SkelMage : Character
 
         charImage = Resources.Load<Sprite>("Images/SkelMage");
         charName = "SkelMage";
-        charId = 7;
+        charId = 17;
         charCost = 23;
 
         charType = Utility.char_Type.night;
@@ -42,7 +42,6 @@ public class SkelMage : Character
         charMovement.movePoints_max = 4;
         base.lookRange = 3;
 
-        // Upgrades
         //upgradeList.Add(7);
 
         charAttacks = new List<Utility.char_Attack>();

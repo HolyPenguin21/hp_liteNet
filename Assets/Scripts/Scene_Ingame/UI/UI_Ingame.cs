@@ -537,7 +537,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_2_button.gameObject.SetActive(true);
 				recruit_3_button.gameObject.SetActive(true);
 				recruit_4_button.gameObject.SetActive(true);
-				recruit_5_button.gameObject.SetActive(false);
+				recruit_5_button.gameObject.SetActive(true);
 				recruit_6_button.gameObject.SetActive(false);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
@@ -551,7 +551,7 @@ public class UI_Ingame : MonoBehaviour
 				}
 				if (!recrutable_dict.ContainsKey(recruit_2_button))
 				{
-					Character swordman = new Swordman(null, gameClient, isHero: false);
+					Character swordman = new Swordman(null, gameClient, false);
 					recrutable_dict[recruit_2_button] = swordman;
 
 					GameObject.Find("recruit_2_Char_Image").GetComponent<Image>().sprite = swordman.charImage;
@@ -560,7 +560,7 @@ public class UI_Ingame : MonoBehaviour
 				}
 				if (!recrutable_dict.ContainsKey(recruit_3_button))
 				{
-					Character humArcher = new HumArcher(null, gameClient, isHero: false);
+					Character humArcher = new HumArcher(null, gameClient, false);
 					recrutable_dict[recruit_3_button] = humArcher;
 
 					GameObject.Find("recruit_3_Char_Image").GetComponent<Image>().sprite = humArcher.charImage;
@@ -569,22 +569,22 @@ public class UI_Ingame : MonoBehaviour
 				}
 				if (!recrutable_dict.ContainsKey(recruit_4_button))
 				{
-					Character humMage = new HumMage(null, gameClient, isHero: false);
+					Character humMage = new HumMage(null, gameClient, false);
 					recrutable_dict[recruit_4_button] = humMage;
 
 					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = humMage.charImage;
 					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (humMage.charName ?? "");
 					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(humMage.charCost);
 				}
-				// if (!recrutable_dict.ContainsKey(recruit_5_button))
-				// {
-				// 	Character humMage = new HumMage(null, gameClient, isHero: false);
-				// 	recrutable_dict[recruit_5_button] = humMage;
+				if (!recrutable_dict.ContainsKey(recruit_5_button))
+				{
+					Character rogue = new Rogue(null, gameClient, false);
+					recrutable_dict[recruit_5_button] = rogue;
 
-				// 	GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = humMage.charImage;
-				// 	GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (humMage.charName ?? "");
-				// 	GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(humMage.charCost);
-				// }
+					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = rogue.charImage;
+					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (rogue.charName ?? "");
+					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(rogue.charCost);
+				}
 				// if (!recrutable_dict.ContainsKey(recruit_6_button))
 				// {
 				// 	Character knight = new KnightHalberd(null, gameClient, isHero: false);
@@ -594,7 +594,7 @@ public class UI_Ingame : MonoBehaviour
 				// 	GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (knight.charName ?? "");
 				// 	GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(knight.charCost);
 				// }
-			break;
+				break;
 
 			case 1: // Orcs
 				recruit_1_button.gameObject.SetActive(false);
@@ -610,7 +610,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_2_button.gameObject.SetActive(true);
 				recruit_3_button.gameObject.SetActive(true);
 				recruit_4_button.gameObject.SetActive(true);
-				recruit_5_button.gameObject.SetActive(false);
+				recruit_5_button.gameObject.SetActive(true);
 				recruit_6_button.gameObject.SetActive(false);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
@@ -647,6 +647,16 @@ public class UI_Ingame : MonoBehaviour
 					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = character4.charImage;
 					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (character4.charName ?? "");
 					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(character4.charCost);
+				}
+
+				if (!recrutable_dict.ContainsKey(recruit_5_button))
+				{
+					Character zombie = new Zombie(null, gameClient, false);
+					recrutable_dict[recruit_5_button] = zombie;
+
+					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = zombie.charImage;
+					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (zombie.charName ?? "");
+					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(zombie.charCost);
 				}
 				break;
 		}

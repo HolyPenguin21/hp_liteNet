@@ -22,8 +22,9 @@ public class Knight : Character
 
 		charImage = Resources.Load<Sprite>("Images/Knight");
 		charName = "Knight";
-		charId = 13;
+		charId = 5;
 		charCost = 30;
+
 		charType = Utility.char_Type.day;
 
 		charHp.hp_max = 32;
@@ -42,7 +43,6 @@ public class Knight : Character
 		base.lookRange = 3;
 
 		// upgradeList.Add(2);
-		// upgradeList.Add(4);
 
 		charAttacks = new List<Utility.char_Attack>();
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);

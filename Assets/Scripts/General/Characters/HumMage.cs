@@ -22,7 +22,7 @@ public class HumMage : Character
 
 		charImage = Resources.Load<Sprite>("Images/HumMage");
 		charName = "Mage";
-		charId = 9;
+		charId = 10;
 		charCost = 22;
 
 		charType = Utility.char_Type.day;
@@ -43,7 +43,6 @@ public class HumMage : Character
 		base.lookRange = 3;
 
 		// upgradeList.Add(2);
-		// upgradeList.Add(4);
 
 		charAttacks = new List<Utility.char_Attack>();
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);

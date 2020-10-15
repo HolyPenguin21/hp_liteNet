@@ -22,7 +22,7 @@ public class Skeleton : Character
 
         charImage = Resources.Load<Sprite>("Images/Skeleton");
         charName = "Skeleton";
-        charId = 6;
+        charId = 12;
         charCost = 12;
 
         charType = Utility.char_Type.night;
@@ -43,7 +43,7 @@ public class Skeleton : Character
         base.lookRange = 3;
 
         // Upgrades
-        upgradeList.Add(7);
+        upgradeList.Add(13);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();

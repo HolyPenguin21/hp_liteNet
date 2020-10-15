@@ -22,7 +22,7 @@ public class HumArcher : Character
 
 		charImage = Resources.Load<Sprite>("Images/HumArcher");
 		charName = "Archer";
-		charId = 8;
+		charId = 7;
 		charCost = 16;
 		
 		charType = Utility.char_Type.day;
@@ -42,8 +42,8 @@ public class HumArcher : Character
 		charMovement.movePoints_max = 5;
 		base.lookRange = 4;
 
-		// upgradeList.Add(2);
-		// upgradeList.Add(4);
+		upgradeList.Add(8);
+		upgradeList.Add(9);
 
 		charAttacks = new List<Utility.char_Attack>();
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class VeteranSpearman : Character
 {
 	public VeteranSpearman(Transform tr, Player owner, bool isHero)
@@ -26,6 +24,7 @@ public class VeteranSpearman : Character
 		charName = "Veteran Spearman";
 		charId = 2;
 		charCost = 30;
+
 		charType = Utility.char_Type.day;
 
 		charHp.hp_max = 30;
@@ -43,7 +42,7 @@ public class VeteranSpearman : Character
 		charMovement.movePoints_max = 5;
 		base.lookRange = 5;
 
-		upgradeList.Add(4);
+		//upgradeList.Add(4);
 
 		charAttacks = new List<Utility.char_Attack>();
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);

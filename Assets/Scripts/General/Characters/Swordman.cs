@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public class Swordman : Character
 {
     public Swordman(Transform tr, Player owner, bool isHero)
@@ -23,7 +22,7 @@ public class Swordman : Character
 
         charImage = Resources.Load<Sprite>("Images/Swordman");
         charName = "Swordman";
-        charId = 3;
+        charId = 4;
         charCost = 15;
 
         charType = Utility.char_Type.day;
@@ -44,8 +43,8 @@ public class Swordman : Character
         base.lookRange = 3;
 
         // Upgrades
-        upgradeList.Add(13);
-        upgradeList.Add(14);
+        upgradeList.Add(5);
+        upgradeList.Add(6);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();

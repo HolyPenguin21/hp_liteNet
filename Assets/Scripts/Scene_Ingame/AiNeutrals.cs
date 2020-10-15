@@ -24,7 +24,7 @@ public class AiNeutrals
             int spawnChance = Random.Range(1, 101);
             if (spawnChance < 80) continue;
 
-            int charId = Random.Range(1, 15);
+            int charId = Random.Range(1, 21);
             yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
         }
 

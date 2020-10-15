@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public class Pikeman : Character
 {
     public Pikeman(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;
-        
-        // Hero icon
-        if(isHero) 
+
+        if (isHero)
             base.heroCharacter = true;
         else
         {
-            if(tr != null)
+            if (tr != null)
                 tr.Find("Hero").gameObject.SetActive(false);
         }
 
@@ -24,7 +22,7 @@ public class Pikeman : Character
 
         charImage = Resources.Load<Sprite>("Images/Pikeman");
         charName = "Pikeman";
-        charId = 4;
+        charId = 3;
         charCost = 30;
 
         charType = Utility.char_Type.day;
@@ -44,7 +42,7 @@ public class Pikeman : Character
         charMovement.movePoints_max = 4;
         base.lookRange = 4;
 
-        // Upgrades
+        //upgradeList.Add(4);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();

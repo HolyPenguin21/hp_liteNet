@@ -22,7 +22,7 @@ public class BatRed : Character
 
         charImage = Resources.Load<Sprite>("Images/Bat");
         charName = "Bat Red";
-        charId = 11;
+        charId = 19;
         charCost = 13;
 
         charType = Utility.char_Type.night;
@@ -42,7 +42,6 @@ public class BatRed : Character
         charMovement.movePoints_max = 5;
         base.lookRange = 5;
 
-        // Upgrades
         //upgradeList.Add(7);
 
         charAttacks = new List<Utility.char_Attack>();

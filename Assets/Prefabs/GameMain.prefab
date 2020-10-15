@@ -52,16 +52,13 @@ MonoBehaviour:
   currentTurn:
     id: 0
     isServer: 0
+    isNeutral: 0
+    isAvailable: 0
     name: 
     race: 0
     gold: 0
     villages: 0
   dayTime_cur: 5
-  taskManager:
-    delayedTasks: []
-    serverReady:
-      ready: 0
-      taskId: 0
   gridManager: {fileID: 0}
   charactersData: {fileID: 0}
   effectsData: {fileID: 0}
@@ -83,25 +80,40 @@ MonoBehaviour:
   spearman: {fileID: 813385900582852865, guid: 9d266abb46ac1e844a42bfffb9909fc0, type: 3}
   veteranSpearman: {fileID: 1998121727568639576, guid: d7f5a9608bc80d64ebaf37324f482af8,
     type: 3}
-  swordman: {fileID: 6934696929566613636, guid: 7bb42f993364de4418b8038b2ee351a0,
-    type: 3}
   pikeman: {fileID: 5081544297305505078, guid: 55381dfd2f649784280f7c00aec09a80, type: 3}
-  grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
-  skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
-    type: 3}
-  skelMage: {fileID: 7936884735807693186, guid: 402cd41adf027314ebadd875e6255ba4,
-    type: 3}
-  humArcher: {fileID: 4145327562660652325, guid: 5ca67dc8a798edd4c88df8a7eb4969a3,
-    type: 3}
-  humMage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
-  batWhite: {fileID: 1857760588051744421, guid: da0e073c9dd49964a80d15a3e9a98a86,
-    type: 3}
-  batRed: {fileID: 5945952312710855031, guid: bc9d838c3069e3d40b66ad8d43e0726b, type: 3}
-  skelArcher: {fileID: 2193709298504832577, guid: e646241f46d343c42b726410fbbb9abf,
+  swordman: {fileID: 6934696929566613636, guid: 7bb42f993364de4418b8038b2ee351a0,
     type: 3}
   knight: {fileID: 1844222379328976759, guid: 7a860bfc3a43201499804bf9a5b06a5f, type: 3}
   knightHalberd: {fileID: 7940948817180614613, guid: 580c40c034983ad4f9c89a7e4022e70c,
     type: 3}
+  humArcher: {fileID: 4145327562660652325, guid: 5ca67dc8a798edd4c88df8a7eb4969a3,
+    type: 3}
+  trainedArcher: {fileID: 1743600373186000291, guid: 3d17a7b4ae1358845b986d3928825277,
+    type: 3}
+  hunter: {fileID: 7524226168957027308, guid: b6cc29d44b3994d459dbe2223ebed3d9, type: 3}
+  humMage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
+  rogue: {fileID: 5165242745472272674, guid: 2be141cfed9612748af1af81d0f770fe, type: 3}
+  skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
+    type: 3}
+  armoredSkeleton: {fileID: 5884620163833239470, guid: 95d4083e28946b64cb36d1d1cec9b499,
+    type: 3}
+  zombie: {fileID: 6710331954463582736, guid: 32e41a2bb48d2cf4291065c9efcc4d18, type: 3}
+  armoredZombie: {fileID: 8589770047132162992, guid: 8bd12b62e1f92334b9d1b09a8d0939e9,
+    type: 3}
+  skelArcher: {fileID: 2193709298504832577, guid: e646241f46d343c42b726410fbbb9abf,
+    type: 3}
+  skelMage: {fileID: 7936884735807693186, guid: 402cd41adf027314ebadd875e6255ba4,
+    type: 3}
+  batWhite: {fileID: 1857760588051744421, guid: da0e073c9dd49964a80d15a3e9a98a86,
+    type: 3}
+  batRed: {fileID: 5945952312710855031, guid: bc9d838c3069e3d40b66ad8d43e0726b, type: 3}
+  ghost: {fileID: 7513467499403191558, guid: bb36acd55beab4543b710dd2f44c67f7, type: 3}
+  darkFigure: {fileID: 8180806248011673393, guid: 7d5f67596eb6c27488822ba156d2309c,
+    type: 3}
+  necromancer: {fileID: 2664058969936173876, guid: 93c112f17106f1843b0a801e1faee12a,
+    type: 3}
+  reaper: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
+  grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
 --- !u!114 &3490742488040442251
 MonoBehaviour:
   m_ObjectHideFlags: 0

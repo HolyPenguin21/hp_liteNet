@@ -88,13 +88,13 @@ public class GameMain : MonoBehaviour
             switch (gameClient.race)
             {
                 case 0: // Humans
-                    yield return Server_CreateCharacter(hex, 9, gameClient.name, true);
+                    yield return Server_CreateCharacter(hex, 10, gameClient.name, true);
                     break;
                 case 1: // Orcs
                     yield return Server_CreateCharacter(hex, 5, gameClient.name, true);
                     break;
                 case 2: // Undeads
-                    yield return Server_CreateCharacter(hex, 7, gameClient.name, true);
+                    yield return Server_CreateCharacter(hex, 17, gameClient.name, true);
                     break;
             }
         }
@@ -174,7 +174,7 @@ public class GameMain : MonoBehaviour
 
         if (!Utility.InAttackRange(a_Character.hex, t_Character.hex)) yield break;
 
-        yield return Server_BlockActions(a_Character); // server blocked
+        yield return Server_BlockActions(a_Character);
 
         int attacksCount_attacker = 0;
         if (a_Attack.Count > attackId)
@@ -198,8 +198,8 @@ public class GameMain : MonoBehaviour
                     yield return Server_AddExp(a_Character.hex, 3);
                     break;
                 }
-                yield return Server_AddExp(a_Character.hex, 1);
             }
+
             if (attacksCount_target > 0)
             {
                 attacksCount_target--;
@@ -212,17 +212,23 @@ public class GameMain : MonoBehaviour
                     yield return Server_AddExp(t_Character.hex, 3);
                     break;
                 }
-                yield return Server_AddExp(t_Character.hex, 1);
             }
             yield return null;
         }
-        if (a_Character.charHp.hp_cur > 0 && a_Character.charExp.exp_cur >= a_Character.charExp.exp_max)
+
+        if (a_Character.charHp.hp_cur > 0)
         {
-            yield return Server_LevelUp(a_Character);
+            yield return Server_AddExp(a_Character.hex, 1);
+
+            if (a_Character.charExp.exp_cur >= a_Character.charExp.exp_max)
+                yield return Server_LevelUp(a_Character);
         }
-        if (t_Character.charHp.hp_cur > 0 && t_Character.charExp.exp_cur >= t_Character.charExp.exp_max)
+        if (t_Character.charHp.hp_cur > 0)
         {
-            yield return Server_LevelUp(t_Character);
+            yield return Server_AddExp(t_Character.hex, 1);
+
+            if (t_Character.charExp.exp_cur >= t_Character.charExp.exp_max)
+                yield return Server_LevelUp(t_Character);
         }
         yield return null;
     }

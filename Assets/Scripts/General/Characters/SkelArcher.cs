@@ -22,7 +22,7 @@ public class SkelArcher : Character
 
         charImage = Resources.Load<Sprite>("Images/SkelArcher");
         charName = "Skel Archer";
-        charId = 12;
+        charId = 16;
         charCost = 15;
 
         charType = Utility.char_Type.night;
@@ -42,7 +42,6 @@ public class SkelArcher : Character
         charMovement.movePoints_max = 5;
         base.lookRange = 4;
 
-        // Upgrades
         //upgradeList.Add(7);
 
         charAttacks = new List<Utility.char_Attack>();
