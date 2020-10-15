@@ -139,10 +139,10 @@ public class CharactersData : MonoBehaviour
 				GameObject ghostObj = Instantiate(ghost, position, Quaternion.identity);
 				character = new Ghost(ghostObj.transform, gameClient, isHero);
 				break;
-				//case 21:
-				//	GameObject darkFigureObj = Instantiate(darkFigure, position, Quaternion.identity);
-				//	character = new DarkFigure(darkFigureObj.transform, gameClient, isHero);
-				//	break;
+			case 21:
+				GameObject darkFigureObj = Instantiate(darkFigure, position, Quaternion.identity);
+				character = new DarkFigure(darkFigureObj.transform, gameClient, isHero);
+				break;
 				//case 22:
 				//	GameObject necromancerObj = Instantiate(necromancer, position, Quaternion.identity);
 				//	character = new Necromancer(necromancerObj.transform, gameClient, isHero);
@@ -155,6 +155,7 @@ public class CharactersData : MonoBehaviour
 
 		if (gameClient != null) Utility.Set_OwnerColor(character.tr, gameClient);
 		if (isHero) gameClient.heroCharacter = character;
+		if (character.tr != null) character.tr.Find("canMove").gameObject.SetActive(false);
 
 		createAt.character = character;
 		character.hex = createAt;
@@ -228,9 +229,9 @@ public class CharactersData : MonoBehaviour
 			case 20:
 				result = new Ghost(null, null, false);
 				break;
-				//case 21:
-				//	result = new DarkFigure(null, null, false);
-				//	break;
+			case 21:
+				result = new DarkFigure(null, null, false);
+				break;
 				//case 22:
 				//	result = new Necromancer(null, null, false);
 				//	break;

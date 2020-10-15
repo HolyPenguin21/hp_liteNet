@@ -611,7 +611,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_3_button.gameObject.SetActive(true);
 				recruit_4_button.gameObject.SetActive(true);
 				recruit_5_button.gameObject.SetActive(true);
-				recruit_6_button.gameObject.SetActive(false);
+				recruit_6_button.gameObject.SetActive(true);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
@@ -657,6 +657,16 @@ public class UI_Ingame : MonoBehaviour
 					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = zombie.charImage;
 					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (zombie.charName ?? "");
 					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(zombie.charCost);
+				}
+
+				if (!recrutable_dict.ContainsKey(recruit_6_button))
+				{
+					Character darkFigure = new DarkFigure(null, gameClient, isHero: false);
+					recrutable_dict[recruit_6_button] = darkFigure;
+
+					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = darkFigure.charImage;
+					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (darkFigure.charName ?? "");
+					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(darkFigure.charCost);
 				}
 				break;
 		}

@@ -528,6 +528,8 @@ public class GameMain : MonoBehaviour
     private IEnumerator Server_AddExp(Hex charactersHex, int expAmount)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
+        if (charactersHex == null) yield break;
+        if (charactersHex.character == null) yield break;
 
         charactersHex.character.Add_Exp(expAmount);
 
@@ -1285,6 +1287,7 @@ public class GameMain : MonoBehaviour
 
         someCharacter.canAct = false;
         someCharacter.charMovement.movePoints_cur = 0;
+        if (someCharacter.tr != null) someCharacter.tr.Find("canMove").gameObject.SetActive(false);
 
         if (Utility.IsMyCharacter(someCharacter))
             fog.Show_MoveHexes(someCharacter);

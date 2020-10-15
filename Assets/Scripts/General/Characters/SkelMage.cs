@@ -8,12 +8,14 @@ public class SkelMage : Character
     {
         base.tr = tr;
         base.owner = owner;
-        
-        if(isHero) 
+
+        if (isHero)
+        {
             base.heroCharacter = true;
+        }
         else
         {
-            if(tr != null)
+            if (tr != null)
                 tr.Find("Hero").gameObject.SetActive(false);
         }
 
@@ -40,7 +42,7 @@ public class SkelMage : Character
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 4;
-        base.lookRange = 3;
+        lookRange = 3;
 
         //upgradeList.Add(7);
 

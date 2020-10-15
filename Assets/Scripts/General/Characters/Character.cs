@@ -39,8 +39,9 @@ public abstract class Character
 	{
 		charMovement.movePoints_cur = charMovement.movePoints_max;
 		canAct = true;
+		if (tr != null) tr.Find("canMove").gameObject.SetActive(true);
 
-		if(charSpell_1 != null) charSpell_1.CooldownUpdate();
+		if (charSpell_1 != null) charSpell_1.CooldownUpdate();
 		if(charSpell_2 != null) charSpell_2.CooldownUpdate();
 
 		AttackUpdateOnDayChange();
@@ -51,6 +52,8 @@ public abstract class Character
 	{
 		charMovement.movePoints_cur = 0;
 		canAct = false;
+		if (tr != null) tr.Find("canMove").gameObject.SetActive(false);
+
 		AttackUpdateOnDayChange();
 	}
 
