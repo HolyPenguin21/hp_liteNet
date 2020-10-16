@@ -11,18 +11,21 @@ public class SpellData : MonoBehaviour
 		switch (spellId)
 		{
 			case 1:
-				spell = new Flame();
+				spell = new Flame(0);
 				break;
 			case 2:
-				spell = new EarthSpike();
+				spell = new EarthSpike(0);
 				break;
             case 3:
-				spell = new MassHeal();
+				spell = new MassHeal(0);
 				break;
             case 4:
-				spell = new Heal();
+				spell = new Heal(0);
 				break;
-		}
+            case 5:
+                spell = new Blink(0);
+                break;
+        }
 
 		return spell;
 	}

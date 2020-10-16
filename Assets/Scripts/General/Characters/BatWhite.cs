@@ -40,7 +40,7 @@ public class BatWhite : Character
 
         charMovement.moveType = Utility.char_moveType.air;
         charMovement.movePoints_max = 5;
-        base.lookRange = 4;
+        base.lookRange = 5;
 
         upgradeList.Add(19);
 

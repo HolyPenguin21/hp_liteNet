@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class Flame : Spell
 {
-    public Flame()
+    private int dmgValue;
+
+    public Flame(int dmgValue)
     {
         spellId = 1;
         spellName = "Flame";
-        spellDmg = 10;
         spellArea = Utility.spell_Area.single;
         cooldown_max = 2;
         spellCastRange = 2;
+
+        this.dmgValue = dmgValue;
     }
 
     public override void Use(Vector3 pos)
@@ -22,6 +25,6 @@ public class Flame : Spell
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        yield return GameMain.inst.Server_SpellDamage(casterHex, hex, spellDmg);
+        yield return GameMain.inst.Server_SpellDamage(casterHex, hex, dmgValue);
     }
 }

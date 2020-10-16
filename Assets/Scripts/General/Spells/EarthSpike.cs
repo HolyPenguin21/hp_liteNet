@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class EarthSpike : Spell
 {
-    public EarthSpike()
+    private int dmgValue;
+
+    public EarthSpike(int dmgValue)
     {
         spellId = 2;
         spellName = "Earth spikes";
-        spellDmg = 10;
         spellArea = Utility.spell_Area.circle;
         cooldown_max = 3;
         spellCastRange = 3;
+
+        this.dmgValue = dmgValue;
     }
 
     public override void Use(Vector3 pos)
@@ -22,6 +25,6 @@ public class EarthSpike : Spell
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        yield return GameMain.inst.Server_SpellDamage(casterHex, hex, spellDmg);
+        yield return GameMain.inst.Server_SpellDamage(casterHex, hex, dmgValue);
     }
 }

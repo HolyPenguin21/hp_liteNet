@@ -16,6 +16,15 @@ public class ClientSubscriptions
         this.netProcessor = netPacketProcessor;
     }
 
+    public void Replace()
+    {
+        netProcessor.SubscribeReusable<Replace>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_Blink(data));
+        });
+    }
+
     public void StatsUp()
     {
         netProcessor.SubscribeReusable<StatsUp>((data) => {

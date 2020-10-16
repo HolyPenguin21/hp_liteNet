@@ -426,6 +426,7 @@ public class GameMain : MonoBehaviour
         castSpell.targetCoord_x = targetCoords.coord_x;
         castSpell.targetCoord_y = targetCoords.coord_y;
         castSpell.spellId = spellId;
+
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
@@ -503,6 +504,7 @@ public class GameMain : MonoBehaviour
         spellHeal.coord_x = gridCoord.coord_x;
         spellHeal.coord_y = gridCoord.coord_y;
         spellHeal.amount = amount;
+
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
@@ -521,6 +523,47 @@ public class GameMain : MonoBehaviour
         c.RecieveHeal(spellHeal.amount);
 
         yield return Reply_TaskDone("Healing done");
+    }
+
+    public IEnumerator Server_Blink(Hex casterHex, Hex targetHex)
+    {
+        if (casterHex.character == null) yield break;
+        if (targetHex.character != null) yield break;
+
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character c = casterHex.character;
+        c.Replace(targetHex);
+
+        yield return Server_AfterMoveCheck(c);
+
+        Utility.GridCoord casterCoord = gridManager.Get_GridCoord_ByHex(casterHex);
+        Utility.GridCoord targetCoord = gridManager.Get_GridCoord_ByHex(targetHex);
+        Replace replace = new Replace();
+        replace.caster_coord_x = casterCoord.coord_x;
+        replace.caster_coord_y = casterCoord.coord_y;
+        replace.target_coord_x = targetCoord.coord_x;
+        replace.target_coord_y = targetCoord.coord_y;
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, replace, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_Blink(Replace replace)
+    {
+        Character c = gridManager.Get_GridItem_ByCoords(replace.caster_coord_x, replace.caster_coord_y).hex.character;
+        Hex targetHex = gridManager.Get_GridItem_ByCoords(replace.target_coord_x, replace.target_coord_y).hex;
+
+        c.Replace(targetHex);
+
+        yield return Reply_TaskDone("Blink done");
     }
     #endregion
 
@@ -806,6 +849,10 @@ public class GameMain : MonoBehaviour
         Character someCharacter = somePath[0].character;
         yield return On_Move(someCharacter, somePath);
 
+        yield return Server_AfterMoveCheck(someCharacter);
+    }
+    public IEnumerator Server_AfterMoveCheck(Character someCharacter)
+    {
         if (someCharacter.hex.isVillage && someCharacter.hex.villageOwner != someCharacter.owner)
         {
             yield return Server_CaptureVillage(someCharacter.hex);

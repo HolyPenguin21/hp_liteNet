@@ -185,6 +185,20 @@ public abstract class Character
 		GameMain.inst.fog.Update_Fog();
 	}
 
+	public void Replace(Hex replaceTo)
+	{
+		hex.character = null;
+		hex = replaceTo;
+		replaceTo.character = this;
+
+		tr.position = replaceTo.transform.position;
+
+		GameMain.inst.fog.Update_Fog();
+
+		if (Utility.IsMyCharacter(this))
+			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
+	}
+
 	public void StatsUp()
 	{
 		charHp.hp_max += 5;

@@ -42,7 +42,7 @@ public class SkelMage : Character
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 4;
-        lookRange = 3;
+        lookRange = 4;
 
         //upgradeList.Add(7);
 
@@ -63,8 +63,8 @@ public class SkelMage : Character
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
 
-        charSpell_1 = new EarthSpike();
-		charSpell_2 = new Heal();
+        charSpell_1 = new EarthSpike(5);
+		charSpell_2 = new Heal(6);
     }
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)

@@ -90,6 +90,9 @@ public class AiNeutrals
 
         Hex randomEnemy = enemysInRange[Random.Range(0, enemysInRange.Count)];
         List<Hex> path = manager.pathfinding.Get_Path(character.hex, randomEnemy);
+
+        if(path == null || path.Count < 2) yield break;
+
         path.RemoveAt(path.Count - 1);
         yield return manager.Server_Move(path);
     }

@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class MassHeal : Spell
 {
-    public MassHeal()
+    private int healValue;
+
+    public MassHeal(int healValue)
     {
         spellId = 3;
         spellName = "Mass heal";
-        spellDmg = 3;
         spellArea = Utility.spell_Area.circle;
         cooldown_max = 5;
         spellCastRange = 1;
+
+        this.healValue = healValue;
     }
 
     public override void Use(Vector3 pos)
@@ -22,6 +25,6 @@ public class MassHeal : Spell
 
     public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
     {
-        yield return GameMain.inst.Server_SpellHeal(hex, spellDmg);
+        yield return GameMain.inst.Server_SpellHeal(hex, healValue);
     }
 }

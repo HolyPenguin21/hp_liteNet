@@ -40,7 +40,7 @@ public class HumMage : Character
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 4;
-		base.lookRange = 3;
+		base.lookRange = 4;
 
 		// upgradeList.Add(2);
 
@@ -61,8 +61,8 @@ public class HumMage : Character
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
 
-		charSpell_1 = new Flame();
-		charSpell_2 = new MassHeal();
+		charSpell_1 = new Flame(8);
+		charSpell_2 = new MassHeal(3);
 	}
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)

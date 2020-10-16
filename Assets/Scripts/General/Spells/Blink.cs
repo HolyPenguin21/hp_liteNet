@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Heal : Spell
+public class Blink : Spell
 {
-    private int healValue;
-
-    public Heal(int healValue)
+    public Blink(int maxRange)
     {
-        spellId = 4;
+        spellId = 5;
         spellName = "Heal";
         spellArea = Utility.spell_Area.single;
         cooldown_max = 3;
-        spellCastRange = 2;
-
-        this.healValue = healValue;
+        spellCastRange = maxRange;
     }
 
     public override void Use(Vector3 pos)
@@ -23,8 +19,8 @@ public class Heal : Spell
         cooldown_cur = cooldown_max;
     }
 
-    public override IEnumerator ResultingEffect(Hex casterHex, Hex hex)
+    public override IEnumerator ResultingEffect(Hex casterHex, Hex targetHex)
     {
-        yield return GameMain.inst.Server_SpellHeal(hex, healValue);
+        yield return GameMain.inst.Server_Blink(casterHex, targetHex);
     }
 }

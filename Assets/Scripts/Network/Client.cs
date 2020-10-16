@@ -74,6 +74,7 @@ public class Client : MonoBehaviour
         cSubscription.AttackAnimation();
         cSubscription.OpenUpgradeMenu();
         cSubscription.StatsUp();
+        cSubscription.Replace();
     }
 
     private void Update()

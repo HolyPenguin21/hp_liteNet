@@ -40,7 +40,7 @@ public class TrainedArcher : Character
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 5;
-		base.lookRange = 4;
+		base.lookRange = 5;
 
 		//upgradeList.Add(2);
 

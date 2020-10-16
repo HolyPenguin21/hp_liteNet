@@ -39,7 +39,7 @@ public class Rogue : Character
 		charExp.exp_max = 17;
 
 		charMovement.moveType = Utility.char_moveType.ground;
-		charMovement.movePoints_max = 5;
+		charMovement.movePoints_max = 4;
 		base.lookRange = 4;
 
 		//upgradeList.Add(8);
@@ -60,6 +60,8 @@ public class Rogue : Character
 		char_Attack2.attackDmg_base = 3;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
+
+		charSpell_1 = new Blink(3);
 	}
 
 	public override IEnumerator AttackAnimation(Hex target, int attackId)

@@ -63,7 +63,7 @@ public class DarkFigure : Character
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
 
-        charSpell_1 = new Heal();
+        charSpell_1 = new Heal(4);
     }
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)
