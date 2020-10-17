@@ -615,20 +615,20 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
-					Character character = new Skeleton(null, gameClient, isHero: false);
-					recrutable_dict[recruit_1_button] = character;
-					GameObject.Find("recruit_1_Char_Image").GetComponent<Image>().sprite = character.charImage;
-					GameObject.Find("recruit_1_CharName_Text").GetComponent<Text>().text = (character.charName ?? "");
-					GameObject.Find("recruit_1_CharPrice_Text").GetComponent<Text>().text = string.Concat(character.charCost);
+					Character zombie = new Zombie(null, gameClient, false);
+					recrutable_dict[recruit_1_button] = zombie;
+					GameObject.Find("recruit_1_Char_Image").GetComponent<Image>().sprite = zombie.charImage;
+					GameObject.Find("recruit_1_CharName_Text").GetComponent<Text>().text = (zombie.charName ?? "");
+					GameObject.Find("recruit_1_CharPrice_Text").GetComponent<Text>().text = string.Concat(zombie.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_2_button))
 				{
-					Character character2 = new SkelMage(null, gameClient, isHero: false);
-					recrutable_dict[recruit_2_button] = character2;
-					GameObject.Find("recruit_2_Char_Image").GetComponent<Image>().sprite = character2.charImage;
-					GameObject.Find("recruit_2_CharName_Text").GetComponent<Text>().text = (character2.charName ?? "");
-					GameObject.Find("recruit_2_CharPrice_Text").GetComponent<Text>().text = string.Concat(character2.charCost);
+					Character character = new Skeleton(null, gameClient, isHero: false);
+					recrutable_dict[recruit_2_button] = character;
+					GameObject.Find("recruit_2_Char_Image").GetComponent<Image>().sprite = character.charImage;
+					GameObject.Find("recruit_2_CharName_Text").GetComponent<Text>().text = (character.charName ?? "");
+					GameObject.Find("recruit_2_CharPrice_Text").GetComponent<Text>().text = string.Concat(character.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_3_button))
@@ -642,31 +642,29 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_4_button))
 				{
-					Character character4 = new BatWhite(null, gameClient, isHero: false);
-					recrutable_dict[recruit_4_button] = character4;
-					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = character4.charImage;
-					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (character4.charName ?? "");
-					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(character4.charCost);
+					Character character2 = new SkelMage(null, gameClient, isHero: false);
+					recrutable_dict[recruit_4_button] = character2;
+					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = character2.charImage;
+					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (character2.charName ?? "");
+					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(character2.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_5_button))
 				{
-					Character zombie = new Zombie(null, gameClient, false);
-					recrutable_dict[recruit_5_button] = zombie;
-
-					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = zombie.charImage;
-					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (zombie.charName ?? "");
-					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(zombie.charCost);
+					Character darkFigure = new DarkFigure(null, gameClient, isHero: false);
+					recrutable_dict[recruit_5_button] = darkFigure;
+					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = darkFigure.charImage;
+					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (darkFigure.charName ?? "");
+					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(darkFigure.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_6_button))
 				{
-					Character darkFigure = new DarkFigure(null, gameClient, isHero: false);
-					recrutable_dict[recruit_6_button] = darkFigure;
-
-					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = darkFigure.charImage;
-					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (darkFigure.charName ?? "");
-					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(darkFigure.charCost);
+					Character bat = new BatWhite(null, gameClient, isHero: false);
+					recrutable_dict[recruit_6_button] = bat;
+					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = bat.charImage;
+					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (bat.charName ?? "");
+					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(bat.charCost);
 				}
 				break;
 		}

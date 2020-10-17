@@ -140,6 +140,8 @@ MonoBehaviour:
   villageOwner:
     id: 0
     isServer: 0
+    isNeutral: 0
+    isAvailable: 0
     name: 
     race: 0
     gold: 0
@@ -151,7 +153,7 @@ MonoBehaviour:
   airMove: 1
   neighbors: []
   moveCost: 1
-  dodge: 10
+  dodge: 0
 --- !u!135 &4216298911591769674
 SphereCollider:
   m_ObjectHideFlags: 0

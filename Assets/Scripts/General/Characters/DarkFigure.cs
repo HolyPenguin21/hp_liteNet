@@ -64,6 +64,7 @@ public class DarkFigure : Character
         charAttacks.Add(attack2);
 
         charSpell_1 = new Heal(4);
+        charSpell_2 = new Blink(3);
     }
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)

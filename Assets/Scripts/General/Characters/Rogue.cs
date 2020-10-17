@@ -10,7 +10,9 @@ public class Rogue : Character
 		base.owner = owner;
 
 		if (isHero)
+		{
 			base.heroCharacter = true;
+		}
 		else
 		{
 			if (tr != null)

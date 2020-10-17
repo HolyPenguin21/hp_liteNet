@@ -15,7 +15,6 @@ public class Blink : Spell
 
     public override void Use(Vector3 pos)
     {
-        GameMain.inst.effectsData.Effect_Heal(pos);
         cooldown_cur = cooldown_max;
     }
 

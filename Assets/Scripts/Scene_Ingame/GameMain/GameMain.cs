@@ -531,8 +531,10 @@ public class GameMain : MonoBehaviour
         if (targetHex.character != null) yield break;
 
         if (server.players.Count > 2) server.player.isAvailable = false;
-
+        
         Character c = casterHex.character;
+        effectsData.Effect_DarkPortal(c.tr.position, c.tr);
+        yield return new WaitForSeconds(0.25f);
         c.Replace(targetHex);
 
         yield return Server_AfterMoveCheck(c);
@@ -561,6 +563,8 @@ public class GameMain : MonoBehaviour
         Character c = gridManager.Get_GridItem_ByCoords(replace.caster_coord_x, replace.caster_coord_y).hex.character;
         Hex targetHex = gridManager.Get_GridItem_ByCoords(replace.target_coord_x, replace.target_coord_y).hex;
 
+        effectsData.Effect_DarkPortal(c.tr.position, c.tr);
+        yield return new WaitForSeconds(0.25f);
         c.Replace(targetHex);
 
         yield return Reply_TaskDone("Blink done");

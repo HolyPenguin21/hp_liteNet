@@ -13,6 +13,7 @@ public class EffectsData : MonoBehaviour
 	public GameObject effectFlame;
 	public GameObject effectMassHeal;
 	public GameObject effectHeal;
+	public GameObject effectDarkPortal;
 
     public void Effect_Lightning(Vector3 pos)
 	{
@@ -57,5 +58,10 @@ public class EffectsData : MonoBehaviour
 	public void Effect_Heal(Vector3 pos)
 	{
 		Instantiate(effectHeal, pos, Quaternion.identity);
+	}
+
+	public void Effect_DarkPortal(Vector3 pos, Transform parent)
+	{
+		Instantiate(effectDarkPortal, pos, Quaternion.identity, parent);
 	}
 }

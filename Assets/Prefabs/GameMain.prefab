@@ -144,6 +144,8 @@ MonoBehaviour:
     type: 3}
   effectHeal: {fileID: 1341147665099077446, guid: f437ae6cc2f6f4f498d897940456a71e,
     type: 3}
+  effectDarkPortal: {fileID: 7748788231770146579, guid: 4b916780507295c4aa6ccdcc14cb056b,
+    type: 3}
 --- !u!114 &4898994044667058996
 MonoBehaviour:
   m_ObjectHideFlags: 0
