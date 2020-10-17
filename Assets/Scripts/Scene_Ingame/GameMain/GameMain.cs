@@ -670,6 +670,9 @@ public class GameMain : MonoBehaviour
                 case Utility.char_attackDmgType.pierce:
                     resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.pierce_resistance);
                     break;
+                case Utility.char_attackDmgType.blunt:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.blunt_resistance);
+                    break;
                 case Utility.char_attackDmgType.magic:
                     resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.magic_resistance);
                     break;

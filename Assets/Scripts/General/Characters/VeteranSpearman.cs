@@ -33,7 +33,8 @@ public class VeteranSpearman : Character
 		charDef.dodgeChance = 10;
 		charDef.slash_resistance = 0.2f;
 		charDef.pierce_resistance = 0.2f;
-		charDef.magic_resistance = 0f;
+		charDef.blunt_resistance = 0.0f;
+		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;
 		charExp.exp_max = 25;

@@ -49,9 +49,6 @@ public class UI_Ingame : MonoBehaviour
 	public Text cInfo_Exp_Text;
 	public Text cInfo_MP_Text;
 	public Text cInfo_Dodge_Text;
-	public Text cInfo_SlashResist_Text;
-	public Text cInfo_PierceResist_Text;
-	public Text cInfo_MagicResist_Text;
 	public Button cInfo_Spell1_Obj;
 	public Text cInfo_Spell1_CD_Text;
 	public Button cInfo_Spell2_Obj;
@@ -89,11 +86,8 @@ public class UI_Ingame : MonoBehaviour
 	public Text rec_CharExp_Text;
 	public Text rec_CharMP_Text;
 	public Text rec_CharDodge_Text;
-	public Text rec_CharSlashResist_Text;
-	public Text rec_CharPierceResist_Text;
-	public Text rec_CharMagicResist_Text;
 
-	private Character charToRecruit;
+	public Character charToRecruit;
 	private Hex recruitHex;
 	public Button recruitButton;
 	#endregion
@@ -144,9 +138,6 @@ public class UI_Ingame : MonoBehaviour
 	public Text upg_curExp_Text;
 	public Text upg_curMP_Text;
 	public Text upg_curDodge_Text;
-	public Text upg_curSlashResist_Text;
-	public Text upg_curPierceResist_Text;
-	public Text upg_curMagicResist_Text;
 
 	public Image upg_Char_Image;
 	public Text upg_CharName_Text;
@@ -154,9 +145,6 @@ public class UI_Ingame : MonoBehaviour
 	public Text upg_Exp_Text;
 	public Text upg_MP_Text;
 	public Text upg_Dodge_Text;
-	public Text upg_SlashResist_Text;
-	public Text upg_PierceResist_Text;
-	public Text upg_MagicResist_Text;
 
 	public Button levelupButton;
 	#endregion
@@ -312,9 +300,6 @@ public class UI_Ingame : MonoBehaviour
 		cInfo_Exp_Text.text = "Exp : " + c.charExp.exp_cur + " / " + c.charExp.exp_max;
 		cInfo_MP_Text.text = "MovePoints : " + c.charMovement.movePoints_cur + " / " + c.charMovement.movePoints_max;
 		cInfo_Dodge_Text.text = "Dodge : " + c.charDef.dodgeChance + " + " + hex.dodge;
-		cInfo_SlashResist_Text.text = "SlashRes : " + c.charDef.slash_resistance;
-		cInfo_PierceResist_Text.text = "PierceRes : " + c.charDef.pierce_resistance;
-		cInfo_MagicResist_Text.text = "MagicRes : " + c.charDef.magic_resistance;
 		cInfo_Attacks_Text.text = "";
 		for (int y = 0; y < c.charAttacks.Count; y++)
 		{
@@ -524,9 +509,6 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharExp_Text.text = "";
 		rec_CharMP_Text.text = "";
 		rec_CharDodge_Text.text = "";
-		rec_CharSlashResist_Text.text = "";
-		rec_CharPierceResist_Text.text = "";
-		rec_CharMagicResist_Text.text = "";
 
 		Player gameClient = null;
 		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
@@ -777,9 +759,6 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharExp_Text.text = "Exp : " + character.charExp.exp_max;
 		rec_CharMP_Text.text = "MovePoints : " + character.charMovement.movePoints_max;
 		rec_CharDodge_Text.text = "Dodge : " + character.charDef.dodgeChance;
-		rec_CharSlashResist_Text.text = "SlashRes : " + character.charDef.slash_resistance;
-		rec_CharPierceResist_Text.text = "PierceRes : " + character.charDef.pierce_resistance;
-		rec_CharMagicResist_Text.text = "MagicRes : " + character.charDef.magic_resistance;
 	}
 
 	public void Recruit()
@@ -915,6 +894,9 @@ public class UI_Ingame : MonoBehaviour
 			case Utility.char_attackDmgType.pierce:
 				result = Resources.Load<Sprite>("DamageType/Arrow");
 				break;
+			case Utility.char_attackDmgType.blunt:
+				result = Resources.Load<Sprite>("DamageType/Hammer");
+				break;
 			case Utility.char_attackDmgType.magic:
 				result = Resources.Load<Sprite>("DamageType/RubyStaff");
 				break;
@@ -1027,9 +1009,6 @@ public class UI_Ingame : MonoBehaviour
 		upg_curExp_Text.text = "Exp : " + levelupCharacter.charExp.exp_max;
 		upg_curMP_Text.text = "MovePoints : " + levelupCharacter.charMovement.movePoints_max;
 		upg_curDodge_Text.text = "Dodge : " + levelupCharacter.charDef.dodgeChance;
-		upg_curSlashResist_Text.text = "SlashRes : " + levelupCharacter.charDef.slash_resistance;
-		upg_curPierceResist_Text.text = "PierceRes : " + levelupCharacter.charDef.pierce_resistance;
-		upg_curMagicResist_Text.text = "MagicRes : " + levelupCharacter.charDef.magic_resistance;
 
 		upg_Char_Image.gameObject.SetActive(false);
 		upg_CharName_Text.text = "";
@@ -1037,9 +1016,6 @@ public class UI_Ingame : MonoBehaviour
 		upg_Exp_Text.text = "";
 		upg_MP_Text.text = "";
 		upg_Dodge_Text.text = "";
-		upg_SlashResist_Text.text = "";
-		upg_PierceResist_Text.text = "";
-		upg_MagicResist_Text.text = "";
 	}
 
 	public void Select_Upgrade1()
@@ -1089,9 +1065,6 @@ public class UI_Ingame : MonoBehaviour
 		upg_Exp_Text.text = "Exp : " + character.charExp.exp_max;
 		upg_MP_Text.text = "MovePoints : " + character.charMovement.movePoints_max;
 		upg_Dodge_Text.text = "Dodge : " + character.charDef.dodgeChance;
-		upg_SlashResist_Text.text = "SlashRes : " + character.charDef.slash_resistance;
-		upg_PierceResist_Text.text = "PierceRes : " + character.charDef.pierce_resistance;
-		upg_MagicResist_Text.text = "MagicRes : " + character.charDef.magic_resistance;
 	}
 
 	public void Button_Upgrade()

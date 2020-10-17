@@ -10,6 +10,7 @@ public class Flame : Spell
     {
         spellId = 1;
         spellName = "Flame";
+        description = "Sets target hex into fire.";
         spellArea = Utility.spell_Area.single;
         cooldown_max = 2;
         spellCastRange = 2;

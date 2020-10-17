@@ -33,6 +33,7 @@ public class SkelArcher : Character
         charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.0f;
         charDef.pierce_resistance = 0.4f;
+        charDef.blunt_resistance = -0.3f;
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;

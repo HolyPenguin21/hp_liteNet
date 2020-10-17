@@ -10,6 +10,7 @@ public class Heal : Spell
     {
         spellId = 4;
         spellName = "Heal";
+        description = "Heals character in target hex.";
         spellArea = Utility.spell_Area.single;
         cooldown_max = 3;
         spellCastRange = 2;

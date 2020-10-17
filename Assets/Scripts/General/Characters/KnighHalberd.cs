@@ -33,6 +33,7 @@ public class KnightHalberd : Character
 		charDef.dodgeChance = 10;
 		charDef.slash_resistance = 0.2f;
 		charDef.pierce_resistance = 0.4f;
+		charDef.blunt_resistance = -0.2f;
 		charDef.magic_resistance = 0.1f;
 
 		charExp.exp_cur = 0;

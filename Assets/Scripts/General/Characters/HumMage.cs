@@ -33,6 +33,7 @@ public class HumMage : Character
 		charDef.dodgeChance = 5;
 		charDef.slash_resistance = 0.0f;
 		charDef.pierce_resistance = 0.0f;
+		charDef.blunt_resistance = 0.0f;
 		charDef.magic_resistance = 0.3f;
 
 		charExp.exp_cur = 0;
@@ -47,7 +48,7 @@ public class HumMage : Character
 		charAttacks = new List<Utility.char_Attack>();
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);
 		char_Attack.attackType = Utility.char_attackType.melee;
-		char_Attack.attackDmgType = Utility.char_attackDmgType.slash;
+		char_Attack.attackDmgType = Utility.char_attackDmgType.blunt;
 		char_Attack.attackCount = 1;
 		char_Attack.attackDmg_base = 3;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;

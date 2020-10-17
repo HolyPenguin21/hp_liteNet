@@ -33,6 +33,7 @@ public class TrainedArcher : Character
 		charDef.dodgeChance = 15;
 		charDef.slash_resistance = 0.1f;
 		charDef.pierce_resistance = 0.1f;
+		charDef.blunt_resistance = 0.0f;
 		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;

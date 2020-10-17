@@ -6,6 +6,7 @@ public abstract class Spell
 {
     public int spellId;
     public string spellName;
+    public string description;
     public Utility.spell_Area spellArea;
     public int cooldown_cur;
     public int cooldown_max;

@@ -35,6 +35,7 @@ public class SkelMage : Character
         charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.0f;
         charDef.pierce_resistance = 0.4f;
+        charDef.blunt_resistance = -0.3f;
         charDef.magic_resistance = 0.4f;
 
         charExp.exp_cur = 0;
@@ -49,7 +50,7 @@ public class SkelMage : Character
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.melee;
-        attack1.attackDmgType = Utility.char_attackDmgType.slash;
+        attack1.attackDmgType = Utility.char_attackDmgType.blunt;
         attack1.attackCount = 1;
         attack1.attackDmg_base = 3;
         attack1.attackDmg_cur = attack1.attackDmg_base;

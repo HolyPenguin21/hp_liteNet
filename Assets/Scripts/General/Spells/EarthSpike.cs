@@ -10,6 +10,7 @@ public class EarthSpike : Spell
     {
         spellId = 2;
         spellName = "Earth spikes";
+        description = "Delivers small amount of damage to all characters in target area.";
         spellArea = Utility.spell_Area.circle;
         cooldown_max = 3;
         spellCastRange = 3;

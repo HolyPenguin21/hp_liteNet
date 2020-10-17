@@ -33,7 +33,8 @@ public class Zombie : Character
         charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.0f;
         charDef.pierce_resistance = 0.0f;
-        charDef.magic_resistance = 0.0f;
+        charDef.blunt_resistance = 0.2f;
+        charDef.magic_resistance = -0.1f;
 
         charExp.exp_cur = 0;
         charExp.exp_max = 12;

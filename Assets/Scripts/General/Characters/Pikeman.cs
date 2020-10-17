@@ -33,6 +33,7 @@ public class Pikeman : Character
         charDef.dodgeChance = 10;
         charDef.slash_resistance = 0.2f;
         charDef.pierce_resistance = 0.3f;
+        charDef.blunt_resistance = -0.1f;
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;

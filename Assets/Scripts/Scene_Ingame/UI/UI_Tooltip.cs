@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class UI_Tooltip : MonoBehaviour
 {
-    public GameObject tooltipPrefab;
-    public GameObject tooltipObj;
+    private GameObject tooltipPrefab;
+    public GameObject tooltipCanvas;
     public RectTransform tooltipRect;
-    private Text tooltipText;
+    public Text tooltipText;
 
     private float width;
     private float widthTreshold;
@@ -19,20 +19,16 @@ public class UI_Tooltip : MonoBehaviour
     private void Start()
     {
         width = Screen.width;
-        widthTreshold = width * 0.1f;
+        widthTreshold = width * 0.11f;
         height = Screen.height;
         heightTreshold = height * 0.1f;
-
-        tooltipObj = Instantiate(tooltipPrefab).transform.Find("Tooltip_Panel").gameObject;
-        tooltipRect = tooltipObj.GetComponent<RectTransform>();
-        tooltipText = tooltipObj.transform.Find("Text").GetComponent<Text>();
 
         Hide_Tooltip();
     }
 
     private void Update()
     {
-        if (!tooltipObj.activeInHierarchy) return;
+        if (!tooltipCanvas.activeInHierarchy) return;
 
         Vector2 mouse = Input.mousePosition;
 
@@ -46,19 +42,76 @@ public class UI_Tooltip : MonoBehaviour
 
     public void Show_Tooltip(string textId)
     {
+        bool show = true;
+        string tooltip = "";
+
         switch (textId)
         {
             case "skill_1":
+                Spell s1 = GameObject.Find("UI").GetComponent<Ingame_Input>().selectedHex.character.charSpell_1;
+                if (s1 == null)
+                {
+                    show = false;
+                    break;
+                }
+                tooltip = s1.spellName + " : " +
+                          "\n  " + s1.description +
+                          "\nSpell range : " + s1.spellCastRange +
+                          "\nSpell cooldown : " + s1.cooldown_max;
 
-            break;
+                tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 200f);
+                break;
+
+            case "skill_2":
+                Spell s2 = GameObject.Find("UI").GetComponent<Ingame_Input>().selectedHex.character.charSpell_2;
+                if (s2 == null)
+                {
+                    show = false;
+                    break;
+                }
+                tooltip = s2.spellName + " : " +
+                          "\n  " + s2.description +
+                          "\nSpell range : " + s2.spellCastRange +
+                          "\nSpell cooldown : " + s2.cooldown_max;
+
+                tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 200f);
+                break;
+
+            case "char_info":
+                Ingame_Input ingameInput = GameObject.Find("UI").GetComponent<Ingame_Input>();
+                UI_Ingame uIIngame = GameObject.Find("UI").GetComponent<UI_Ingame>();
+
+                Character c = null;
+
+                if(uIIngame.recruit_Canvas.activeInHierarchy) c = uIIngame.charToRecruit;
+                else if (ingameInput.selectedHex != null) c = ingameInput.selectedHex.character;
+
+                if (c == null)
+                {
+                    show = false;
+                    break;
+                }
+                tooltip = c.charName + " :" +
+                          "\n Slash resistance : " + c.charDef.slash_resistance +
+                          "\n Pierce resistance : " + c.charDef.pierce_resistance +
+                          "\n Blunt resistance : " + c.charDef.blunt_resistance +
+                          "\n Magic resistance : " + c.charDef.magic_resistance;
+
+                if (c.charSpell_1 != null)
+                    tooltip = tooltip + "\n - " + c.charSpell_1.spellName;
+
+                if (c.charSpell_2 != null)
+                    tooltip = tooltip + "\n - " + c.charSpell_2.spellName;
+
+                tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 250f);
+                break;
         }
-        string tooltip = "";
 
         tooltipText.text = tooltip;
-        tooltipObj.SetActive(true);
+        if (show) tooltipCanvas.SetActive(true);
     }
     public void Hide_Tooltip()
     {
-        tooltipObj.SetActive(false);
+        tooltipCanvas.SetActive(false);
     }
 }

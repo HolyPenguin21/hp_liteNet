@@ -33,6 +33,7 @@ public class ArmoredZombie : Character
         charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.2f;
         charDef.pierce_resistance = 0.2f;
+        charDef.blunt_resistance = -0.1f;
         charDef.magic_resistance = 0.1f;
 
         charExp.exp_cur = 0;

@@ -10,6 +10,7 @@ public class MassHeal : Spell
     {
         spellId = 3;
         spellName = "Mass heal";
+        description = "Heals all characters in target area.";
         spellArea = Utility.spell_Area.circle;
         cooldown_max = 5;
         spellCastRange = 1;

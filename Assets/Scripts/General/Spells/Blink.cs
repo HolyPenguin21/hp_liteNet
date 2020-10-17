@@ -7,7 +7,8 @@ public class Blink : Spell
     public Blink(int maxRange)
     {
         spellId = 5;
-        spellName = "Heal";
+        spellName = "Blink";
+        description = "Changes character position to target hex.";
         spellArea = Utility.spell_Area.single;
         cooldown_max = 3;
         spellCastRange = maxRange;

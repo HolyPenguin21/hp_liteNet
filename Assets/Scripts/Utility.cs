@@ -19,7 +19,7 @@ public static class Utility
     public enum dayTime { dawn, day1, day2, evening, night1, night2 };
     public enum char_moveType { ground, air };
     public enum char_attackType { none, melee, ranged };
-    public enum char_attackDmgType { slash, pierce, magic };
+    public enum char_attackDmgType { slash, pierce, blunt, magic };
     public enum char_Type { day, night, neutral };
 
     public enum buff_Type { onEquip, onRemove, onTurn};
@@ -54,6 +54,7 @@ public static class Utility
         public int dodgeChance;
         public float slash_resistance;
         public float pierce_resistance;
+        public float blunt_resistance;
         public float magic_resistance;
     }
 

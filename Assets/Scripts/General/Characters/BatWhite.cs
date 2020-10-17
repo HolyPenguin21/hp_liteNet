@@ -33,6 +33,7 @@ public class BatWhite : Character
         charDef.dodgeChance = 20;
         charDef.slash_resistance = 0.0f;
         charDef.pierce_resistance = 0.0f;
+        charDef.blunt_resistance = 0.0f;
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;
