@@ -39,7 +39,7 @@ public class Rogue : Character
 		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 17;
+		charExp.exp_max = 50;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 4;

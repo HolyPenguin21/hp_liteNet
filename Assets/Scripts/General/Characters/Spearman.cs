@@ -10,7 +10,9 @@ public class Spearman : Character
 		base.owner = owner;
 
 		if (isHero)
+		{
 			base.heroCharacter = true;
+		}
 		else
 		{
 			if (tr != null)
@@ -30,14 +32,14 @@ public class Spearman : Character
 		charHp.hp_max = 20;
 		charHp.hp_cur = charHp.hp_max;
 
-		charDef.dodgeChance = 10;
+		charDef.dodgeChance = 0;
 		charDef.slash_resistance = 0.1f;
 		charDef.pierce_resistance = 0.2f;
 		charDef.blunt_resistance = 0.0f;
 		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 15;
+		charExp.exp_max = 10;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 4;
@@ -59,12 +61,9 @@ public class Spearman : Character
 		char_Attack2.attackType = Utility.char_attackType.ranged;
 		char_Attack2.attackDmgType = Utility.char_attackDmgType.pierce;
 		char_Attack2.attackCount = 1;
-		char_Attack2.attackDmg_base = 4;
+		char_Attack2.attackDmg_base = 3;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
-
-		// charSpell_1 = new MassHeal();
-		// charSpell_2 = new Heal();
 	}
 
 	public override IEnumerator AttackAnimation(Hex target, int attackId)

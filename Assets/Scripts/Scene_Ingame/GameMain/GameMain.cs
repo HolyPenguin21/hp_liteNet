@@ -111,6 +111,12 @@ public class GameMain : MonoBehaviour
         hex2 = gridManager.Get_GridItem_ByCoords(8, 10).hex;
         yield return Server_CreateItem(hex2, 2); // Server is blocked
 
+        hex2 = gridManager.Get_GridItem_ByCoords(8, 22).hex;
+        yield return Server_CreateItem(hex2, 3); // Server is blocked
+
+        hex2 = gridManager.Get_GridItem_ByCoords(1, 7).hex;
+        yield return Server_CreateItem(hex2, 3); // Server is blocked
+
 
         yield return Server_UpdateData();
 
@@ -457,6 +463,69 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
+    #region Cast Item spell
+    public void Request_CastItemSpell(Hex charactersHex, Hex spellTargetHex, int spellId)
+    {
+        Utility.GridCoord characterCoords = gridManager.Get_GridCoord_ByHex(charactersHex);
+        Utility.GridCoord targetCoords = gridManager.Get_GridCoord_ByHex(spellTargetHex);
+
+        CastItemSpell castItemSpell = new CastItemSpell();
+        castItemSpell.casterCoord_x = characterCoords.coord_x;
+        castItemSpell.casterCoord_y = characterCoords.coord_y;
+        castItemSpell.targetCoord_x = targetCoords.coord_x;
+        castItemSpell.targetCoord_y = targetCoords.coord_y;
+        castItemSpell.spellId = spellId;
+
+        client.netProcessor.Send(client.network.GetPeerById(0), castItemSpell, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_CastItemSpell(Hex charactersHex, Hex spellTargetHex, int spellId)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character character = charactersHex.character;
+        Spell spell = spellData.Get_Spell_ById(spellId);
+        spell.Use(spellTargetHex.transform.position);
+
+        Utility.GridCoord characterCoords = gridManager.Get_GridCoord_ByHex(charactersHex);
+        Utility.GridCoord targetCoords = gridManager.Get_GridCoord_ByHex(spellTargetHex);
+        CastItemSpell castItemSpell = new CastItemSpell();
+        castItemSpell.casterCoord_x = characterCoords.coord_x;
+        castItemSpell.casterCoord_y = characterCoords.coord_y;
+        castItemSpell.targetCoord_x = targetCoords.coord_x;
+        castItemSpell.targetCoord_y = targetCoords.coord_y;
+        castItemSpell.spellId = spellId;
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, castItemSpell, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+
+        yield return Server_BlockActions(character);
+
+        List<Hex> concernedHexes = spellData.Get_ConcernedHexes(spellTargetHex, spellId);
+        for (int x = 0; x < concernedHexes.Count; x++)
+        {
+            yield return spell.ResultingEffect(charactersHex, concernedHexes[x]);
+        }
+    }
+
+    public IEnumerator Client_CastItemSpell(CastItemSpell castSpell)
+    {
+        Hex casterHex = gridManager.Get_GridItem_ByCoords(castSpell.casterCoord_x, castSpell.casterCoord_y).hex;
+        Hex targetHex = gridManager.Get_GridItem_ByCoords(castSpell.targetCoord_x, castSpell.targetCoord_y).hex;
+
+        spellData.Get_Spell_ById(castSpell.spellId).Use(targetHex.transform.position);
+
+        yield return Reply_TaskDone("Cast spell");
+    }
+    #endregion
+
     #region Spell resulting effect
     public IEnumerator Server_SpellDamage(Hex casterHex, Hex targetHex, int amount)
     {
@@ -525,16 +594,24 @@ public class GameMain : MonoBehaviour
         yield return Reply_TaskDone("Healing done");
     }
 
+    public IEnumerator Server_SpellSummon(Hex casterHex, Hex targetHex, int summonId)
+    {
+        if (targetHex.character != null) yield break;
+
+        yield return Server_CreateCharacter(targetHex, summonId, casterHex.character.owner.name, true);
+    }
+    #endregion
+
+    #region Blink spell
     public IEnumerator Server_Blink(Hex casterHex, Hex targetHex)
     {
         if (casterHex.character == null) yield break;
         if (targetHex.character != null) yield break;
 
         if (server.players.Count > 2) server.player.isAvailable = false;
-        
+
         Character c = casterHex.character;
         effectsData.Effect_DarkPortal(c.tr.position, c.tr);
-        yield return new WaitForSeconds(0.25f);
         c.Replace(targetHex);
 
         yield return Server_AfterMoveCheck(c);
@@ -564,7 +641,6 @@ public class GameMain : MonoBehaviour
         Hex targetHex = gridManager.Get_GridItem_ByCoords(replace.target_coord_x, replace.target_coord_y).hex;
 
         effectsData.Effect_DarkPortal(c.tr.position, c.tr);
-        yield return new WaitForSeconds(0.25f);
         c.Replace(targetHex);
 
         yield return Reply_TaskDone("Blink done");
@@ -1615,6 +1691,10 @@ public class GameMain : MonoBehaviour
 
             case 2:
                 item = new Item_HealthPotion();
+                break;
+
+            case 3:
+                item = new Item_BlinkScroll();
                 break;
         }
 

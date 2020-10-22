@@ -51,6 +51,16 @@ public class ServerSubscriptions
         });
     }
 
+    public void CastItemSpell()
+    {
+        netProcessor.SubscribeReusable<CastItemSpell>((data) => {
+            Hex charactersHex = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.casterCoord_x, data.casterCoord_y).hex;
+            Hex spellTargetHex = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.targetCoord_x, data.targetCoord_y).hex;
+
+            server.StartCoroutine(GameMain.inst.Server_CastItemSpell(charactersHex, spellTargetHex, data.spellId));
+        });
+    }
+
     public void RecruitCharacter()
     {
         netProcessor.SubscribeReusable<RecruitCharacter>((data) => {

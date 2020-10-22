@@ -25,6 +25,15 @@ public class SpellData : MonoBehaviour
             case 5:
                 spell = new Blink(0);
                 break;
+            case 6:
+                spell = new SummonZombie();
+                break;
+            case 7:
+                spell = new SummonBat();
+                break;
+            case 8:
+                spell = new SummonFireEmber();
+                break;
         }
 
 		return spell;

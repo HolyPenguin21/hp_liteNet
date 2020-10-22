@@ -37,7 +37,7 @@ public class BatRed : Character
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 20;
+        charExp.exp_max = 50;
 
         charMovement.moveType = Utility.char_moveType.air;
         charMovement.movePoints_max = 5;
@@ -50,7 +50,7 @@ public class BatRed : Character
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.pierce;
         attack1.attackCount = 3;
-        attack1.attackDmg_base = 3;
+        attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
     }

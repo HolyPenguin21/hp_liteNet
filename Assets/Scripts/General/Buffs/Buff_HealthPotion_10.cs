@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff_HealhPotion_10 : Buff
+public class Buff_HealthPotion_10 : Buff
 {
-    public Buff_HealhPotion_10 ()
+    public Buff_HealthPotion_10 ()
     {
         base.buffId = 1;
-        base.buffName = "Heals for 10 HP";
+        base.buffName = "Healh potion 10";
         base.buffDescription = "Heals character for 10 HP.";
         base.buffType = Utility.buff_Type.onEquip;
     }

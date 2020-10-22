@@ -27,7 +27,7 @@ public class BatWhite : Character
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 12;
+        charHp.hp_max = 10;
         charHp.hp_cur = charHp.hp_max;
 
         charDef.dodgeChance = 20;
@@ -37,7 +37,7 @@ public class BatWhite : Character
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 10;
+        charExp.exp_max = 8;
 
         charMovement.moveType = Utility.char_moveType.air;
         charMovement.movePoints_max = 5;
@@ -50,7 +50,7 @@ public class BatWhite : Character
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.slash;
         attack1.attackCount = 2;
-        attack1.attackDmg_base = 4;
+        attack1.attackDmg_base = 3;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
     }

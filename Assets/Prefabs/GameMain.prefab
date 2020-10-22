@@ -114,6 +114,8 @@ MonoBehaviour:
     type: 3}
   reaper: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
   grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
+  fireEmber: {fileID: 7508290312353660163, guid: 69a34d8d85ca0484fad2aa759f1c4fe3,
+    type: 3}
 --- !u!114 &3490742488040442251
 MonoBehaviour:
   m_ObjectHideFlags: 0

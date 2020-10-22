@@ -37,7 +37,7 @@ public class ArmoredZombie : Character
         charDef.magic_resistance = 0.1f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 22;
+        charExp.exp_max = 50;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 4;
@@ -49,8 +49,8 @@ public class ArmoredZombie : Character
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.slash;
-        attack1.attackCount = 2;
-        attack1.attackDmg_base = 4;
+        attack1.attackCount = 3;
+        attack1.attackDmg_base = 5;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
     }

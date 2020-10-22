@@ -67,6 +67,7 @@ public class Client : MonoBehaviour
         cSubscription.BlockActions();
         cSubscription.SetCharVars();
         cSubscription.CastSpell();
+        cSubscription.CastItemSpell();
         cSubscription.SpellHeal();
         cSubscription.AttackResult();
         cSubscription.CharacterDie();

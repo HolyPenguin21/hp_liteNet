@@ -10,7 +10,9 @@ public class Zombie : Character
         base.owner = owner;
 
         if (isHero)
+        {
             base.heroCharacter = true;
+        }
         else
         {
             if (tr != null)
@@ -27,7 +29,7 @@ public class Zombie : Character
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 15;
+        charHp.hp_max = 13;
         charHp.hp_cur = charHp.hp_max;
 
         charDef.dodgeChance = 0;
@@ -37,7 +39,7 @@ public class Zombie : Character
         charDef.magic_resistance = -0.1f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 12;
+        charExp.exp_max = 8;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 3;
@@ -50,7 +52,7 @@ public class Zombie : Character
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.slash;
         attack1.attackCount = 2;
-        attack1.attackDmg_base = 4;
+        attack1.attackDmg_base = 3;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
     }

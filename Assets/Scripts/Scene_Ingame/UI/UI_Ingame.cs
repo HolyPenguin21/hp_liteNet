@@ -211,7 +211,7 @@ public class UI_Ingame : MonoBehaviour
             player = Utility.Get_Client_byString(client.player.name, client.players);
 
         pInfo_Gold_Text.text = "" + player.gold;
-        pInfo_Vilage_Text.text = "" + player.villages;
+        pInfo_Vilage_Text.text = "" + player.villages + " / " + GameMain.inst.gridManager.villages.Count;
         pInfo_Income_Text.text = "+" + player.villages * Utility.villageIncome;
         pInfo_Daytime_Text.text = "" + GameMain.inst.dayTime_cur;
 

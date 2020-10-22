@@ -32,14 +32,14 @@ public class Skeleton : Character
         charHp.hp_max = 18;
         charHp.hp_cur = charHp.hp_max;
 
-        charDef.dodgeChance = 5;
+        charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.0f;
         charDef.pierce_resistance = 0.4f;
         charDef.blunt_resistance = -0.3f;
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 15;
+        charExp.exp_max = 10;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 4;

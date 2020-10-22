@@ -88,6 +88,15 @@ public class ClientSubscriptions
         });
     }
 
+    public void CastItemSpell()
+    {
+        netProcessor.SubscribeReusable<CastItemSpell>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_CastItemSpell(data));
+        });
+    }
+
     public void SpellHeal()
     {
         netProcessor.SubscribeReusable<SpellHeal>((data) => {

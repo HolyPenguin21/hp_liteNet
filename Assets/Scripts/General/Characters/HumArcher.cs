@@ -33,10 +33,11 @@ public class HumArcher : Character
 		charDef.dodgeChance = 10;
 		charDef.slash_resistance = 0.0f;
 		charDef.pierce_resistance = 0.1f;
+		charDef.blunt_resistance = 0.0f;
 		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 15;
+		charExp.exp_max = 10;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 5;
@@ -49,8 +50,8 @@ public class HumArcher : Character
 		Utility.char_Attack char_Attack = default(Utility.char_Attack);
 		char_Attack.attackType = Utility.char_attackType.melee;
 		char_Attack.attackDmgType = Utility.char_attackDmgType.slash;
-		char_Attack.attackCount = 2;
-		char_Attack.attackDmg_base = 2;
+		char_Attack.attackCount = 1;
+		char_Attack.attackDmg_base = 3;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
 		charAttacks.Add(char_Attack);
 
@@ -58,7 +59,7 @@ public class HumArcher : Character
 		char_Attack2.attackType = Utility.char_attackType.ranged;
 		char_Attack2.attackDmgType = Utility.char_attackDmgType.pierce;
 		char_Attack2.attackCount = 3;
-		char_Attack2.attackDmg_base = 4;
+		char_Attack2.attackDmg_base = 3;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
 	}

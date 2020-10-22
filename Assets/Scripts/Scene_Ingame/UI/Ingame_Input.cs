@@ -11,6 +11,7 @@ public class Ingame_Input : MonoBehaviour
 
     // Spell
     public bool castingSpell = false;
+    public bool castItemSpell = false;
     public Spell spell_Active;
     public List<Hex> spell_HexConcerned = new List<Hex>();
 
@@ -198,10 +199,20 @@ public class Ingame_Input : MonoBehaviour
         {
             if(GameMain.inst.spellData.InRange(selectedHex, spell_HexConcerned[0], spell_Active))
             {
-                if (Utility.IsServer())
-                    StartCoroutine(GameMain.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
+                if (castItemSpell)
+                {
+                    if (Utility.IsServer())
+                        StartCoroutine(GameMain.inst.Server_CastItemSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
+                    else
+                        GameMain.inst.Request_CastItemSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
+                }
                 else
-                    GameMain.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
+                {
+                    if (Utility.IsServer())
+                        StartCoroutine(GameMain.inst.Server_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId));
+                    else
+                        GameMain.inst.Request_CastSpell(selectedHex, spell_HexConcerned[0], spell_Active.spellId);
+                }
             }
 
             Spellcasting_Cancel();
@@ -340,7 +351,8 @@ public class Ingame_Input : MonoBehaviour
         spell_HexConcerned.Clear();
 
         castingSpell = false;
-		spell_Active = null;
+        castItemSpell = false;
+        spell_Active = null;
 
         if(selectedHex != null)
             if(Utility.CharacterIsVisible(selectedHex.character))

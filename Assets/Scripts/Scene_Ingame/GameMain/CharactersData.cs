@@ -31,6 +31,8 @@ public class CharactersData : MonoBehaviour
 	public GameObject reaper;           // 23
 	[Header("Orcs")]
 	public GameObject grunt;
+	[Header("Other")]
+	public GameObject fireEmber;		// 24
 
 	private GameMain manager;
 	private Server server;
@@ -143,14 +145,18 @@ public class CharactersData : MonoBehaviour
 				GameObject darkFigureObj = Instantiate(darkFigure, position, Quaternion.identity);
 				character = new DarkFigure(darkFigureObj.transform, gameClient, isHero);
 				break;
-				//case 22:
-				//	GameObject necromancerObj = Instantiate(necromancer, position, Quaternion.identity);
-				//	character = new Necromancer(necromancerObj.transform, gameClient, isHero);
-				//	break;
-				//case 23:
-				//	GameObject reaperObj = Instantiate(reaper, position, Quaternion.identity);
-				//	character = new Reaper(reaperObj.transform, gameClient, isHero);
-				//	break;
+			case 22:
+				GameObject necromancerObj = Instantiate(necromancer, position, Quaternion.identity);
+				character = new Necromancer(necromancerObj.transform, gameClient, isHero);
+				break;
+			case 23:
+				GameObject reaperObj = Instantiate(reaper, position, Quaternion.identity);
+				character = new Reaper(reaperObj.transform, gameClient, isHero);
+				break;
+			case 24:
+				GameObject fireEmberObj = Instantiate(fireEmber, position, Quaternion.identity);
+				character = new FireEmber(fireEmberObj.transform, gameClient, isHero);
+				break;
 		}
 
 		if (gameClient != null) Utility.Set_OwnerColor(character.tr, gameClient);
@@ -232,12 +238,15 @@ public class CharactersData : MonoBehaviour
 			case 21:
 				result = new DarkFigure(null, null, false);
 				break;
-				//case 22:
-				//	result = new Necromancer(null, null, false);
-				//	break;
-				//case 23:
-				//	result = new Reaper(null, null, false);
-				//	break;
+			case 22:
+				result = new Necromancer(null, null, false);
+				break;
+			case 23:
+				result = new Reaper(null, null, false);
+				break;
+			case 24:
+				result = new FireEmber(null, null, false);
+				break;
 		}
 		return result;
 	}

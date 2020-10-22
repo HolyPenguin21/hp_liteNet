@@ -34129,9 +34129,6 @@ MonoBehaviour:
   rec_CharExp_Text: {fileID: 486324860}
   rec_CharMP_Text: {fileID: 1800407183}
   rec_CharDodge_Text: {fileID: 182645741}
-  rec_CharSlashResist_Text: {fileID: 0}
-  rec_CharPierceResist_Text: {fileID: 0}
-  rec_CharMagicResist_Text: {fileID: 0}
   recruitButton: {fileID: 7823390059625085538}
   attack_Canvas: {fileID: 1637607866}
   attackerImage: {fileID: 7823390061044572335}
@@ -34163,18 +34160,12 @@ MonoBehaviour:
   upg_curExp_Text: {fileID: 909162254}
   upg_curMP_Text: {fileID: 358632926}
   upg_curDodge_Text: {fileID: 431917464}
-  upg_curSlashResist_Text: {fileID: 0}
-  upg_curPierceResist_Text: {fileID: 0}
-  upg_curMagicResist_Text: {fileID: 0}
   upg_Char_Image: {fileID: 7823390059049598035}
   upg_CharName_Text: {fileID: 7823390059841018914}
   upg_Hp_Text: {fileID: 510133837}
   upg_Exp_Text: {fileID: 118471059}
   upg_MP_Text: {fileID: 232338573}
   upg_Dodge_Text: {fileID: 177257170}
-  upg_SlashResist_Text: {fileID: 0}
-  upg_PierceResist_Text: {fileID: 0}
-  upg_MagicResist_Text: {fileID: 0}
   levelupButton: {fileID: 7823390059473497153}
   playerInfoPanel: {fileID: 7823390059750599683}
   pInfo_Gold_Text: {fileID: 7823390060448440659}
@@ -122209,10 +122200,10 @@ RectTransform:
   m_Father: {fileID: 7823390059750599680}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.15935153}
-  m_AnchorMax: {x: 0.55546975, y: 0.841}
+  m_AnchorMin: {x: 0.5074698, y: 0.15935153}
+  m_AnchorMax: {x: 0.57726514, y: 0.841}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.0000019073486, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7823390059196570543
 MonoBehaviour:
@@ -122240,13 +122231,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 999
+  m_Text: 999 / 999
 --- !u!114 &7823390059203309120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127410,7 +127401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0004479414}
+  m_AnchoredPosition: {x: 0, y: 0.0004776722}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &7823390060585513421

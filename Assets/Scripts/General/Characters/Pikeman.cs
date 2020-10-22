@@ -10,7 +10,9 @@ public class Pikeman : Character
         base.owner = owner;
 
         if (isHero)
+        {
             base.heroCharacter = true;
+        }
         else
         {
             if (tr != null)
@@ -30,14 +32,14 @@ public class Pikeman : Character
         charHp.hp_max = 30;
         charHp.hp_cur = charHp.hp_max;
 
-        charDef.dodgeChance = 10;
+        charDef.dodgeChance = 0;
         charDef.slash_resistance = 0.2f;
         charDef.pierce_resistance = 0.3f;
         charDef.blunt_resistance = -0.1f;
         charDef.magic_resistance = 0.0f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 25;
+        charExp.exp_max = 50;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 4;
@@ -49,8 +51,8 @@ public class Pikeman : Character
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.pierce;
-        attack1.attackCount = 3;
-        attack1.attackDmg_base = 5;
+        attack1.attackCount = 4;
+        attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
     }

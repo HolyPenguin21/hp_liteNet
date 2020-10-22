@@ -37,7 +37,7 @@ public class KnightHalberd : Character
 		charDef.magic_resistance = 0.1f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 25;
+		charExp.exp_max = 50;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 4;
@@ -50,7 +50,7 @@ public class KnightHalberd : Character
 		char_Attack.attackType = Utility.char_attackType.melee;
 		char_Attack.attackDmgType = Utility.char_attackDmgType.pierce;
 		char_Attack.attackCount = 3;
-		char_Attack.attackDmg_base = 5;
+		char_Attack.attackDmg_base = 4;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
 		charAttacks.Add(char_Attack);
 	}

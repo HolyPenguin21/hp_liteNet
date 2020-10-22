@@ -37,7 +37,7 @@ public class HumMage : Character
 		charDef.magic_resistance = 0.3f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 20;
+		charExp.exp_max = 50;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 4;
@@ -58,11 +58,12 @@ public class HumMage : Character
 		char_Attack2.attackType = Utility.char_attackType.ranged;
 		char_Attack2.attackDmgType = Utility.char_attackDmgType.magic;
 		char_Attack2.attackCount = 2;
-		char_Attack2.attackDmg_base = 6;
+		char_Attack2.attackDmg_base = 5;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
 
-		charSpell_1 = new Flame(8);
+		//charSpell_1 = new Flame(8);
+		charSpell_1 = new SummonFireEmber();
 		charSpell_2 = new MassHeal(3);
 	}
 

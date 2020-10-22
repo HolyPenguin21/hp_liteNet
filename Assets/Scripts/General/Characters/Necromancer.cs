@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkelMage : Character
+public class Necromancer : Character
 {
-    public SkelMage(Transform tr, Player owner, bool isHero)
+    public Necromancer(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;
@@ -22,20 +22,19 @@ public class SkelMage : Character
         // Item icon
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-        charImage = Resources.Load<Sprite>("Images/SkelMage");
-        charName = "SkelMage";
-        charId = 17;
-        charCost = 23;
+        charImage = Resources.Load<Sprite>("Images/DarkFigure2");
+        charName = "Necromancer";
+        charId = 22;
+        charCost = 14;
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 20;
+        charHp.hp_max = 25;
         charHp.hp_cur = charHp.hp_max;
 
-        charDef.dodgeChance = 0;
+        charDef.dodgeChance = 5;
         charDef.slash_resistance = 0.0f;
-        charDef.pierce_resistance = 0.4f;
-        charDef.blunt_resistance = -0.3f;
+        charDef.pierce_resistance = 0.1f;
         charDef.magic_resistance = 0.4f;
 
         charExp.exp_cur = 0;
@@ -45,7 +44,7 @@ public class SkelMage : Character
         charMovement.movePoints_max = 4;
         lookRange = 4;
 
-        //upgradeList.Add(7);
+        upgradeList.Add(20);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
@@ -59,18 +58,18 @@ public class SkelMage : Character
         Utility.char_Attack attack2 = new Utility.char_Attack();
         attack2.attackType = Utility.char_attackType.ranged;
         attack2.attackDmgType = Utility.char_attackDmgType.magic;
-        attack2.attackCount = 2;
-        attack2.attackDmg_base = 5;
+        attack2.attackCount = 3;
+        attack2.attackDmg_base = 6;
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
 
-        charSpell_1 = new Heal(5);
-		charSpell_2 = new EarthSpike(6);
+        charSpell_1 = new Heal(6);
+        charSpell_2 = new SummonZombie();
     }
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)
     {
-        if(attackId == 1)
+        if (attackId == 1)
         {
             float t = 0f;
             while (t < 1f)
@@ -79,7 +78,7 @@ public class SkelMage : Character
                 yield return null;
             }
 
-            if(base.tr.gameObject.activeInHierarchy)
+            if (base.tr.gameObject.activeInHierarchy)
                 GameMain.inst.effectsData.Effect_Lightning(target.transform.position);
 
             t = 0f;

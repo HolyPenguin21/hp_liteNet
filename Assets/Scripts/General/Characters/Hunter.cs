@@ -30,14 +30,14 @@ public class Hunter : Character
 		charHp.hp_max = 21;
 		charHp.hp_cur = charHp.hp_max;
 
-		charDef.dodgeChance = 20;
+		charDef.dodgeChance = 10;
 		charDef.slash_resistance = 0.0f;
 		charDef.pierce_resistance = 0.1f;
 		charDef.blunt_resistance = 0.0f;
 		charDef.magic_resistance = 0.0f;
 
 		charExp.exp_cur = 0;
-		charExp.exp_max = 25;
+		charExp.exp_max = 50;
 
 		charMovement.moveType = Utility.char_moveType.ground;
 		charMovement.movePoints_max = 5;

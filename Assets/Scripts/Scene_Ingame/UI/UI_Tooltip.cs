@@ -103,7 +103,7 @@ public class UI_Tooltip : MonoBehaviour
                 if (c.charSpell_2 != null)
                     tooltip = tooltip + "\n - " + c.charSpell_2.spellName;
 
-                tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 250f);
+                tooltipRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 275f);
                 break;
         }
 

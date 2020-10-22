@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmoredSkeleton : Character
+public class Reaper : Character
 {
-    public ArmoredSkeleton(Transform tr, Player owner, bool isHero)
+    public Reaper(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;
@@ -20,21 +20,20 @@ public class ArmoredSkeleton : Character
         // Item icon
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-        charImage = Resources.Load<Sprite>("Images/Skeleton2");
-        charName = "Armored Skeleton";
-        charId = 13;
-        charCost = 22;
+        charImage = Resources.Load<Sprite>("Images/DarkFigure4");
+        charName = "Reaper";
+        charId = 23;
+        charCost = 27;
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 28;
+        charHp.hp_max = 30;
         charHp.hp_cur = charHp.hp_max;
 
-        charDef.dodgeChance = 0;
-        charDef.slash_resistance = 0.2f;
-        charDef.pierce_resistance = 0.4f;
-        charDef.blunt_resistance = -0.2f;
-        charDef.magic_resistance = 0.1f;
+        charDef.dodgeChance = 10;
+        charDef.slash_resistance = 0.1f;
+        charDef.pierce_resistance = 0.1f;
+        charDef.magic_resistance = 0.2f;
 
         charExp.exp_cur = 0;
         charExp.exp_max = 50;
@@ -49,10 +48,12 @@ public class ArmoredSkeleton : Character
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.melee;
         attack1.attackDmgType = Utility.char_attackDmgType.slash;
-        attack1.attackCount = 3;
-        attack1.attackDmg_base = 4;
+        attack1.attackCount = 4;
+        attack1.attackDmg_base = 6;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
+
+        charSpell_2 = new Blink(4);
     }
 
     public override IEnumerator AttackAnimation(Hex target, int attackId)

@@ -90,6 +90,7 @@ public class Server : MonoBehaviour
         sSubscription.ItemUse();
         sSubscription.RecruitCharacter();
         sSubscription.CastSpell();
+        sSubscription.CastItemSpell();
         sSubscription.Attack();
         sSubscription.UpgradeCharacter();
     }
