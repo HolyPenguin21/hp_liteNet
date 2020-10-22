@@ -10,6 +10,7 @@ public class Ingame_Input : MonoBehaviour
     public bool mouseOverUI = false;
 
     // Spell
+    public SpellData spData;
     public bool castingSpell = false;
     public bool castItemSpell = false;
     public Spell spell_Active;
@@ -197,7 +198,7 @@ public class Ingame_Input : MonoBehaviour
 
         if(castingSpell)
         {
-            if(GameMain.inst.spellData.InRange(selectedHex, spell_HexConcerned[0], spell_Active))
+            if(spData.InRange(selectedHex, spell_HexConcerned[0], spell_Active) && spData.IsValidTarget(spell_HexConcerned[0], spell_Active))
             {
                 if (castItemSpell)
                 {
@@ -329,7 +330,7 @@ public class Ingame_Input : MonoBehaviour
         spell_HexConcerned = GameMain.inst.spellData.Get_ConcernedHexes(someHex, spell_Active.spellId);
 
         // Check range
-        if(GameMain.inst.spellData.InRange(selectedHex, someHex, spell_Active))
+        if(spData.InRange(selectedHex, someHex, spell_Active) && spData.IsValidTarget(someHex, spell_Active))
         {
             foreach(Hex h in spell_HexConcerned)
                 h.target.transform.GetComponent<SpriteRenderer>().color = Color.white;

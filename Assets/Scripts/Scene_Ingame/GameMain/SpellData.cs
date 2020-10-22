@@ -5,23 +5,23 @@ using UnityEngine;
 public class SpellData : MonoBehaviour
 {
     public Spell Get_Spell_ById(int spellId)
-	{
-		Spell spell = null;
+    {
+        Spell spell = null;
 
-		switch (spellId)
-		{
-			case 1:
-				spell = new Flame(0);
-				break;
-			case 2:
-				spell = new EarthSpike(0);
-				break;
+        switch (spellId)
+        {
+            case 1:
+                spell = new Flame(0);
+                break;
+            case 2:
+                spell = new EarthSpike(0);
+                break;
             case 3:
-				spell = new MassHeal(0);
-				break;
+                spell = new MassHeal(0);
+                break;
             case 4:
-				spell = new Heal(0);
-				break;
+                spell = new Heal(0);
+                break;
             case 5:
                 spell = new Blink(0);
                 break;
@@ -36,8 +36,8 @@ public class SpellData : MonoBehaviour
                 break;
         }
 
-		return spell;
-	}
+        return spell;
+    }
 
     public List<Hex> Get_ConcernedHexes(Hex targetHex, int spellId)
     {
@@ -48,17 +48,17 @@ public class SpellData : MonoBehaviour
         {
             case Utility.spell_Area.single:
                 concernedHexes.Add(targetHex);
-            break;
+                break;
 
             case Utility.spell_Area.circle:
                 concernedHexes.Add(targetHex);
-                foreach(Hex h in targetHex.neighbors)
+                foreach (Hex h in targetHex.neighbors)
                     concernedHexes.Add(h);
-            break;
+                break;
 
             case Utility.spell_Area.cone:
 
-            break;
+                break;
         }
 
         return concernedHexes;
@@ -66,20 +66,41 @@ public class SpellData : MonoBehaviour
 
     public Spell Get_Spell_ById(Character c, int spellId)
     {
-        if(c.charSpell_1 != null && c.charSpell_1.spellId == spellId)
-			return c.charSpell_1;
-		if(c.charSpell_2 != null && c.charSpell_2.spellId == spellId)
-			return c.charSpell_2;
-        
+        if (c.charSpell_1 != null && c.charSpell_1.spellId == spellId)
+            return c.charSpell_1;
+        if (c.charSpell_2 != null && c.charSpell_2.spellId == spellId)
+            return c.charSpell_2;
+
         return null;
     }
 
-    public bool InRange(Hex selectedHex, Hex someHex, Spell someSpell)
+    public bool InRange(Hex selectedHex, Hex targetHex, Spell someSpell)
     {
-        float dist = Vector3.Distance(selectedHex.transform.position, someHex.transform.position);
-        if(dist <= Utility.distHexes * someSpell.spellCastRange)
+        float dist = Vector3.Distance(selectedHex.transform.position, targetHex.transform.position);
+        if (dist <= Utility.distHexes * someSpell.spellCastRange)
             return true;
 
         return false;
+    }
+
+    public bool IsValidTarget(Hex targetHex, Spell someSpell)
+    {
+        bool isValid = true;
+
+        switch (someSpell.spellId)
+        {
+            case 5:
+                if (targetHex.character != null)
+                    isValid = false;
+                break;
+            case 6:
+            case 7:
+            case 8:
+                if (targetHex.isVillage || targetHex.character != null)
+                    isValid = false;
+                break;
+        }
+
+        return isValid;
     }
 }

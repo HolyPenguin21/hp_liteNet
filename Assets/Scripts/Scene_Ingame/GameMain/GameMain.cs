@@ -606,7 +606,6 @@ public class GameMain : MonoBehaviour
     public IEnumerator Server_Blink(Hex casterHex, Hex targetHex)
     {
         if (casterHex.character == null) yield break;
-        if (targetHex.character != null) yield break;
 
         if (server.players.Count > 2) server.player.isAvailable = false;
 
@@ -1736,6 +1735,7 @@ public class GameMain : MonoBehaviour
     private void Setup_SpellData()
     {
         spellData = GetComponent<SpellData>();
+        GameObject.Find("UI").GetComponent<Ingame_Input>().spData = spellData;
     }
 
     private void Setup_Fog()
