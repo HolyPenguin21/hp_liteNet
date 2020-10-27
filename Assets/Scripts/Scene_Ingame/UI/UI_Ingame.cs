@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,7 @@ public class UI_Ingame : MonoBehaviour
 
 	public GameObject helpMenu;
 	public Button save_Button;
+	public GameObject turnMessage;
 
 	#region Hex info panel
 	[Header("Hex info")]
@@ -86,6 +88,7 @@ public class UI_Ingame : MonoBehaviour
 	public Text rec_CharExp_Text;
 	public Text rec_CharMP_Text;
 	public Text rec_CharDodge_Text;
+	public Text rec_CharAttack_Text;
 
 	public Character charToRecruit;
 	private Hex recruitHex;
@@ -214,9 +217,15 @@ public class UI_Ingame : MonoBehaviour
         pInfo_Vilage_Text.text = "" + player.villages + " / " + GameMain.inst.gridManager.villages.Count;
         pInfo_Income_Text.text = "+" + player.villages * Utility.villageIncome;
         pInfo_Daytime_Text.text = "" + GameMain.inst.dayTime_cur;
+	}
 
-		if(Utility.IsMyTurn())
+	public void Update_OnTurnUI()
+	{
+		if (Utility.IsMyTurn())
+		{
 			endTurn.interactable = true;
+			ShowTurnMessage();
+		}
 		else
 			endTurn.interactable = false;
 	}
@@ -509,6 +518,7 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharExp_Text.text = "";
 		rec_CharMP_Text.text = "";
 		rec_CharDodge_Text.text = "";
+		rec_CharAttack_Text.text = "";
 
 		Player gameClient = null;
 		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
@@ -759,6 +769,12 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharExp_Text.text = "Exp : " + character.charExp.exp_max;
 		rec_CharMP_Text.text = "MovePoints : " + character.charMovement.movePoints_max;
 		rec_CharDodge_Text.text = "Dodge : " + character.charDef.dodgeChance;
+
+		rec_CharAttack_Text.text = "";
+		for (int y = 0; y < character.charAttacks.Count; y++)
+		{
+			rec_CharAttack_Text.text = rec_CharAttack_Text.text + Get_AttackTooltip(character.charAttacks[y]) + "\n";
+		}
 	}
 
 	public void Recruit()
@@ -794,8 +810,11 @@ public class UI_Ingame : MonoBehaviour
 
 		this.attackPath = new List<Hex>(attackPath);
 
-		List<Utility.char_Attack> a_Attacks = attackPath[0].character.charAttacks;
-		List<Utility.char_Attack> t_Attacks = attackPath[attackPath.Count - 1].character.charAttacks;
+
+		Character attacker = attackPath[0].character;
+		Character target = attackPath[attackPath.Count - 1].character;
+		List<Utility.char_Attack> a_Attacks = attacker.charAttacks;
+		List<Utility.char_Attack> t_Attacks = target.charAttacks;
 
 		attackerImage.sprite = attackPath[0].character.charImage;
 		targetImage.sprite = attackPath[attackPath.Count - 1].character.charImage;
@@ -807,7 +826,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack1_Image_a.gameObject.SetActive(true);
 				attack1_Image_a.sprite = Get_AttackTypeImage(a_Attacks[0].attackDmgType);
-				attack1_Text_a.text = Get_AttackTooltip(a_Attacks[0]);
+				attack1_Text_a.text = Calculate_AttackValue(a_Attacks[0], target);
 			}
 			else
 			{
@@ -819,7 +838,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack1_Image_t.gameObject.SetActive(true);
 				attack1_Image_t.sprite = Get_AttackTypeImage(t_Attacks[0].attackDmgType);
-				attack1_Text_t.text = Get_AttackTooltip(t_Attacks[0]);
+				attack1_Text_t.text = Calculate_AttackValue(t_Attacks[0], attacker);
 			}
 			else
 			{
@@ -834,7 +853,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack2_Image_a.gameObject.SetActive(true);
 				attack2_Image_a.sprite = Get_AttackTypeImage(a_Attacks[1].attackDmgType);
-				attack2_Text_a.text = Get_AttackTooltip(a_Attacks[1]);
+				attack2_Text_a.text = Calculate_AttackValue(a_Attacks[1], target);
 			}
 			else
 			{
@@ -846,7 +865,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack2_Image_t.gameObject.SetActive(true);
 				attack2_Image_t.sprite = Get_AttackTypeImage(t_Attacks[1].attackDmgType);
-				attack2_Text_t.text = Get_AttackTooltip(t_Attacks[1]);
+				attack2_Text_t.text = Calculate_AttackValue(t_Attacks[1], attacker);
 			}
 			else
 			{
@@ -861,7 +880,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack3_Image_a.gameObject.SetActive(true);
 				attack3_Image_a.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
-				attack3_Text_a.text = Get_AttackTooltip(a_Attacks[2]);
+				attack3_Text_a.text = Calculate_AttackValue(a_Attacks[2], target);
 			}
 			else
 			{
@@ -873,7 +892,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack3_Image_t.gameObject.SetActive(true);
 				attack3_Image_t.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
-				attack3_Text_t.text = Get_AttackTooltip(t_Attacks[2]);
+				attack3_Text_t.text = Calculate_AttackValue(t_Attacks[2], attacker);
 			}
 			else
 			{
@@ -907,6 +926,29 @@ public class UI_Ingame : MonoBehaviour
 	private string Get_AttackTooltip(Utility.char_Attack attack)
 	{
 		return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
+	}
+
+	private string Calculate_AttackValue(Utility.char_Attack attack, Character target)
+	{
+		int attackDmg_cur = attack.attackDmg_cur;
+		int resultDmg = 0;
+		switch (attack.attackDmgType)
+		{
+			case Utility.char_attackDmgType.slash:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.slash_resistance);
+				break;
+			case Utility.char_attackDmgType.pierce:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.pierce_resistance);
+				break;
+			case Utility.char_attackDmgType.blunt:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.blunt_resistance);
+				break;
+			case Utility.char_attackDmgType.magic:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.magic_resistance);
+				break;
+		}
+
+		return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount;
 	}
 
 	public void SelectAttack1()
@@ -1120,4 +1162,17 @@ public class UI_Ingame : MonoBehaviour
 		Application.Quit();
 	}
 	#endregion
+
+	#region On turn message
+	public void ShowTurnMessage()
+	{
+		turnMessage.SetActive(true);
+		ingameInput.mouseOverUI = true;
+	}
+	public void HideTurnMessage()
+	{
+		turnMessage.SetActive(false);
+		ingameInput.mouseOverUI = false;
+	}
+    #endregion
 }

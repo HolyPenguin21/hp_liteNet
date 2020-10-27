@@ -598,7 +598,7 @@ public class GameMain : MonoBehaviour
     {
         if (targetHex.character != null) yield break;
 
-        yield return Server_CreateCharacter(targetHex, summonId, casterHex.character.owner.name, true);
+        yield return Server_CreateCharacter(targetHex, summonId, casterHex.character.owner.name, false);
     }
     #endregion
 
@@ -1063,7 +1063,7 @@ public class GameMain : MonoBehaviour
                 daytime.Update_DayTime();
         }
 
-        uiIngame.Update_PlayerInfoPanel();
+        uiIngame.Update_OnTurnUI();
 
         for (int i = 0; i < allCharacters.Count; i++)
         {
