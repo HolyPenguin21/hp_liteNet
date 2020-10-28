@@ -1045,12 +1045,13 @@ public class UI_Ingame : MonoBehaviour
 			GameObject.Find("upg3Name").GetComponent<Text>().text = levelup_dict[levelupOption_3].charName;
 		}
 
-		upg_curChar_Image.sprite = levelupCharacter.charImage;
-		upg_curName_Text.text = levelupCharacter.charName;
-		upg_curHp_Text.text = "Health : " + levelupCharacter.charHp.hp_max;
-		upg_curExp_Text.text = "Exp : " + levelupCharacter.charExp.exp_max;
-		upg_curMP_Text.text = "MovePoints : " + levelupCharacter.charMovement.movePoints_max;
-		upg_curDodge_Text.text = "Dodge : " + levelupCharacter.charDef.dodgeChance;
+		Character someChar = charData.Get_CharacterById(levelupCharacter.charId);
+		upg_curChar_Image.sprite = someChar.charImage;
+		upg_curName_Text.text = someChar.charName;
+		upg_curHp_Text.text = "Health : " + someChar.charHp.hp_max;
+		upg_curExp_Text.text = "Exp : " + someChar.charExp.exp_max;
+		upg_curMP_Text.text = "MovePoints : " + someChar.charMovement.movePoints_max;
+		upg_curDodge_Text.text = "Dodge : " + someChar.charDef.dodgeChance;
 
 		upg_Char_Image.gameObject.SetActive(false);
 		upg_CharName_Text.text = "";

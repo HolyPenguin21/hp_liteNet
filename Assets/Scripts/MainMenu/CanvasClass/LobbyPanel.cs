@@ -10,7 +10,7 @@ public class LobbyPanel : UI_MainMenu_CanvasPanel
         base.canvasObj = canvasObj;
     }
 
-    public override void Setup_RacePicker(bool load, Text player1Name_Text, Text player2Name_Text, Text chat_Text, Dropdown player1RaceDropdown, Dropdown player2RaceDropdown, Button startGame_button)
+    public override void Setup_RacePicker(bool load, Text player1Name_Text, Text player2Name_Text, Text chat_Text, Dropdown player1RaceDropdown, Dropdown player2RaceDropdown, Dropdown player1HeroDropdown, Dropdown player2HeroDropdown,Button startGame_button)
     {
         player1Name_Text.text = "Waiting ...";
         player2Name_Text.text = "Waiting ...";
@@ -21,6 +21,8 @@ public class LobbyPanel : UI_MainMenu_CanvasPanel
 
         player1RaceDropdown.interactable = false;
         player2RaceDropdown.interactable = false;
+        player1HeroDropdown.interactable = false;
+        player2HeroDropdown.interactable = false;
         startGame_button.interactable = false;
 
         if (Utility.IsServer())
@@ -31,12 +33,14 @@ public class LobbyPanel : UI_MainMenu_CanvasPanel
             if (GameMain.inst.server.players.Count > 1)
                 player2Name_Text.text = GameMain.inst.server.players[1].name;
             player1RaceDropdown.interactable = true;
+            player1HeroDropdown.interactable = true;
         }
         else
         {
             player1Name_Text.text = GameMain.inst.client.players[0].name;
             player2Name_Text.text = GameMain.inst.client.players[1].name;
             player2RaceDropdown.interactable = true;
+            player2HeroDropdown.interactable = true;
         }
     }
 }

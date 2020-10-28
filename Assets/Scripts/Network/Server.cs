@@ -34,6 +34,7 @@ public class Server : MonoBehaviour
         player.isServer = true;
         player.isAvailable = true;
         player.name = hostName;
+        player.heroId = 10;
         players.Add(player);
 
         //Debug.Log("Starting server ...");
@@ -55,6 +56,7 @@ public class Server : MonoBehaviour
             somePlayer.address = client;
             somePlayer.id = id;
             somePlayer.isServer = false;
+            somePlayer.heroId = 10;
 
             netProcessor.Send(client, new LoginData() { clientId = id }, DeliveryMethod.ReliableOrdered);
         };
@@ -80,6 +82,7 @@ public class Server : MonoBehaviour
 
         // Custom methods
         sSubscription.RaceChange();
+        sSubscription.HeroChange();
         sSubscription.ResponceOnLogin();
         sSubscription.ChatMessage();
         sSubscription.ResponsOnTaskDone();

@@ -25,6 +25,8 @@ public class UI_MainMenu : MonoBehaviour
     public Text player2Name_Text;
     public Dropdown player1RaceDropdown;
     public Dropdown player2RaceDropdown;
+    public Dropdown player1HeroDropdown;
+    public Dropdown player2HeroDropdown;
     public InputField chatMessage_Input;
     public Text chat_Text;
     public Button startGame_Button;
@@ -143,7 +145,7 @@ public class UI_MainMenu : MonoBehaviour
     }
     public void Setup_RacePicker()
     {
-        lobbyMenu_canvas.Setup_RacePicker(GameMain.inst.loadGame, player1Name_Text, player2Name_Text, chat_Text, player1RaceDropdown, player2RaceDropdown, startGame_Button);
+        lobbyMenu_canvas.Setup_RacePicker(GameMain.inst.loadGame, player1Name_Text, player2Name_Text, chat_Text, player1RaceDropdown, player2RaceDropdown, player1HeroDropdown, player2HeroDropdown, startGame_Button);
     }
 
     public void OnRaceChange(int clientId)
@@ -162,6 +164,25 @@ public class UI_MainMenu : MonoBehaviour
             raceChange.playerName = GameMain.inst.client.player.name;
             raceChange.raceId = player2RaceDropdown.value;
             GameMain.inst.Request_RaceChange(raceChange);
+        }
+    }
+
+    public void OnHeroChange(int clientId)
+    {
+        HeroChange heroChange = new HeroChange();
+
+        if (clientId == 0)
+        {
+            heroChange.playerName = GameMain.inst.server.player.name;
+            heroChange.optionId = player1HeroDropdown.value;
+            StartCoroutine(GameMain.inst.Server_HeroChange(heroChange));
+        }
+
+        if (clientId == 1)
+        {
+            heroChange.playerName = GameMain.inst.client.player.name;
+            heroChange.optionId = player2HeroDropdown.value;
+            GameMain.inst.Request_HeroChange(heroChange);
         }
     }
 

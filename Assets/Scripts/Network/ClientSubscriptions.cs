@@ -259,6 +259,15 @@ public class ClientSubscriptions
         });
     }
 
+    public void HeroChange()
+    {
+        netProcessor.SubscribeReusable<HeroChange>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_HeroChange(data));
+        });
+    }
+
     public void RaceChange()
     {
         netProcessor.SubscribeReusable<RaceChange>((data) => {
@@ -286,6 +295,7 @@ public class ClientSubscriptions
             {
                 Player somePlayer = new Player();
                 somePlayer.name = sData[x];
+                somePlayer.heroId = 10;
                 if (x == 1) somePlayer.isServer = true;
                 client.players.Add(somePlayer);
             }

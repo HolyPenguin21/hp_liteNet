@@ -34,6 +34,7 @@ public class Client : MonoBehaviour
         player.isServer = false;
         player.isAvailable = true;
         player.name = playerName;
+        player.heroId = 10;
 
         network.Start();
 
@@ -47,6 +48,7 @@ public class Client : MonoBehaviour
 
         // Custom methods
         cSubscription.RaceChange();
+        cSubscription.HeroChange();
         cSubscription.OnLogin();
         cSubscription.PlayersList();
         cSubscription.ChatMessage();

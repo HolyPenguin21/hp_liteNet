@@ -15,14 +15,14 @@ public class Fog
 		g = gridManager;
 	}
 
-    public void Update_Fog()
+	public void Update_Fog()
 	{
 		for (int i = 0; i < g.grids.Length; i++)
 		{
 			Hex hex = g.grids[i].hex;
 			hex.Show_Fog();
 
-			if(hex.item != null)
+			if (hex.item != null)
 				hex.itemObj.SetActive(false);
 
 			if (Utility.IsServer())
@@ -41,7 +41,7 @@ public class Fog
 
 						if (hex.character != null)
 							hex.character.tr.gameObject.SetActive(true);
-						
+
 						if (hex.item != null)
 							hex.itemObj.SetActive(true);
 					}
@@ -56,13 +56,13 @@ public class Fog
 				for (int x = 0; x < GameMain.inst.allCharacters.Count; x++)
 				{
 					Character character = GameMain.inst.allCharacters[x];
-					if (character.owner.name == c.player.name && 
+					if (character.owner.name == c.player.name &&
 					Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.lookRange)
 					{
 						hex.Hide_Fog();
 						if (hex.character != null)
 							hex.character.tr.gameObject.SetActive(true);
-						
+
 						if (hex.item != null)
 							hex.itemObj.SetActive(true);
 					}
@@ -71,7 +71,7 @@ public class Fog
 		}
 	}
 
-    public void Hide_Fog()
+	public void Hide_Fog()
 	{
 		for (int i = 0; i < g.grids.Length; i++)
 		{
@@ -95,28 +95,29 @@ public class Fog
 		for (int i = 0; i < g.grids.Length; i++)
 		{
 			float dist = Vector3.Distance(g.grids[i].hex.transform.position, character.hex.transform.position);
-            if (dist < Utility.distHexes * range_max)
-            {
-				if(g.grids[i].hex.character != null) continue;
-                	hexesInRange.Add(g.grids[i].hex);
-            }
+			if (dist < Utility.distHexes * range_max)
+			{
+				if (g.grids[i].hex.character != null) continue;
+
+				hexesInRange.Add(g.grids[i].hex);
+			}
 		}
 
 		for (int i = 0; i < hexesInRange.Count; i++)
 		{
-			if(hexesInRange[i].character != null) continue;
+			if (hexesInRange[i].character != null) continue;
 
 			List<Hex> path = GameMain.inst.pathfinding.Get_Path(character.hex, hexesInRange[i]);
 
-			if(path == null) continue;
+			if (path == null) continue;
 			path.RemoveAt(0);
-			if(path.Count == 0) continue;
+			if (path.Count == 0) continue;
 
 			int pathCost = GameMain.inst.pathfinding.Get_PathCost_FromStart(path);
 
-			if(pathCost <= range_cur)
+			if (pathCost <= range_cur)
 				moveHexes.Add(hexesInRange[i]);
-			
+
 			// string debug = hexesInRange[i].gameObject.name + " c: " + pathCost + " : ";
 			// for(int x = 0; x < path.Count; x ++)
 			// {
@@ -129,7 +130,7 @@ public class Fog
 
 		for (int i = 0; i < g.grids.Length; i++)
 		{
-			if(!moveHexes.Contains(g.grids[i].hex))
+			if (!moveHexes.Contains(g.grids[i].hex))
 				g.grids[i].hex.Show_Fog();
 		}
 

@@ -13,6 +13,7 @@ public class Player
     public bool isAvailable;
     public string name;
     public int race;
+    public int heroId;
     public int gold;
     public int villages;
     public Character heroCharacter;

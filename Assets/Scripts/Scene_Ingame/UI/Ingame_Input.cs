@@ -220,18 +220,18 @@ public class Ingame_Input : MonoBehaviour
             return;
         }
 
-        Character character = selectedHex.character;
-        if (character != null)
+        Character selectedChar = selectedHex.character;
+        if (selectedChar != null)
         {
-            if (Utility.IsMyCharacter(character))
+            if (Utility.IsMyCharacter(selectedChar))
             {
                 if (clickedHex.character != null)
                 {
-                    if (Utility.IsEmeny(character, clickedHex.character))
+                    if (Utility.IsEmeny(selectedChar, clickedHex.character))
 					{
                         if(Utility.CharacterIsVisible(clickedHex.character))
                         {
-                            if (character.canAct)
+                            if (selectedChar.canAct)
                             {
                                 GameMain.inst.Try_Attack(selectedHex, clickedHex);
                                 pathfinding.Hide_Path();
@@ -244,7 +244,7 @@ public class Ingame_Input : MonoBehaviour
                         }
                         else
                         {
-                            if (character.charMovement.movePoints_cur > 0)
+                            if (selectedChar.charMovement.movePoints_cur > 0)
                             {
                                 if (Utility.IsServer())
                                     StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
@@ -266,7 +266,7 @@ public class Ingame_Input : MonoBehaviour
                         pathfinding.Hide_Path();
 					}
                 }
-                else if (character.charMovement.movePoints_cur > 0)
+                else if (selectedChar.charMovement.movePoints_cur > 0)
                 {
                     if (Utility.IsServer())
                         StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));

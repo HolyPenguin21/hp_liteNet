@@ -90,7 +90,7 @@ public abstract class UI_MainMenu_CanvasPanel
     #endregion
 
     #region LobbyPanel
-    public virtual void Setup_RacePicker(bool load, Text player1Name_Text, Text player2Name_Text, Text chat_Text, Dropdown player1RaceDropdown, Dropdown player2RaceDropdown, Button startGame_button)
+    public virtual void Setup_RacePicker(bool load, Text player1Name_Text, Text player2Name_Text, Text chat_Text, Dropdown player1RaceDropdown, Dropdown player2RaceDropdown, Dropdown player1HeroDropdown, Dropdown player2HeroDropdown, Button startGame_button)
     {
         Debug.Log("Sys > Used by LobbyPanel class only");
         return;

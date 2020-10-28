@@ -116,6 +116,13 @@ public class ServerSubscriptions
         });
     }
 
+    public void HeroChange()
+    {
+        netProcessor.SubscribeReusable<HeroChange>((data) => {
+            server.StartCoroutine(GameMain.inst.Server_HeroChange(data));
+        });
+    }
+
     public void RaceChange()
     {
         netProcessor.SubscribeReusable<RaceChange>((data) => {

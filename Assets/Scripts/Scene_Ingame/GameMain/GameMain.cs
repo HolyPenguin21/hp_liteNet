@@ -79,24 +79,13 @@ public class GameMain : MonoBehaviour
 
         for (int x = 0; x < server.players.Count; x++)
         {
-            Player gameClient = server.players[x];
-            if (gameClient.isNeutral) continue;
+            Player somePlayer = server.players[x];
+            if (somePlayer.isNeutral) continue;
 
-            gameClient.gold = 50;
+            somePlayer.gold = 50;
 
             Hex hex = gridManager.Get_StartGridItem().hex;
-            switch (gameClient.race)
-            {
-                case 0: // Humans
-                    yield return Server_CreateCharacter(hex, 10, gameClient.name, true);
-                    break;
-                case 1: // Orcs
-                    yield return Server_CreateCharacter(hex, 5, gameClient.name, true);
-                    break;
-                case 2: // Undeads
-                    yield return Server_CreateCharacter(hex, 17, gameClient.name, true);
-                    break;
-            }
+            yield return Server_CreateCharacter(hex, somePlayer.heroId, somePlayer.name, true);
         }
 
         Hex hex2 = gridManager.Get_GridItem_ByCoords(3, 6).hex;
@@ -1581,7 +1570,7 @@ public class GameMain : MonoBehaviour
     {
         if (server.players.Count > 1) server.player.isAvailable = false;
 
-        yield return raceChange.Implementation();
+        yield return raceChange.Implementation(GameObject.Find("UI").GetComponent<UI_MainMenu>());
 
         for (int x = 0; x < server.players.Count; x++)
         {
@@ -1597,9 +1586,41 @@ public class GameMain : MonoBehaviour
 
     public IEnumerator Client_RaceChange(RaceChange raceChange)
     {
-        yield return raceChange.Implementation();
+        yield return raceChange.Implementation(GameObject.Find("UI").GetComponent<UI_MainMenu>());
 
         yield return Reply_TaskDone("Race change");
+    }
+    #endregion
+
+    #region Hero change
+    public void Request_HeroChange(HeroChange heroChange)
+    {
+        client.netProcessor.Send(client.network.GetPeerById(0), heroChange, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_HeroChange(HeroChange heroChange)
+    {
+        if (server.players.Count > 1) server.player.isAvailable = false;
+
+        yield return heroChange.Implementation(GameObject.Find("UI").GetComponent<UI_MainMenu>());
+
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, heroChange, DeliveryMethod.ReliableOrdered);
+        }
+
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_HeroChange(HeroChange heroChange)
+    {
+        yield return heroChange.Implementation(GameObject.Find("UI").GetComponent<UI_MainMenu>());
+
+        yield return Reply_TaskDone("Hero change");
     }
     #endregion
 
