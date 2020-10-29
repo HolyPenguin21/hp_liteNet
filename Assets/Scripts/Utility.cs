@@ -22,7 +22,7 @@ public static class Utility
     public enum char_attackDmgType { slash, pierce, blunt, magic };
     public enum char_Type { day, night, neutral };
 
-    public enum buff_Type { onEquip, onRemove, onTurn};
+    public enum buff_Type { onEquip, onTurn, onAttack, active};
     public enum spell_Area { single, circle, cone};
 
     public struct GridCoord

@@ -72,11 +72,11 @@ public class Client : MonoBehaviour
         cSubscription.CastItemSpell();
         cSubscription.SpellHeal();
         cSubscription.AttackResult();
+        cSubscription.ReceivePoisonDmg();
         cSubscription.CharacterDie();
         cSubscription.AddExp();
         cSubscription.AttackAnimation();
         cSubscription.OpenUpgradeMenu();
-        cSubscription.StatsUp();
         cSubscription.Replace();
     }
 

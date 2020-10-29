@@ -9,6 +9,7 @@ public class Item_BlinkScroll : Item
         base.itemId = 3;
         base.itemName = "Blink scroll";
         base.itemImage = Resources.Load<Sprite>("Items/Scroll");
+        
         base.itemActive = new Buff_Blink();
         base.itemOneTime = true;
     }

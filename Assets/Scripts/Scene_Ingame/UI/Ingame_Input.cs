@@ -64,6 +64,7 @@ public class Ingame_Input : MonoBehaviour
             Reset_All();
 
         if (mouseOverUI) return;
+        if (uI_Ingame.somePanelIsOn) return;
 
         MouseInput_Constant();
     }
@@ -80,6 +81,7 @@ public class Ingame_Input : MonoBehaviour
     public void OnDoubleClick()
     {
         if (mouseOverUI) return;
+        if (uI_Ingame.somePanelIsOn) return;
         if (Utility.IsServer())
         {
             if (!GameMain.inst.server.player.isAvailable) return;
@@ -95,6 +97,7 @@ public class Ingame_Input : MonoBehaviour
     public void OnHold()
     {
         if (mouseOverUI) return;
+        if (uI_Ingame.somePanelIsOn) return;
         if (castingSpell) return;
         if (Utility.IsServer())
         {
@@ -114,7 +117,7 @@ public class Ingame_Input : MonoBehaviour
     private void MouseInput_Constant()
     {
         Hex someHex = HittedObject();
-        if (someHex == null || uI_Ingame.somePanelIsOn)
+        if (someHex == null)
         {
             Reset_Hover();
             return;

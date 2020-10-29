@@ -25,15 +25,6 @@ public class ClientSubscriptions
         });
     }
 
-    public void StatsUp()
-    {
-        netProcessor.SubscribeReusable<StatsUp>((data) => {
-            client.player.isAvailable = false;
-
-            client.StartCoroutine(GameMain.inst.Client_StatsUp(data));
-        });
-    }
-
     public void AddExp()
     {
         netProcessor.SubscribeReusable<AddExp>((data) => {
@@ -67,6 +58,15 @@ public class ClientSubscriptions
             client.player.isAvailable = false;
 
             client.StartCoroutine(GameMain.inst.Client_AttackAnim(data));
+        });
+    }
+
+    public void ReceivePoisonDmg()
+    {
+        netProcessor.SubscribeReusable<ReceivePoisonDmg>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_ReceivePoisonDmg(data));
         });
     }
 

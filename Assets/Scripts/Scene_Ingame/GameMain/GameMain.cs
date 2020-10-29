@@ -314,26 +314,15 @@ public class GameMain : MonoBehaviour
     {
         string ownerName = character.owner.name;
         Hex someHex = character.hex;
-        int itemId = 0;
-        if (character.charItem != null)
-        {
-            itemId = character.charItem.itemId;
-        }
-        if (character.charId != upgradeId)
-        {
-            yield return Server_Die(someHex);
-            yield return Server_CreateCharacter(someHex, upgradeId, ownerName, character.heroCharacter);
-            if (itemId != 0)
-            {
-                yield return Server_CreateItem(someHex, itemId);
-                yield return Server_PickupItem(someHex.character);
-            }
-        }
-        else
-        {
-            yield return Server_StatsUp(someHex); // Server is blocked
-        }
-        yield return null;
+        Item charItem = character.charItem;
+
+        yield return Server_Die(someHex);
+        yield return Server_CreateCharacter(someHex, upgradeId, ownerName, character.heroCharacter);
+
+        if (charItem == null) yield break;
+
+        yield return Server_CreateItem(someHex, charItem.itemId);
+        yield return Server_PickupItem(someHex.character);
     }
 
     public IEnumerator Client_OpenUpgradeMenu(OpenUpgradeMenu upgradeMenu)
@@ -354,38 +343,6 @@ public class GameMain : MonoBehaviour
         upgrade.upgId = upgradeId;
 
         client.netProcessor.Send(client.network.GetPeerById(0), upgrade, DeliveryMethod.ReliableOrdered);
-    }
-    #endregion
-
-    #region Stats up
-    private IEnumerator Server_StatsUp(Hex hex)
-    {
-        if (server.players.Count > 2) server.player.isAvailable = false;
-
-        hex.character.StatsUp();
-
-        StatsUp statsUp = new StatsUp();
-        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(hex);
-        statsUp.coord_x = gridCoord.coord_x;
-        statsUp.coord_y = gridCoord.coord_y;
-        for (int x = 0; x < server.players.Count; x++)
-        {
-            Player somePlayer = server.players[x];
-            if (somePlayer.isServer || somePlayer.isNeutral) continue;
-
-            somePlayer.isAvailable = false;
-            yield return server.netProcessor.Send(server.players[x].address, statsUp, DeliveryMethod.ReliableOrdered);
-        }
-        yield return new WaitUntil(() => server.player.isAvailable);
-    }
-
-    public IEnumerator Client_StatsUp(StatsUp statsUp)
-    {
-        Character character = gridManager.Get_GridItem_ByCoords(statsUp.coord_x, statsUp.coord_y).hex.character;
-
-        character.StatsUp();
-
-        yield return Reply_TaskDone("Character stats are up");
     }
     #endregion
 
@@ -670,6 +627,42 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
+    #region Add max health
+    public IEnumerator Server_AddMaxHealth(Hex charHex, int amount)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character someChar = charHex.character;
+        someChar.charHp.hp_cur += amount;
+        someChar.charHp.hp_max += amount;
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charHex);
+        AddMaxHealth addMaxHealth = new AddMaxHealth();
+        addMaxHealth.coord_x = gridCoord.coord_x;
+        addMaxHealth.coord_y = gridCoord.coord_y;
+        addMaxHealth.curHealth = someChar.charHp.hp_cur;
+        addMaxHealth.maxHealth = someChar.charHp.hp_max;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, addMaxHealth, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_AddMaxHealth(AddMaxHealth addMaxHealth)
+    {
+        Character someChar = gridManager.Get_GridItem_ByCoords(addMaxHealth.coord_x, addMaxHealth.coord_y).hex.character;
+        someChar.charHp.hp_cur = addMaxHealth.curHealth;
+        someChar.charHp.hp_cur = addMaxHealth.maxHealth;
+
+        yield return Reply_TaskDone("Health added");
+    }
+    #endregion
+
     #region Die
     private IEnumerator Server_Die(Hex dieAtHex)
     {
@@ -767,6 +760,42 @@ public class GameMain : MonoBehaviour
         t_Character.RecieveDmg(attackResult.amount);
 
         yield return Reply_TaskDone("Attack result");
+    }
+    #endregion
+
+    #region Receive poison dmg
+    public IEnumerator Server_ReceivePoisonDmg(Hex charHex, int amount)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        Character someChar = charHex.character;
+        someChar.RecieveDmg(amount);
+        if (someChar.charHp.hp_cur <= 0) someChar.charHp.hp_cur = 1;
+
+        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charHex);
+        ReceivePoisonDmg poison = new ReceivePoisonDmg();
+        poison.coord_x = gridCoord.coord_x;
+        poison.coord_y = gridCoord.coord_y;
+        poison.amount = amount;
+        poison.hpLeft = someChar.charHp.hp_cur;
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, poison, DeliveryMethod.ReliableOrdered);
+        }
+        yield return new WaitUntil(() => server.player.isAvailable);
+    }
+
+    public IEnumerator Client_ReceivePoisonDmg(ReceivePoisonDmg poison)
+    {
+        Character someChar = gridManager.Get_GridItem_ByCoords(poison.coord_x, poison.coord_y).hex.character;
+        someChar.RecieveDmg(poison.amount);
+        someChar.charHp.hp_cur = poison.hpLeft;
+
+        yield return Reply_TaskDone("Poison dmg is done");
     }
     #endregion
 
@@ -1059,11 +1088,11 @@ public class GameMain : MonoBehaviour
             Character character = allCharacters[i];
             if (character.owner == currentTurn)
             {
-                character.OnMyTurnUpdate();
+                StartCoroutine(character.OnMyTurnUpdate());
             }
             else
             {
-                character.OnEnemyTurnUpdate();
+                StartCoroutine(character.OnEnemyTurnUpdate());
             }
         }
 

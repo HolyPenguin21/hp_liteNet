@@ -32,29 +32,45 @@ public abstract class Character
 	public Spell charSpell_1;
 	public Spell charSpell_2;
 
+	public List<Buff> charBuffs = new List<Buff>();
+
 	public float moveAnimationSpeed = 3f;
 	public float attackAnimationSpeed = 3f;
 
-	public void OnMyTurnUpdate()
+	public IEnumerator OnMyTurnUpdate()
 	{
 		charMovement.movePoints_cur = charMovement.movePoints_max;
 		canAct = true;
 		if (tr != null) tr.Find("canMove").gameObject.SetActive(true);
 
 		if (charSpell_1 != null) charSpell_1.CooldownUpdate();
-		if(charSpell_2 != null) charSpell_2.CooldownUpdate();
+		if (charSpell_2 != null) charSpell_2.CooldownUpdate();
+
+		if (charItem != null) charItem.Item_OnTurn(this);
+
+		for (int x = 0; x < charBuffs.Count; x++)
+		{
+			Buff someBuff = charBuffs[x];
+			if (someBuff.buffType != Utility.buff_Type.onTurn) continue;
+
+			yield return charBuffs[x].Buff_Activate(this);
+		}
 
 		AttackUpdateOnDayChange();
 		VillageHeal();
+
+		yield return null;
 	}
 
-	public void OnEnemyTurnUpdate()
+	public IEnumerator OnEnemyTurnUpdate()
 	{
 		charMovement.movePoints_cur = 0;
 		canAct = false;
 		if (tr != null) tr.Find("canMove").gameObject.SetActive(false);
 
 		AttackUpdateOnDayChange();
+
+		yield return null;
 	}
 
 	private void AttackUpdateOnDayChange()
@@ -167,7 +183,7 @@ public abstract class Character
 		if (Utility.IsMyCharacter(this))
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
 
-		if(charMovement.movePoints_cur == 0)
+		if (charMovement.movePoints_cur == 0)
 			GameMain.inst.fog.Update_Fog();
 	}
 
@@ -199,23 +215,6 @@ public abstract class Character
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
 	}
 
-	public void StatsUp()
-	{
-		charHp.hp_max += 5;
-		charHp.hp_cur = charHp.hp_max;
-		charDef.magic_resistance += 0.1f;
-		charExp.exp_cur = 0;
-		charExp.exp_max += 5;
-		charMovement.movePoints_max++;
-		for (int i = 0; i < charAttacks.Count; i++)
-		{
-			Utility.char_Attack value = charAttacks[i];
-			value.attackCount++;
-			value.attackDmg_base++;
-			charAttacks[i] = value;
-		}
-	}
-
 	public abstract IEnumerator AttackAnimation(Hex target, int attackId);
 
 	public void Item_PickUp(Hex hexWithItem)
@@ -230,7 +229,7 @@ public abstract class Character
 	public void Item_Drop()
 	{
 		Item item = charItem;
-		if(item == null) return;
+		if (item == null) return;
 		item.Item_OnRemove(this);
 
 		charItem = null;
@@ -239,10 +238,10 @@ public abstract class Character
 	}
 	public void Item_Use()
 	{
-		if(charItem == null) return;
-		if(charItem.itemActive == null) return;
-		
-		charItem.itemActive.Buff_Activate(this);
+		if (charItem == null) return;
+		if (charItem.itemActive == null) return;
+
+		GameMain.inst.StartCoroutine(charItem.itemActive.Buff_Activate(this));
 	}
 	public void Item_Remove()
 	{
@@ -267,7 +266,7 @@ public abstract class Character
 	{
 		charHp.hp_cur += amount;
 
-		if(charHp.hp_cur > charHp.hp_max)
+		if (charHp.hp_cur > charHp.hp_max)
 			charHp.hp_cur = charHp.hp_max;
 
 		if (tr.gameObject.activeInHierarchy)

@@ -9,13 +9,16 @@ public class Buff_Hp_up_10 : Buff
         base.buffId = 1;
         base.buffName = "HP bonus : + 10";
         base.buffDescription = "Adds 10 HP to character health pull.";
+
         base.buffType = Utility.buff_Type.onEquip;
     }
 
-    public override void Buff_Activate(Character character)
+    public override IEnumerator Buff_Activate(Character character)
     {
         character.charHp.hp_cur += 10;
         character.charHp.hp_max += 10;
+
+        yield return null;
     }
 
     public override void Buff_Remove(Character character)
