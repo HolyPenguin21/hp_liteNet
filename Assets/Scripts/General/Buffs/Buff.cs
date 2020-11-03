@@ -12,5 +12,5 @@ public abstract class Buff
 
     public abstract IEnumerator Buff_Activate(Character character);
 
-    public abstract void Buff_Remove(Character character);
+    public abstract IEnumerator Buff_Remove(Character character);
 }

@@ -16,6 +16,10 @@ public class CharactersData : MonoBehaviour
 	public GameObject hunter;           // 9
 	public GameObject humMage;          // 10
 	public GameObject rogue;            // 11
+	public GameObject cavalryman;       // 26
+	public GameObject dragoon;          // 27
+	public GameObject heavyinfantry;    // 28
+	public GameObject shocktrooper;		// 29
 	[Header("Undeads")]
 	public GameObject skeleton;         // 12
 	public GameObject armoredSkeleton;  // 13
@@ -29,6 +33,7 @@ public class CharactersData : MonoBehaviour
 	public GameObject darkFigure;       // 21
 	public GameObject necromancer;      // 22
 	public GameObject reaper;           // 23
+	public GameObject deathblade;		// 25
 	[Header("Orcs")]
 	public GameObject grunt;
 	[Header("Other")]
@@ -75,31 +80,31 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 4:
 				GameObject swordmanObj = Instantiate(swordman, position, Quaternion.identity);
-				character = new Swordman(swordmanObj.transform, gameClient, isHero);
+				character = new Swordsman(swordmanObj.transform, gameClient, isHero);
 				break;
 			case 5:
 				GameObject knightObj = Instantiate(knight, position, Quaternion.identity);
-				character = new Knight(knightObj.transform, gameClient, isHero);
+				character = new RoyalGuard(knightObj.transform, gameClient, isHero);
 				break;
 			case 6:
 				GameObject knightHalberdObj = Instantiate(knightHalberd, position, Quaternion.identity);
-				character = new KnightHalberd(knightHalberdObj.transform, gameClient, isHero);
+				character = new Halberdier(knightHalberdObj.transform, gameClient, isHero);
 				break;
 			case 7:
 				GameObject humArcherObj = Instantiate(humArcher, position, Quaternion.identity);
-				character = new HumArcher(humArcherObj.transform, gameClient, isHero);
+				character = new Bowman(humArcherObj.transform, gameClient, isHero);
 				break;
 			case 8:
 				GameObject trainedArcherObj = Instantiate(trainedArcher, position, Quaternion.identity);
-				character = new TrainedArcher(trainedArcherObj.transform, gameClient, isHero);
+				character = new Longbowman(trainedArcherObj.transform, gameClient, isHero);
 				break;
 			case 9:
 				GameObject hunterObj = Instantiate(hunter, position, Quaternion.identity);
-				character = new Hunter(hunterObj.transform, gameClient, isHero);
+				character = new MasterBowman(hunterObj.transform, gameClient, isHero);
 				break;
 			case 10:
 				GameObject humMageObj = Instantiate(humMage, position, Quaternion.identity);
-				character = new HumMage(humMageObj.transform, gameClient, isHero);
+				character = new Mage(humMageObj.transform, gameClient, isHero);
 				break;
 			case 11:
 				GameObject rogueObj = Instantiate(rogue, position, Quaternion.identity);
@@ -111,15 +116,15 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 13:
 				GameObject armSkeletonObj = Instantiate(armoredSkeleton, position, Quaternion.identity);
-				character = new ArmoredSkeleton(armSkeletonObj.transform, gameClient, isHero);
+				character = new Revenant(armSkeletonObj.transform, gameClient, isHero);
 				break;
 			case 14:
 				GameObject zombieObj = Instantiate(zombie, position, Quaternion.identity);
-				character = new Zombie(zombieObj.transform, gameClient, isHero);
+				character = new Ghoul(zombieObj.transform, gameClient, isHero);
 				break;
 			case 15:
 				GameObject armoredZombieObj = Instantiate(armoredZombie, position, Quaternion.identity);
-				character = new ArmoredZombie(armoredZombieObj.transform, gameClient, isHero);
+				character = new Necrophage(armoredZombieObj.transform, gameClient, isHero);
 				break;
 			case 16:
 				GameObject skeArcherObj = Instantiate(skelArcher, position, Quaternion.identity);
@@ -127,15 +132,15 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 17:
 				GameObject skelMageObj = Instantiate(skelMage, position, Quaternion.identity);
-				character = new SkelMage(skelMageObj.transform, gameClient, isHero);
+				character = new Necromancer(skelMageObj.transform, gameClient, isHero);
 				break;
 			case 18:
 				GameObject batWhiteObj = Instantiate(batWhite, position, Quaternion.identity);
-				character = new BatWhite(batWhiteObj.transform, gameClient, isHero);
+				character = new VampireBat(batWhiteObj.transform, gameClient, isHero);
 				break;
 			case 19:
 				GameObject batRedObj = Instantiate(batRed, position, Quaternion.identity);
-				character = new BatRed(batRedObj.transform, gameClient, isHero);
+				character = new BloodBat(batRedObj.transform, gameClient, isHero);
 				break;
 			case 20:
 				GameObject ghostObj = Instantiate(ghost, position, Quaternion.identity);
@@ -143,19 +148,39 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 21:
 				GameObject darkFigureObj = Instantiate(darkFigure, position, Quaternion.identity);
-				character = new DarkFigure(darkFigureObj.transform, gameClient, isHero);
+				character = new DarkAdept(darkFigureObj.transform, gameClient, isHero);
 				break;
 			case 22:
 				GameObject necromancerObj = Instantiate(necromancer, position, Quaternion.identity);
-				character = new Necromancer(necromancerObj.transform, gameClient, isHero);
+				character = new DarkSorcerer(necromancerObj.transform, gameClient, isHero);
 				break;
 			case 23:
 				GameObject reaperObj = Instantiate(reaper, position, Quaternion.identity);
-				character = new Reaper(reaperObj.transform, gameClient, isHero);
+				character = new Wraith(reaperObj.transform, gameClient, isHero);
 				break;
 			case 24:
 				GameObject fireEmberObj = Instantiate(fireEmber, position, Quaternion.identity);
 				character = new FireEmber(fireEmberObj.transform, gameClient, isHero);
+				break;
+			case 25:
+				GameObject deathbladeObj = Instantiate(deathblade, position, Quaternion.identity);
+				character = new Deathblade(deathbladeObj.transform, gameClient, isHero);
+				break;
+			case 26:
+				GameObject cavalrymanObj = Instantiate(cavalryman, position, Quaternion.identity);
+				character = new Cavalryman(cavalrymanObj.transform, gameClient, isHero);
+				break;
+			case 27:
+				GameObject dragoonObj = Instantiate(dragoon, position, Quaternion.identity);
+				character = new Dragoon(dragoonObj.transform, gameClient, isHero);
+				break;
+			case 28:
+				GameObject heavyObj = Instantiate(heavyinfantry, position, Quaternion.identity);
+				character = new HeavyInfantryman(heavyObj.transform, gameClient, isHero);
+				break;
+			case 29:
+				GameObject shockObj = Instantiate(shocktrooper, position, Quaternion.identity);
+				character = new Shocktrooper(shockObj.transform, gameClient, isHero);
 				break;
 		}
 
@@ -185,25 +210,25 @@ public class CharactersData : MonoBehaviour
 				result = new Pikeman(null, null, false);
 				break;
 			case 4:
-				result = new Swordman(null, null, false);
+				result = new Swordsman(null, null, false);
 				break;
 			case 5:
-				result = new Knight(null, null, false);
+				result = new RoyalGuard(null, null, false);
 				break;
 			case 6:
-				result = new KnightHalberd(null, null, false);
+				result = new Halberdier(null, null, false);
 				break;
 			case 7:
-				result = new HumArcher(null, null, false);
+				result = new Bowman(null, null, false);
 				break;
 			case 8:
-				result = new TrainedArcher(null, null, false);
+				result = new Longbowman(null, null, false);
 				break;
 			case 9:
-				result = new Hunter(null, null, false);
+				result = new MasterBowman(null, null, false);
 				break;
 			case 10:
-				result = new HumMage(null, null, false);
+				result = new Mage(null, null, false);
 				break;
 			case 11:
 				result = new Rogue(null, null, false);
@@ -212,40 +237,55 @@ public class CharactersData : MonoBehaviour
 				result = new Skeleton(null, null, false);
 				break;
 			case 13:
-				result = new ArmoredSkeleton(null, null, false);
+				result = new Revenant(null, null, false);
 				break;
 			case 14:
-				result = new Zombie(null, null, false);
+				result = new Ghoul(null, null, false);
 				break;
 			case 15:
-				result = new ArmoredZombie(null, null, false);
+				result = new Necrophage(null, null, false);
 				break;
 			case 16:
 				result = new SkelArcher(null, null, false);
 				break;
 			case 17:
-				result = new SkelMage(null, null, false);
+				result = new Necromancer(null, null, false);
 				break;
 			case 18:
-				result = new BatWhite(null, null, false);
+				result = new VampireBat(null, null, false);
 				break;
 			case 19:
-				result = new BatRed(null, null, false);
+				result = new BloodBat(null, null, false);
 				break;
 			case 20:
 				result = new Ghost(null, null, false);
 				break;
 			case 21:
-				result = new DarkFigure(null, null, false);
+				result = new DarkAdept(null, null, false);
 				break;
 			case 22:
-				result = new Necromancer(null, null, false);
+				result = new DarkSorcerer(null, null, false);
 				break;
 			case 23:
-				result = new Reaper(null, null, false);
+				result = new Wraith(null, null, false);
 				break;
 			case 24:
 				result = new FireEmber(null, null, false);
+				break;
+			case 25:
+				result = new Deathblade(null, null, false);
+				break;
+			case 26:
+				result = new Cavalryman(null, null, false);
+				break;
+			case 27:
+				result = new Dragoon(null, null, false);
+				break;
+			case 28:
+				result = new HeavyInfantryman(null, null, false);
+				break;
+			case 29:
+				result = new Shocktrooper(null, null, false);
 				break;
 		}
 		return result;

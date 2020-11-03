@@ -56,6 +56,7 @@ MonoBehaviour:
     isAvailable: 0
     name: 
     race: 0
+    heroId: 0
     gold: 0
     villages: 0
   dayTime_cur: 5
@@ -93,6 +94,13 @@ MonoBehaviour:
   hunter: {fileID: 7524226168957027308, guid: b6cc29d44b3994d459dbe2223ebed3d9, type: 3}
   humMage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
   rogue: {fileID: 5165242745472272674, guid: 2be141cfed9612748af1af81d0f770fe, type: 3}
+  cavalryman: {fileID: 4938322891378261139, guid: ec5b066d2ff7e5b48a5feca0173d19ad,
+    type: 3}
+  dragoon: {fileID: 6088421443218006277, guid: 3df4413bc05e55e4198ad0fa88ee30ff, type: 3}
+  heavyinfantry: {fileID: 5631460484882560005, guid: b0997fe4ea2b0954c9a1d7cf0b8e9fd0,
+    type: 3}
+  shocktrooper: {fileID: 9111161891389293740, guid: 01179e205a8740d44bf651fddac2e393,
+    type: 3}
   skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
     type: 3}
   armoredSkeleton: {fileID: 5884620163833239470, guid: 95d4083e28946b64cb36d1d1cec9b499,
@@ -113,6 +121,8 @@ MonoBehaviour:
   necromancer: {fileID: 2664058969936173876, guid: 93c112f17106f1843b0a801e1faee12a,
     type: 3}
   reaper: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
+  deathblade: {fileID: 3678949775293388011, guid: 9308bd5ae6ac77941baa48505029a0c9,
+    type: 3}
   grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
   fireEmber: {fileID: 7508290312353660163, guid: 69a34d8d85ca0484fad2aa759f1c4fe3,
     type: 3}

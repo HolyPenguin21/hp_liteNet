@@ -10,6 +10,6 @@ public class Item_Belt : Item
         base.itemName = "Belt";
         base.itemImage = Resources.Load<Sprite>("Items/Belt");
 
-        base.itemBuffs.Add(new Buff_Hp_up_10());
+        base.itemBuffs.Add(new Buff_Hp_up_5());
     }
 }

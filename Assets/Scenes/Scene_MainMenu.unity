@@ -874,9 +874,9 @@ MonoBehaviour:
     m_Options:
     - m_Text: Mage
       m_Image: {fileID: 0}
-    - m_Text: Knight
+    - m_Text: Pikeman
       m_Image: {fileID: 0}
-    - m_Text: Hunter
+    - m_Text: Longbowman
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7807,9 +7807,9 @@ MonoBehaviour:
     m_Options:
     - m_Text: Mage
       m_Image: {fileID: 0}
-    - m_Text: Knight
+    - m_Text: Pikeman
       m_Image: {fileID: 0}
-    - m_Text: Hunter
+    - m_Text: Longbowman
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

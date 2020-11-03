@@ -34,6 +34,15 @@ public class ClientSubscriptions
         });
     }
 
+    public void AddMaxHealth()
+    {
+        netProcessor.SubscribeReusable<AddMaxHealth>((data) => {
+            client.player.isAvailable = false;
+
+            client.StartCoroutine(GameMain.inst.Client_AddMaxHealth(data));
+        });
+    }
+
     public void CharacterDie()
     {
         netProcessor.SubscribeReusable<CharacterDie>((data) => {

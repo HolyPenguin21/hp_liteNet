@@ -92,9 +92,9 @@ public class UI_Tooltip : MonoBehaviour
                     break;
                 }
                 tooltip = c.charName + " :" +
-                          "\n Slash resistance : " + c.charDef.slash_resistance +
+                          "\n Slash resistance : " + c.charDef.blade_resistance +
                           "\n Pierce resistance : " + c.charDef.pierce_resistance +
-                          "\n Blunt resistance : " + c.charDef.blunt_resistance +
+                          "\n Blunt resistance : " + c.charDef.impact_resistance +
                           "\n Magic resistance : " + c.charDef.magic_resistance;
 
                 if (c.charSpell_1 != null)

@@ -25,57 +25,36 @@ public class Skeleton : Character
         charImage = Resources.Load<Sprite>("Images/Skeleton");
         charName = "Skeleton";
         charId = 12;
-        charCost = 12;
+        charCost = 15;
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 18;
+        charHp.hp_max = 34;
         charHp.hp_cur = charHp.hp_max;
 
         charDef.dodgeChance = 0;
-        charDef.slash_resistance = 0.0f;
-        charDef.pierce_resistance = 0.4f;
-        charDef.blunt_resistance = -0.3f;
-        charDef.magic_resistance = 0.0f;
+        charDef.blade_resistance = 0.4f;
+        charDef.pierce_resistance = 0.6f;
+        charDef.impact_resistance = -0.2f;
+        charDef.magic_resistance = -0.5f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 10;
+        charExp.exp_max = 17;
 
         charMovement.moveType = Utility.char_moveType.ground;
-        charMovement.movePoints_max = 4;
-        lookRange = 4;
+        charMovement.movePoints_max = 5;
+        lookRange = 5;
 
         upgradeList.Add(13);
+        upgradeList.Add(25);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
-        attack1.attackType = Utility.char_attackType.melee;
-        attack1.attackDmgType = Utility.char_attackDmgType.slash;
-        attack1.attackCount = 2;
-        attack1.attackDmg_base = 3;
+        attack1.attackType = Utility.char_attackType.Melee;
+        attack1.attackDmgType = Utility.char_attackDmgType.Blade;
+        attack1.attackCount = 3;
+        attack1.attackDmg_base = 7;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
-    }
-
-    public override IEnumerator AttackAnimation(Hex target, int attackId)
-    {
-        // attack move
-        float t = 0f;
-        Vector3 attackVector = base.tr.position + (target.transform.position - base.tr.position) / 2; // A+(B-A)/2 - vector middle
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, attackVector, t);
-            t += Time.deltaTime * attackAnimationSpeed * 2;
-            yield return null;
-        }
-
-        // return move
-        t = 0f;
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, hex.transform.position, t);
-            t += Time.deltaTime * attackAnimationSpeed;
-            yield return null;
-        }
     }
 }

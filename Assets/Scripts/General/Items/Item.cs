@@ -39,7 +39,7 @@ public abstract class Item
         for(int x = 0; x < itemBuffs.Count; x++)
         {
             Buff buff = itemBuffs[x];
-            buff.Buff_Remove(character);
+            GameMain.inst.StartCoroutine(buff.Buff_Remove(character));
         }
     }
 }

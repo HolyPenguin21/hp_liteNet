@@ -23,67 +23,43 @@ public class SkelArcher : Character
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
         charImage = Resources.Load<Sprite>("Images/SkelArcher");
-        charName = "Skel Archer";
+        charName = "Skeleton Archer";
         charId = 16;
-        charCost = 15;
+        charCost = 14;
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 18;
+        charHp.hp_max = 31;
         charHp.hp_cur = charHp.hp_max;
 
         charDef.dodgeChance = 0;
-        charDef.slash_resistance = 0.0f;
-        charDef.pierce_resistance = 0.4f;
-        charDef.blunt_resistance = -0.3f;
-        charDef.magic_resistance = 0.0f;
+        charDef.blade_resistance = 0.4f;
+        charDef.pierce_resistance = 0.6f;
+        charDef.impact_resistance = -0.2f;
+        charDef.magic_resistance = -0.5f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 50;
+        charExp.exp_max = 99;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 5;
         lookRange = 5;
 
-        //upgradeList.Add(7);
-
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack char_Attack = default(Utility.char_Attack);
-        char_Attack.attackType = Utility.char_attackType.melee;
-        char_Attack.attackDmgType = Utility.char_attackDmgType.blunt;
-        char_Attack.attackCount = 1;
+        char_Attack.attackType = Utility.char_attackType.Melee;
+        char_Attack.attackDmgType = Utility.char_attackDmgType.Impact;
+        char_Attack.attackCount = 2;
         char_Attack.attackDmg_base = 3;
         char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
         charAttacks.Add(char_Attack);
 
         Utility.char_Attack char_Attack2 = default(Utility.char_Attack);
-        char_Attack2.attackType = Utility.char_attackType.ranged;
-        char_Attack2.attackDmgType = Utility.char_attackDmgType.pierce;
+        char_Attack2.attackType = Utility.char_attackType.Ranged;
+        char_Attack2.attackDmgType = Utility.char_attackDmgType.Pierce;
         char_Attack2.attackCount = 3;
-        char_Attack2.attackDmg_base = 3;
+        char_Attack2.attackDmg_base = 6;
         char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
         charAttacks.Add(char_Attack2);
-    }
-
-    public override IEnumerator AttackAnimation(Hex target, int attackId)
-    {
-        // attack move
-        float t = 0f;
-        Vector3 attackVector = base.tr.position + (target.transform.position - base.tr.position) / 2; // A+(B-A)/2 - vector middle
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, attackVector, t);
-            t += Time.deltaTime * attackAnimationSpeed * 2;
-            yield return null;
-        }
-
-        // return move
-        t = 0f;
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, hex.transform.position, t);
-            t += Time.deltaTime * attackAnimationSpeed;
-            yield return null;
-        }
     }
 }

@@ -46,6 +46,9 @@ public abstract class Character
 		if (charSpell_1 != null) charSpell_1.CooldownUpdate();
 		if (charSpell_2 != null) charSpell_2.CooldownUpdate();
 
+		AttackUpdateOnDayChange();
+		VillageHeal();
+
 		if (charItem != null) charItem.Item_OnTurn(this);
 
 		for (int x = 0; x < charBuffs.Count; x++)
@@ -55,9 +58,6 @@ public abstract class Character
 
 			yield return charBuffs[x].Buff_Activate(this);
 		}
-
-		AttackUpdateOnDayChange();
-		VillageHeal();
 
 		yield return null;
 	}
@@ -151,7 +151,12 @@ public abstract class Character
 	{
 		if (!hex.isVillage) return;
 
-		if (charHp.hp_cur < charHp.hp_max)
+		Buff existBuff = charBuffs.Find(i => i.buffId == 4); // Poisoned
+		if (existBuff != null)
+		{
+			charBuffs.Remove(existBuff);
+		}
+		else if (charHp.hp_cur < charHp.hp_max)
 		{
 			charHp.hp_cur += Utility.villageHeal;
 
@@ -186,7 +191,6 @@ public abstract class Character
 		if (charMovement.movePoints_cur == 0)
 			GameMain.inst.fog.Update_Fog();
 	}
-
 	private IEnumerator ActualMove(Hex hexToMove)
 	{
 		float t2 = 0f;
@@ -200,7 +204,6 @@ public abstract class Character
 
 		GameMain.inst.fog.Update_Fog();
 	}
-
 	public void Replace(Hex replaceTo)
 	{
 		hex.character = null;
@@ -215,7 +218,48 @@ public abstract class Character
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
 	}
 
-	public abstract IEnumerator AttackAnimation(Hex target, int attackId);
+	public IEnumerator AttackAnimation(Hex target, int attackId)
+	{
+		if (attackId == 1)
+		{
+			float t = 0f;
+			while (t < 1f)
+			{
+				t += Time.deltaTime * attackAnimationSpeed * 4;
+				yield return null;
+			}
+
+			if (tr.gameObject.activeInHierarchy)
+				GameMain.inst.effectsData.Effect_Lightning(target.transform.position);
+
+			t = 0f;
+			while (t < 1f)
+			{
+				t += Time.deltaTime * attackAnimationSpeed * 0.5f;
+				yield return null;
+			}
+		}
+		else
+		{
+			// attack move
+			float t = 0f;
+			Vector3 attackVector = tr.position + (target.transform.position - tr.position) / 2; // A+(B-A)/2 - vector middle
+			while (t < 1f)
+			{
+				tr.position = Vector3.Lerp(tr.position, attackVector, t);
+				t += Time.deltaTime * attackAnimationSpeed * 2;
+				yield return null;
+			}
+			// return move
+			t = 0f;
+			while (t < 1f)
+			{
+				tr.position = Vector3.Lerp(tr.position, hex.transform.position, t);
+				t += Time.deltaTime * attackAnimationSpeed;
+				yield return null;
+			}
+		}
+	}
 
 	public void Item_PickUp(Hex hexWithItem)
 	{
@@ -262,6 +306,35 @@ public abstract class Character
 			GameMain.inst.effectsData.Effect_Damage(hex.transform.position, dmgToRecieve);
 	}
 
+	public void RecieveBuff(string data_buffIds)
+	{
+		if (data_buffIds == "") return;
+
+		List<int> buffIds = new List<int>();
+		List<Buff> buffsToApply = new List<Buff>();
+
+		string[] parsed_buffIds = data_buffIds.Split('|');
+		for (int x = 1; x < parsed_buffIds.Length; x++)
+			buffIds.Add(int.Parse(parsed_buffIds[x]));
+
+		for (int x = 0; x < buffIds.Count; x++)
+		{
+			switch (buffIds[x])
+			{
+				case 5:
+					buffsToApply.Add(new Buff_Poison());
+					break;
+			}
+		}
+
+		for (int x = 0; x < buffsToApply.Count; x++)
+		{
+			Buff existBuff = charBuffs.Find(i => i.buffId == buffsToApply[x].buffId);
+			if (existBuff != null) return;
+
+			charBuffs.Add(buffsToApply[x]);
+		}
+	}
 	public void RecieveHeal(int amount)
 	{
 		charHp.hp_cur += amount;

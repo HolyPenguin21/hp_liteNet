@@ -52,11 +52,11 @@ public class HeroChange
 				case 0: // Mage
 					player.heroId = 10;
 					break;
-				case 1: // Knight
-					player.heroId = 5;
+				case 1: // Pikeman
+					player.heroId = 3;
 					break;
-				case 2: // Hunter
-					player.heroId = 9;
+				case 2: // Longbowman
+					player.heroId = 8;
 					break;
 			}
 		}
@@ -79,14 +79,14 @@ public class HeroChange
 		{
 			switch (hero.value)
 			{
-				case 0: // Mage
-					player.heroId = 17;
+				case 0: // DarkSorcerer
+					player.heroId = 22;
 					break;
-				case 1: // Skeleton
+				case 1: // Revenant
 					player.heroId = 13;
 					break;
-				case 2: // Necromancer
-					player.heroId = 22;
+				case 2: // Necrophage
+					player.heroId = 15;
 					break;
 			}
 		}

@@ -7,4 +7,5 @@ public class AttackResult
     public int coord_x { get; set; }
     public int coord_y { get; set; }
     public int amount { get; set; }
+    public string attackBuffId { get; set; }
 }

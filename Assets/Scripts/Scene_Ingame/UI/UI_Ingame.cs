@@ -57,6 +57,7 @@ public class UI_Ingame : MonoBehaviour
 	public Text cInfo_Spell2_CD_Text;
 	public GameObject cInfo_Spell_Cancel;
 	public Text cInfo_Attacks_Text;
+	public Text cInfo_Buffs_Text;
 	#endregion
 
 	#region Character item panel
@@ -311,9 +312,10 @@ public class UI_Ingame : MonoBehaviour
 		cInfo_Dodge_Text.text = "Dodge : " + c.charDef.dodgeChance + " + " + hex.dodge;
 		cInfo_Attacks_Text.text = "";
 		for (int y = 0; y < c.charAttacks.Count; y++)
-		{
 			cInfo_Attacks_Text.text = cInfo_Attacks_Text.text + Get_AttackTooltip(c.charAttacks[y]) + "\n";
-		}
+		cInfo_Buffs_Text.text = "";
+		for (int y = 0; y < c.charBuffs.Count; y++)
+			cInfo_Buffs_Text.text = cInfo_Buffs_Text.text + c.charBuffs[y].buffName + "\n";
 
 		// Spells
 		Show_CharacterSpellInfo(c);
@@ -530,7 +532,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_3_button.gameObject.SetActive(true);
 				recruit_4_button.gameObject.SetActive(true);
 				recruit_5_button.gameObject.SetActive(true);
-				recruit_6_button.gameObject.SetActive(false);
+				recruit_6_button.gameObject.SetActive(true);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
@@ -541,51 +543,56 @@ public class UI_Ingame : MonoBehaviour
 					GameObject.Find("recruit_1_CharName_Text").GetComponent<Text>().text = (spearman.charName ?? "");
 					GameObject.Find("recruit_1_CharPrice_Text").GetComponent<Text>().text = string.Concat(spearman.charCost);
 				}
+
 				if (!recrutable_dict.ContainsKey(recruit_2_button))
 				{
-					Character swordman = new Swordman(null, gameClient, false);
-					recrutable_dict[recruit_2_button] = swordman;
+					Character humArcher = new Bowman(null, gameClient, false);
+					recrutable_dict[recruit_2_button] = humArcher;
 
-					GameObject.Find("recruit_2_Char_Image").GetComponent<Image>().sprite = swordman.charImage;
-					GameObject.Find("recruit_2_CharName_Text").GetComponent<Text>().text = (swordman.charName ?? "");
-					GameObject.Find("recruit_2_CharPrice_Text").GetComponent<Text>().text = string.Concat(swordman.charCost);
+					GameObject.Find("recruit_2_Char_Image").GetComponent<Image>().sprite = humArcher.charImage;
+					GameObject.Find("recruit_2_CharName_Text").GetComponent<Text>().text = (humArcher.charName ?? "");
+					GameObject.Find("recruit_2_CharPrice_Text").GetComponent<Text>().text = string.Concat(humArcher.charCost);
 				}
+
 				if (!recrutable_dict.ContainsKey(recruit_3_button))
 				{
-					Character humArcher = new HumArcher(null, gameClient, false);
-					recrutable_dict[recruit_3_button] = humArcher;
+					Character humMage = new Mage(null, gameClient, false);
+					recrutable_dict[recruit_3_button] = humMage;
 
-					GameObject.Find("recruit_3_Char_Image").GetComponent<Image>().sprite = humArcher.charImage;
-					GameObject.Find("recruit_3_CharName_Text").GetComponent<Text>().text = (humArcher.charName ?? "");
-					GameObject.Find("recruit_3_CharPrice_Text").GetComponent<Text>().text = string.Concat(humArcher.charCost);
+					GameObject.Find("recruit_3_Char_Image").GetComponent<Image>().sprite = humMage.charImage;
+					GameObject.Find("recruit_3_CharName_Text").GetComponent<Text>().text = (humMage.charName ?? "");
+					GameObject.Find("recruit_3_CharPrice_Text").GetComponent<Text>().text = string.Concat(humMage.charCost);
 				}
+
 				if (!recrutable_dict.ContainsKey(recruit_4_button))
 				{
-					Character humMage = new HumMage(null, gameClient, false);
-					recrutable_dict[recruit_4_button] = humMage;
+					Character rogue = new Rogue(null, gameClient, false);
+					recrutable_dict[recruit_4_button] = rogue;
 
-					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = humMage.charImage;
-					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (humMage.charName ?? "");
-					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(humMage.charCost);
+					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = rogue.charImage;
+					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (rogue.charName ?? "");
+					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(rogue.charCost);
 				}
+
 				if (!recrutable_dict.ContainsKey(recruit_5_button))
 				{
-					Character rogue = new Rogue(null, gameClient, false);
-					recrutable_dict[recruit_5_button] = rogue;
+					Character cavalryman = new Cavalryman(null, gameClient, false);
+					recrutable_dict[recruit_5_button] = cavalryman;
 
-					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = rogue.charImage;
-					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (rogue.charName ?? "");
-					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(rogue.charCost);
+					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = cavalryman.charImage;
+					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (cavalryman.charName ?? "");
+					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(cavalryman.charCost);
 				}
-				// if (!recrutable_dict.ContainsKey(recruit_6_button))
-				// {
-				// 	Character knight = new KnightHalberd(null, gameClient, isHero: false);
-				// 	recrutable_dict[recruit_6_button] = knight;
 
-				// 	GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = knight.charImage;
-				// 	GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (knight.charName ?? "");
-				// 	GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(knight.charCost);
-				// }
+				if (!recrutable_dict.ContainsKey(recruit_6_button))
+				{
+					Character heavy = new HeavyInfantryman(null, gameClient, false);
+					recrutable_dict[recruit_6_button] = heavy;
+
+					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = heavy.charImage;
+					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (heavy.charName ?? "");
+					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(heavy.charCost);
+				}
 				break;
 
 			case 1: // Orcs
@@ -607,7 +614,7 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
-					Character zombie = new Zombie(null, gameClient, false);
+					Character zombie = new Ghoul(null, gameClient, false);
 					recrutable_dict[recruit_1_button] = zombie;
 					GameObject.Find("recruit_1_Char_Image").GetComponent<Image>().sprite = zombie.charImage;
 					GameObject.Find("recruit_1_CharName_Text").GetComponent<Text>().text = (zombie.charName ?? "");
@@ -634,7 +641,7 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_4_button))
 				{
-					Character character2 = new SkelMage(null, gameClient, isHero: false);
+					Character character2 = new DarkAdept(null, gameClient, isHero: false);
 					recrutable_dict[recruit_4_button] = character2;
 					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = character2.charImage;
 					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (character2.charName ?? "");
@@ -643,16 +650,16 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_5_button))
 				{
-					Character darkFigure = new DarkFigure(null, gameClient, isHero: false);
-					recrutable_dict[recruit_5_button] = darkFigure;
-					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = darkFigure.charImage;
-					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (darkFigure.charName ?? "");
-					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(darkFigure.charCost);
+					Character ghost = new Ghost(null, gameClient, isHero: false);
+					recrutable_dict[recruit_5_button] = ghost;
+					GameObject.Find("recruit_5_Char_Image").GetComponent<Image>().sprite = ghost.charImage;
+					GameObject.Find("recruit_5_CharName_Text").GetComponent<Text>().text = (ghost.charName ?? "");
+					GameObject.Find("recruit_5_CharPrice_Text").GetComponent<Text>().text = string.Concat(ghost.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_6_button))
 				{
-					Character bat = new BatWhite(null, gameClient, isHero: false);
+					Character bat = new VampireBat(null, gameClient, isHero: false);
 					recrutable_dict[recruit_6_button] = bat;
 					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = bat.charImage;
 					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (bat.charName ?? "");
@@ -907,16 +914,16 @@ public class UI_Ingame : MonoBehaviour
 		Sprite result = null;
 		switch (attackDmgType)
 		{
-			case Utility.char_attackDmgType.slash:
+			case Utility.char_attackDmgType.Blade:
 				result = Resources.Load<Sprite>("DamageType/IronSword");
 				break;
-			case Utility.char_attackDmgType.pierce:
+			case Utility.char_attackDmgType.Pierce:
 				result = Resources.Load<Sprite>("DamageType/Arrow");
 				break;
-			case Utility.char_attackDmgType.blunt:
+			case Utility.char_attackDmgType.Impact:
 				result = Resources.Load<Sprite>("DamageType/Hammer");
 				break;
-			case Utility.char_attackDmgType.magic:
+			case Utility.char_attackDmgType.Magic:
 				result = Resources.Load<Sprite>("DamageType/RubyStaff");
 				break;
 		}
@@ -934,16 +941,16 @@ public class UI_Ingame : MonoBehaviour
 		int resultDmg = 0;
 		switch (attack.attackDmgType)
 		{
-			case Utility.char_attackDmgType.slash:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.slash_resistance);
+			case Utility.char_attackDmgType.Blade:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.blade_resistance);
 				break;
-			case Utility.char_attackDmgType.pierce:
+			case Utility.char_attackDmgType.Pierce:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.pierce_resistance);
 				break;
-			case Utility.char_attackDmgType.blunt:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.blunt_resistance);
+			case Utility.char_attackDmgType.Impact:
+				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.impact_resistance);
 				break;
-			case Utility.char_attackDmgType.magic:
+			case Utility.char_attackDmgType.Magic:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.magic_resistance);
 				break;
 		}

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff_Poison : Buff
+public class Buff_Hp_up_5 : Buff
 {
-    public Buff_Poison()
+    public Buff_Hp_up_5 ()
     {
-        base.buffId = 4;
-        base.buffName = "-Poisoned";
-        base.buffDescription = "Character is poisoned and will lose hp on turn.";
+        base.buffId = 1;
+        base.buffName = "HP bonus : + 5";
+        base.buffDescription = "Adds 5 HP to character health pull.";
 
-        base.buffType = Utility.buff_Type.onTurn;
+        base.buffType = Utility.buff_Type.onEquip;
     }
 
     public override IEnumerator Buff_Activate(Character character)
@@ -21,11 +21,11 @@ public class Buff_Poison : Buff
         // Server
         if (!Utility.IsServer()) yield break;
 
-        yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex, Utility.villageHeal);
+        yield return GameMain.inst.Server_ChangeMaxHealth(character.hex, 5);
     }
 
     public override IEnumerator Buff_Remove(Character character)
     {
-        yield return null;
+        yield return GameMain.inst.Server_ChangeMaxHealth(character.hex, -5);
     }
 }

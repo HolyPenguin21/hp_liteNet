@@ -23,56 +23,43 @@ public class Ghost : Character
         charImage = Resources.Load<Sprite>("Images/Ghost");
         charName = "Ghost";
         charId = 20;
-        charCost = 19;
+        charCost = 20;
 
         charType = Utility.char_Type.night;
 
-        charHp.hp_max = 19;
+        charHp.hp_max = 18;
         charHp.hp_cur = charHp.hp_max;
 
-        charDef.dodgeChance = 0;
-        charDef.slash_resistance = 0.5f;
+        charDef.dodgeChance = 40;
+        charDef.blade_resistance = 0.5f;
         charDef.pierce_resistance = 0.5f;
-        charDef.magic_resistance = 0.0f;
+        charDef.impact_resistance = 0.5f;
+        charDef.magic_resistance = -0.1f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 50;
+        charExp.exp_max = 15;
 
         charMovement.moveType = Utility.char_moveType.ground;
-        charMovement.movePoints_max = 5;
-        base.lookRange = 5;
+        charMovement.movePoints_max = 7;
+        base.lookRange = 7;
 
-        //upgradeList.Add(7);
+        upgradeList.Add(23);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
-        attack1.attackType = Utility.char_attackType.melee;
-        attack1.attackDmgType = Utility.char_attackDmgType.magic;
+        attack1.attackType = Utility.char_attackType.Melee;
+        attack1.attackDmgType = Utility.char_attackDmgType.Magic;
         attack1.attackCount = 3;
         attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
-    }
 
-    public override IEnumerator AttackAnimation(Hex target, int attackId)
-    {
-        // attack move
-        float t = 0f;
-        Vector3 attackVector = base.tr.position + (target.transform.position - base.tr.position) / 2; // A+(B-A)/2 - vector middle
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, attackVector, t);
-            t += Time.deltaTime * attackAnimationSpeed * 2;
-            yield return null;
-        }
-
-        // return move
-        t = 0f;
-        while (t < 1f)
-        {
-            tr.position = Vector3.Lerp(base.tr.position, hex.transform.position, t);
-            t += Time.deltaTime * attackAnimationSpeed;
-            yield return null;
-        }
+        Utility.char_Attack attack2 = new Utility.char_Attack();
+        attack2.attackType = Utility.char_attackType.Ranged;
+        attack2.attackDmgType = Utility.char_attackDmgType.Magic;
+        attack2.attackCount = 3;
+        attack2.attackDmg_base = 3;
+        attack2.attackDmg_cur = attack2.attackDmg_base;
+        charAttacks.Add(attack2);
     }
 }

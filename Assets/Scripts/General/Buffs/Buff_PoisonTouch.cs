@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff_Poison : Buff
+public class Buff_PoisonTouch : Buff
 {
-    public Buff_Poison()
+    public Buff_PoisonTouch()
     {
-        base.buffId = 4;
-        base.buffName = "-Poisoned";
-        base.buffDescription = "Character is poisoned and will lose hp on turn.";
+        base.buffId = 5;
+        base.buffName = "Poison Touch";
+        base.buffDescription = "Character will poison its target on attack.";
 
-        base.buffType = Utility.buff_Type.onTurn;
+        base.buffType = Utility.buff_Type.onAttack;
     }
 
     public override IEnumerator Buff_Activate(Character character)
@@ -20,8 +20,8 @@ public class Buff_Poison : Buff
 
         // Server
         if (!Utility.IsServer()) yield break;
-
-        yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex, Utility.villageHeal);
+        Debug.Log("asd");
+        //yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex, Utility.villageHeal);
     }
 
     public override IEnumerator Buff_Remove(Character character)

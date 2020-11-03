@@ -53,7 +53,7 @@ public class RaceChange
 		{
 			case 0: // Humans
 				hero.ClearOptions();
-				List<string> humHeroes = new List<string> { "Mage", "Knight", "Hunter" };
+				List<string> humHeroes = new List<string> { "Mage", "Pikeman", "Longbowman" };
 				hero.AddOptions(humHeroes);
 				
 				player.heroId = 10;
@@ -65,7 +65,7 @@ public class RaceChange
 				break;
 			case 2: // Undeads
 				hero.ClearOptions();
-				List<string> undHeroes = new List<string> { "SkelMage", "Skeleton", "Necromancer" };
+				List<string> undHeroes = new List<string> { "DarkSorcerer", "Revenant", "Necrophage" };
 				hero.AddOptions(undHeroes);
 
 				player.heroId = 17;

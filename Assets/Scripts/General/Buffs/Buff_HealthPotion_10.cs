@@ -24,8 +24,8 @@ public class Buff_HealthPotion_10 : Buff
         yield return null;
     }
 
-    public override void Buff_Remove(Character character)
+    public override IEnumerator Buff_Remove(Character character)
     {
-
+        yield return null;
     }
 }

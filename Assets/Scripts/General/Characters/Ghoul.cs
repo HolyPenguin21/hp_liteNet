@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pikeman : Character
+public class Ghoul : Character
 {
-    public Pikeman(Transform tr, Player owner, bool isHero)
+    public Ghoul(Transform tr, Player owner, bool isHero)
     {
         base.tr = tr;
         base.owner = owner;
@@ -22,38 +22,40 @@ public class Pikeman : Character
         // Item icon
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-        charImage = Resources.Load<Sprite>("Images/Pikeman");
-        charName = "Pikeman";
-        charId = 3;
-        charCost = 25;
+        charImage = Resources.Load<Sprite>("Images/Zombie");
+        charName = "Ghoul";
+        charId = 14;
+        charCost = 16;
 
-        charType = Utility.char_Type.day;
+        charType = Utility.char_Type.night;
 
-        charHp.hp_max = 55;
+        charHp.hp_max = 33;
         charHp.hp_cur = charHp.hp_max;
 
         charDef.dodgeChance = 0;
-        charDef.blade_resistance = 0.0f;
-        charDef.pierce_resistance = 0.4f;
+        charDef.blade_resistance = 0.1f;
+        charDef.pierce_resistance = 0.3f;
         charDef.impact_resistance = 0.0f;
         charDef.magic_resistance = 0.2f;
 
         charExp.exp_cur = 0;
-        charExp.exp_max = 32;
+        charExp.exp_max = 17;
 
         charMovement.moveType = Utility.char_moveType.ground;
         charMovement.movePoints_max = 5;
         base.lookRange = 5;
 
-        upgradeList.Add(6);
+        upgradeList.Add(15);
 
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.Melee;
-        attack1.attackDmgType = Utility.char_attackDmgType.Pierce;
-        attack1.attackCount = 3;
-        attack1.attackDmg_base = 10;
+        attack1.attackDmgType = Utility.char_attackDmgType.Blade;
+        attack1.attackCount = 2;
+        attack1.attackDmg_base = 3;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
+
+        charBuffs.Add(new Buff_PoisonTouch());
     }
 }

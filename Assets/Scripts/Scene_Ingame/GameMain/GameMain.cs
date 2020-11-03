@@ -627,14 +627,16 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
-    #region Add max health
-    public IEnumerator Server_AddMaxHealth(Hex charHex, int amount)
+    #region Change max health
+    public IEnumerator Server_ChangeMaxHealth(Hex charHex, int amount)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
         Character someChar = charHex.character;
         someChar.charHp.hp_cur += amount;
         someChar.charHp.hp_max += amount;
+
+        if (someChar.charHp.hp_cur <= 0) someChar.charHp.hp_cur = 1;
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charHex);
         AddMaxHealth addMaxHealth = new AddMaxHealth();
@@ -657,7 +659,7 @@ public class GameMain : MonoBehaviour
     {
         Character someChar = gridManager.Get_GridItem_ByCoords(addMaxHealth.coord_x, addMaxHealth.coord_y).hex.character;
         someChar.charHp.hp_cur = addMaxHealth.curHealth;
-        someChar.charHp.hp_cur = addMaxHealth.maxHealth;
+        someChar.charHp.hp_max = addMaxHealth.maxHealth;
 
         yield return Reply_TaskDone("Health added");
     }
@@ -715,33 +717,44 @@ public class GameMain : MonoBehaviour
 
         int attackDmg_cur = a_Character.charAttacks[attackId].attackDmg_cur;
         int resultDmg = 0;
+        string attackBuffId = "";
+
         int dodge = t_Character.charDef.dodgeChance + t_Character.hex.dodge;
         if (UnityEngine.Random.Range(0, 101) > dodge)
         {
             resultDmg = attackDmg_cur;
             switch (a_Character.charAttacks[attackId].attackDmgType)
             {
-                case Utility.char_attackDmgType.slash:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.slash_resistance);
+                case Utility.char_attackDmgType.Blade:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.blade_resistance);
                     break;
-                case Utility.char_attackDmgType.pierce:
+                case Utility.char_attackDmgType.Pierce:
                     resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.pierce_resistance);
                     break;
-                case Utility.char_attackDmgType.blunt:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.blunt_resistance);
+                case Utility.char_attackDmgType.Impact:
+                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.impact_resistance);
                     break;
-                case Utility.char_attackDmgType.magic:
+                case Utility.char_attackDmgType.Magic:
                     resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.magic_resistance);
                     break;
             }
+
+            for (int x = 0; x < a_Character.charBuffs.Count; x++)
+            {
+                if (a_Character.charBuffs[x].buffType != Utility.buff_Type.onAttack) continue;
+
+                attackBuffId = attackBuffId + "|" + a_Character.charBuffs[x].buffId;
+            }
         }
         t_Character.RecieveDmg(resultDmg);
+        t_Character.RecieveBuff(attackBuffId);
 
         AttackResult attackResult = new AttackResult();
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(t_Character.hex);
         attackResult.coord_x = gridCoord.coord_x;
         attackResult.coord_y = gridCoord.coord_y;
         attackResult.amount = resultDmg;
+        attackResult.attackBuffId = attackBuffId;
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
@@ -758,6 +771,7 @@ public class GameMain : MonoBehaviour
         Character t_Character = gridManager.Get_GridItem_ByCoords(attackResult.coord_x, attackResult.coord_y).hex.character;
 
         t_Character.RecieveDmg(attackResult.amount);
+        t_Character.RecieveBuff(attackResult.attackBuffId);
 
         yield return Reply_TaskDone("Attack result");
     }
@@ -1101,14 +1115,10 @@ public class GameMain : MonoBehaviour
 
     private IEnumerator NeutralsTurn()
     {
-        if (server.players.Count > 2) server.player.isAvailable = false;
-
         if (currentTurn.name != "Neutrals") yield break;
 
         yield return aiNeutrals.Ai_Logic();
         yield return Server_EndTurn();
-
-        yield return new WaitUntil(() => server.player.isAvailable);
     }
     #endregion
 

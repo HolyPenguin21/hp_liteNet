@@ -9,6 +9,8 @@ public class DarkPortalOpen : MonoBehaviour
 
     IEnumerator Start()
     {
+        Destroy(gameObject, 0.5f);
+
         initialScale = transform.localScale.x;
 
         curScale = 0.01f;
@@ -27,7 +29,5 @@ public class DarkPortalOpen : MonoBehaviour
             transform.localScale = new Vector3(curScale, 1, curScale);
             yield return null;
         }
-
-        Destroy(gameObject);
     }
 }
