@@ -81,6 +81,7 @@ public class UI_Ingame : MonoBehaviour
 	public Button recruit_4_button;
 	public Button recruit_5_button;
 	public Button recruit_6_button;
+	public Button recruit_7_button;
 
 	public Image rec_Char_Image;
 	public Text rec_CharName_Text;
@@ -507,6 +508,7 @@ public class UI_Ingame : MonoBehaviour
 		recruit_4_button.gameObject.SetActive(false);
 		recruit_5_button.gameObject.SetActive(false);
 		recruit_6_button.gameObject.SetActive(false);
+		recruit_7_button.gameObject.SetActive(false);
 
 		recruit_Canvas.SetActive(true);
 
@@ -533,6 +535,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_4_button.gameObject.SetActive(true);
 				recruit_5_button.gameObject.SetActive(true);
 				recruit_6_button.gameObject.SetActive(true);
+				recruit_7_button.gameObject.SetActive(true);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
@@ -566,12 +569,12 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_4_button))
 				{
-					Character rogue = new Rogue(null, gameClient, false);
-					recrutable_dict[recruit_4_button] = rogue;
+					Character heavy = new HeavyInfantryman(null, gameClient, false);
+					recrutable_dict[recruit_4_button] = heavy;
 
-					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = rogue.charImage;
-					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (rogue.charName ?? "");
-					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(rogue.charCost);
+					GameObject.Find("recruit_4_Char_Image").GetComponent<Image>().sprite = heavy.charImage;
+					GameObject.Find("recruit_4_CharName_Text").GetComponent<Text>().text = (heavy.charName ?? "");
+					GameObject.Find("recruit_4_CharPrice_Text").GetComponent<Text>().text = string.Concat(heavy.charCost);
 				}
 
 				if (!recrutable_dict.ContainsKey(recruit_5_button))
@@ -586,12 +589,22 @@ public class UI_Ingame : MonoBehaviour
 
 				if (!recrutable_dict.ContainsKey(recruit_6_button))
 				{
-					Character heavy = new HeavyInfantryman(null, gameClient, false);
-					recrutable_dict[recruit_6_button] = heavy;
+					Character horseman = new Horseman(null, gameClient, false);
+					recrutable_dict[recruit_6_button] = horseman;
 
-					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = heavy.charImage;
-					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (heavy.charName ?? "");
-					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(heavy.charCost);
+					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = horseman.charImage;
+					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (horseman.charName ?? "");
+					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(horseman.charCost);
+				}
+
+				if (!recrutable_dict.ContainsKey(recruit_7_button))
+				{
+					Character rogue = new Rogue(null, gameClient, false);
+					recrutable_dict[recruit_7_button] = rogue;
+
+					GameObject.Find("recruit_7_Char_Image").GetComponent<Image>().sprite = rogue.charImage;
+					GameObject.Find("recruit_7_CharName_Text").GetComponent<Text>().text = (rogue.charName ?? "");
+					GameObject.Find("recruit_7_CharPrice_Text").GetComponent<Text>().text = string.Concat(rogue.charCost);
 				}
 				break;
 
@@ -602,7 +615,8 @@ public class UI_Ingame : MonoBehaviour
 				recruit_4_button.gameObject.SetActive(false);
 				recruit_5_button.gameObject.SetActive(false);
 				recruit_6_button.gameObject.SetActive(false);
-			break;
+				recruit_7_button.gameObject.SetActive(false);
+				break;
 
 			case 2: // Undeads
 				recruit_1_button.gameObject.SetActive(true);
@@ -611,6 +625,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_4_button.gameObject.SetActive(true);
 				recruit_5_button.gameObject.SetActive(true);
 				recruit_6_button.gameObject.SetActive(true);
+				recruit_7_button.gameObject.SetActive(false);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
@@ -762,6 +777,21 @@ public class UI_Ingame : MonoBehaviour
 		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_6_button].charCost)
+		{
+			recruitButton.interactable = true;
+		}
+	}
+
+	public void Recruit_Character_7()
+	{
+		rec_Char_Image.enabled = true;
+		Set_RecruitTooltip(recrutable_dict[recruit_7_button]);
+
+		charToRecruit = recrutable_dict[recruit_7_button];
+
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		recruitButton.interactable = false;
+		if (gameClient.gold >= recrutable_dict[recruit_7_button].charCost)
 		{
 			recruitButton.interactable = true;
 		}

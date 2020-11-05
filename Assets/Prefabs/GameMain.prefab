@@ -101,6 +101,10 @@ MonoBehaviour:
     type: 3}
   shocktrooper: {fileID: 9111161891389293740, guid: 01179e205a8740d44bf651fddac2e393,
     type: 3}
+  horseman: {fileID: 2496570860475680204, guid: e22405572b607b74486feb473a877539,
+    type: 3}
+  mountedKnight: {fileID: 7657433874125563273, guid: 11a24049d4618fd448ed1900c2c8cbc4,
+    type: 3}
   skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
     type: 3}
   armoredSkeleton: {fileID: 5884620163833239470, guid: 95d4083e28946b64cb36d1d1cec9b499,

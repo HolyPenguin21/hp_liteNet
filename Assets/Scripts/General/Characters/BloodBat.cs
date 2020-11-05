@@ -43,8 +43,6 @@ public class BloodBat : Character
         charMovement.movePoints_max = 9;
         base.lookRange = 9;
 
-        //upgradeList.Add(7);
-
         charAttacks = new List<Utility.char_Attack>();
         Utility.char_Attack attack1 = new Utility.char_Attack();
         attack1.attackType = Utility.char_attackType.Melee;
@@ -53,5 +51,7 @@ public class BloodBat : Character
         attack1.attackDmg_base = 5;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
+
+        charBuffs.Add(new Buff_DrainLife());
     }
 }

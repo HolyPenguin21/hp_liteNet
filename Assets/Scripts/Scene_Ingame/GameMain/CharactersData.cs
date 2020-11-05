@@ -19,7 +19,9 @@ public class CharactersData : MonoBehaviour
 	public GameObject cavalryman;       // 26
 	public GameObject dragoon;          // 27
 	public GameObject heavyinfantry;    // 28
-	public GameObject shocktrooper;		// 29
+	public GameObject shocktrooper;     // 29
+	public GameObject horseman;			// 30
+	public GameObject mountedKnight;    // 31
 	[Header("Undeads")]
 	public GameObject skeleton;         // 12
 	public GameObject armoredSkeleton;  // 13
@@ -182,6 +184,14 @@ public class CharactersData : MonoBehaviour
 				GameObject shockObj = Instantiate(shocktrooper, position, Quaternion.identity);
 				character = new Shocktrooper(shockObj.transform, gameClient, isHero);
 				break;
+			case 30:
+				GameObject horsemanObj = Instantiate(horseman, position, Quaternion.identity);
+				character = new Horseman(horsemanObj.transform, gameClient, isHero);
+				break;
+			case 31:
+				GameObject mountedKnightObj = Instantiate(mountedKnight, position, Quaternion.identity);
+				character = new MountedKnight(mountedKnightObj.transform, gameClient, isHero);
+				break;
 		}
 
 		if (gameClient != null) Utility.Set_OwnerColor(character.tr, gameClient);
@@ -286,6 +296,12 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 29:
 				result = new Shocktrooper(null, null, false);
+				break;
+			case 30:
+				result = new Horseman(null, null, false);
+				break;
+			case 31:
+				result = new MountedKnight(null, null, false);
 				break;
 		}
 		return result;

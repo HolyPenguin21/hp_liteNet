@@ -15,13 +15,7 @@ public class Buff_PoisonTouch : Buff
 
     public override IEnumerator Buff_Activate(Character character)
     {
-        // Both
-        // Put some effect here to represent on both Server and Client
-
-        // Server
-        if (!Utility.IsServer()) yield break;
-        Debug.Log("asd");
-        //yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex, Utility.villageHeal);
+        yield return null;
     }
 
     public override IEnumerator Buff_Remove(Character character)

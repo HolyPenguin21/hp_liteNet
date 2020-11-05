@@ -747,7 +747,7 @@ public class GameMain : MonoBehaviour
             }
         }
         t_Character.RecieveDmg(resultDmg);
-        t_Character.RecieveBuff(attackBuffId);
+        t_Character.RecieveBuffOnAttack(attackBuffId);
 
         AttackResult attackResult = new AttackResult();
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(t_Character.hex);
@@ -771,7 +771,7 @@ public class GameMain : MonoBehaviour
         Character t_Character = gridManager.Get_GridItem_ByCoords(attackResult.coord_x, attackResult.coord_y).hex.character;
 
         t_Character.RecieveDmg(attackResult.amount);
-        t_Character.RecieveBuff(attackResult.attackBuffId);
+        t_Character.RecieveBuffOnAttack(attackResult.attackBuffId);
 
         yield return Reply_TaskDone("Attack result");
     }

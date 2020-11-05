@@ -306,7 +306,7 @@ public abstract class Character
 			GameMain.inst.effectsData.Effect_Damage(hex.transform.position, dmgToRecieve);
 	}
 
-	public void RecieveBuff(string data_buffIds)
+	public void RecieveBuffOnAttack(string data_buffIds)
 	{
 		if (data_buffIds == "") return;
 
