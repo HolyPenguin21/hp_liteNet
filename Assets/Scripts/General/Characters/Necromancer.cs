@@ -61,9 +61,5 @@ public class Necromancer : Character
         attack2.attackDmg_base = 17;
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
-
-        charSpell_1 = new Heal(8);
-		//charSpell_2 = new EarthSpike(6);
-        charSpell_2 = new SummonZombie();
     }
 }

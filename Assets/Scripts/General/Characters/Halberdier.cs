@@ -21,7 +21,7 @@ public class Halberdier : Character
 		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
 		charImage = Resources.Load<Sprite>("Images/Knight_2");
-		charName = "Knight Halberd";
+		charName = "Halberdier";
 		charId = 6;
 		charCost = 44;
 

@@ -46,6 +46,7 @@ public static class Utility
         public int attackCount;
         public int attackDmg_base;
         public int attackDmg_cur;
+        public ABuff attackBuff;
     }
 
     [System.Serializable]

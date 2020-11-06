@@ -37,7 +37,8 @@ public abstract class Character
 	public float moveAnimationSpeed = 3f;
 	public float attackAnimationSpeed = 3f;
 
-	public IEnumerator OnMyTurnUpdate()
+    #region Updates
+    public IEnumerator OnMyTurnUpdate()
 	{
 		charMovement.movePoints_cur = charMovement.movePoints_max;
 		canAct = true;
@@ -146,8 +147,10 @@ public abstract class Character
 				break;
 		}
 	}
+    #endregion
 
-	private void VillageHeal()
+    #region Health actions
+    private void VillageHeal()
 	{
 		if (!hex.isVillage) return;
 
@@ -169,7 +172,22 @@ public abstract class Character
 
 	}
 
-	public IEnumerator Move(List<Hex> somePath)
+	public void RecieveHeal(int amount)
+	{
+		if (amount == 0) return;
+
+		charHp.hp_cur += amount;
+
+		if (charHp.hp_cur > charHp.hp_max)
+			charHp.hp_cur = charHp.hp_max;
+
+		if (tr.gameObject.activeInHierarchy)
+			GameMain.inst.effectsData.Effect_VillageHeal(hex.transform.position, amount);
+	}
+    #endregion
+
+    #region Movement
+    public IEnumerator Move(List<Hex> somePath)
 	{
 		if (somePath != null)
 		{
@@ -217,6 +235,41 @@ public abstract class Character
 		if (Utility.IsMyCharacter(this))
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
 	}
+    #endregion
+
+    #region Item actions
+    public void Item_PickUp(Hex hexWithItem)
+	{
+		Item item = hexWithItem.item;
+		hexWithItem.Remove_Item();
+		charItem = item;
+		if (tr != null) tr.Find("Item").gameObject.SetActive(true);
+		// update UI
+		item.Item_OnEquip(this);
+	}
+	public void Item_Drop()
+	{
+		Item item = charItem;
+		if (item == null) return;
+		item.Item_OnRemove(this);
+
+		charItem = null;
+		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
+		hex.Add_Item(item);
+	}
+	public void Item_Use()
+	{
+		if (charItem == null) return;
+		if (charItem.itemActive == null) return;
+
+		GameMain.inst.StartCoroutine(charItem.itemActive.Buff_Activate(this));
+	}
+	public void Item_Remove()
+	{
+		charItem = null;
+		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
+	}
+	#endregion
 
 	public IEnumerator AttackAnimation(Hex target, int attackId)
 	{
@@ -261,88 +314,42 @@ public abstract class Character
 		}
 	}
 
-	public void Item_PickUp(Hex hexWithItem)
-	{
-		Item item = hexWithItem.item;
-		hexWithItem.Remove_Item();
-		charItem = item;
-		if (tr != null) tr.Find("Item").gameObject.SetActive(true);
-		// update UI
-		item.Item_OnEquip(this);
-	}
-	public void Item_Drop()
-	{
-		Item item = charItem;
-		if (item == null) return;
-		item.Item_OnRemove(this);
-
-		charItem = null;
-		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
-		hex.Add_Item(item);
-	}
-	public void Item_Use()
-	{
-		if (charItem == null) return;
-		if (charItem.itemActive == null) return;
-
-		GameMain.inst.StartCoroutine(charItem.itemActive.Buff_Activate(this));
-	}
-	public void Item_Remove()
-	{
-		charItem = null;
-		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
-	}
-
 	public void Add_Exp(int expToAdd)
 	{
 		charExp.exp_cur += expToAdd;
 	}
 
-	public void RecieveDmg(int dmgToRecieve)
+	public void RecieveDmg(int recievedDmg, int hp_target)
 	{
-		charHp.hp_cur -= dmgToRecieve;
+		// change stats
+		charHp.hp_cur = hp_target;
 
-		if (tr.gameObject.activeInHierarchy)
-			GameMain.inst.effectsData.Effect_Damage(hex.transform.position, dmgToRecieve);
+		// visual effect
+		if (recievedDmg > 0)
+			if (tr.gameObject.activeInHierarchy)
+				GameMain.inst.effectsData.Effect_Damage(hex.transform.position, recievedDmg);
 	}
 
-	public void RecieveBuffOnAttack(string data_buffIds)
+	public void Recieve_ABuff_AsAttacker(ABuff aBuff, int hp_target)
 	{
-		if (data_buffIds == "") return;
-
-		List<int> buffIds = new List<int>();
-		List<Buff> buffsToApply = new List<Buff>();
-
-		string[] parsed_buffIds = data_buffIds.Split('|');
-		for (int x = 1; x < parsed_buffIds.Length; x++)
-			buffIds.Add(int.Parse(parsed_buffIds[x]));
-
-		for (int x = 0; x < buffIds.Count; x++)
+		switch (aBuff.buffId)
 		{
-			switch (buffIds[x])
-			{
-				case 5:
-					buffsToApply.Add(new Buff_Poison());
-					break;
-			}
-		}
-
-		for (int x = 0; x < buffsToApply.Count; x++)
-		{
-			Buff existBuff = charBuffs.Find(i => i.buffId == buffsToApply[x].buffId);
-			if (existBuff != null) return;
-
-			charBuffs.Add(buffsToApply[x]);
+			case 1: // Drain
+				int drain = hp_target - charHp.hp_cur;
+				Debug.Log("Drain : " + drain);
+				RecieveHeal(drain);
+				break;
 		}
 	}
-	public void RecieveHeal(int amount)
+
+	public void Recieve_ABuff_AsTarget(ABuff aBuff)
 	{
-		charHp.hp_cur += amount;
-
-		if (charHp.hp_cur > charHp.hp_max)
-			charHp.hp_cur = charHp.hp_max;
-
-		if (tr.gameObject.activeInHierarchy)
-			GameMain.inst.effectsData.Effect_VillageHeal(hex.transform.position, amount);
+		switch (aBuff.buffId)
+		{
+			case 2: // Poison touch
+				Buff someBuff = charBuffs.Find(i => i.buffId == 4);
+				if(someBuff == null) charBuffs.Add(new Buff_Poison());
+				break;
+		}
 	}
 }

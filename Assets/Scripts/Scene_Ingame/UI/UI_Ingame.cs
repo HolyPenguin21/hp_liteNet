@@ -847,14 +847,13 @@ public class UI_Ingame : MonoBehaviour
 
 		this.attackPath = new List<Hex>(attackPath);
 
-
 		Character attacker = attackPath[0].character;
 		Character target = attackPath[attackPath.Count - 1].character;
 		List<Utility.char_Attack> a_Attacks = attacker.charAttacks;
 		List<Utility.char_Attack> t_Attacks = target.charAttacks;
 
-		attackerImage.sprite = attackPath[0].character.charImage;
-		targetImage.sprite = attackPath[attackPath.Count - 1].character.charImage;
+		attackerImage.sprite = attacker.charImage;
+		targetImage.sprite = target.charImage;
 
 		if (a_Attacks.Count > 0 || t_Attacks.Count > 0)
 		{
@@ -962,7 +961,10 @@ public class UI_Ingame : MonoBehaviour
 
 	private string Get_AttackTooltip(Utility.char_Attack attack)
 	{
-		return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
+		if(attack.attackBuff != null)
+			return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount + "\n -"+ attack.attackBuff.buffName;
+		else
+			return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
 	}
 
 	private string Calculate_AttackValue(Utility.char_Attack attack, Character target)
@@ -985,7 +987,10 @@ public class UI_Ingame : MonoBehaviour
 				break;
 		}
 
-		return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount;
+		if (attack.attackBuff != null)
+			return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount + "\n -" + attack.attackBuff.buffName;
+		else
+			return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount;
 	}
 
 	public void SelectAttack1()

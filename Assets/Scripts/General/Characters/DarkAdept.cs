@@ -63,7 +63,5 @@ public class DarkAdept : Character
         attack2.attackDmg_base = 10;
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
-
-        charSpell_1 = new Heal(4);
     }
 }

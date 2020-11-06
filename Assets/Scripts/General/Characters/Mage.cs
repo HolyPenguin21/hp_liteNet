@@ -52,6 +52,7 @@ public class Mage : Character
 		char_Attack.attackCount = 1;
 		char_Attack.attackDmg_base = 5;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
+		char_Attack.attackBuff = new ABuff_DrainLife();
 		charAttacks.Add(char_Attack);
 
 		Utility.char_Attack char_Attack2 = default(Utility.char_Attack);
@@ -60,9 +61,15 @@ public class Mage : Character
 		char_Attack2.attackCount = 3;
 		char_Attack2.attackDmg_base = 7;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
+		char_Attack2.attackBuff = new ABuff_PoisonTouch();
 		charAttacks.Add(char_Attack2);
 
 		//charSpell_1 = new Flame(8);
+		//charSpell_1 = new Heal(4);
+		//charSpell_1 = new SummonBat();
+		//charSpell_1 = new EarthSpike(6);
+		//charSpell_1 = new SummonZombie();
+		//charSpell_1 = new Blink(3);
 		charSpell_1 = new SummonFireEmber();
 		charSpell_2 = new MassHeal(3);
 	}

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -8758041537907791415}
   - component: {fileID: 3490742488040442251}
   - component: {fileID: 4898994044667058996}
+  - component: {fileID: -8661625461238164583}
   m_Layer: 0
   m_Name: GameMain
   m_TagString: Untagged
@@ -64,6 +65,7 @@ MonoBehaviour:
   charactersData: {fileID: 0}
   effectsData: {fileID: 0}
   spellData: {fileID: 0}
+  aBuffData: {fileID: 0}
   movePathVisual: {fileID: 5024291021502148436, guid: 33896a9c50fce4d4f82e6ec58af4654d,
     type: 3}
 --- !u!114 &-8758041537907791415
@@ -172,5 +174,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fbe60ba6a9995e54f8b4dcc50b0b382b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-8661625461238164583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875865744938875442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe180e7c25f1514f835bc9ec6dad68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

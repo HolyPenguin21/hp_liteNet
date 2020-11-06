@@ -53,7 +53,5 @@ public class VampireBat : Character
         attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         charAttacks.Add(attack1);
-
-        charBuffs.Add(new Buff_DrainLife());
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LiteNetLib;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -28,6 +29,7 @@ public class GameMain : MonoBehaviour
     [HideInInspector] public CharactersData charactersData;
     [HideInInspector] public EffectsData effectsData;
     [HideInInspector] public SpellData spellData;
+    [HideInInspector] public ABuffData aBuffData;
     public Pathfinding pathfinding;
     private AiNeutrals aiNeutrals;
     public Fog fog;
@@ -55,6 +57,7 @@ public class GameMain : MonoBehaviour
             Setup_CharactersData();
             Setup_EffectsData();
             Setup_SpellData();
+            Setup_ABuffData();
 
             if (Utility.IsServer())
             {
@@ -155,119 +158,49 @@ public class GameMain : MonoBehaviour
 
     public IEnumerator Server_Attack(List<Hex> somePath, int attackId)
     {
-        Character a_Character = somePath[0].character;
-        List<Utility.char_Attack> a_Attack = a_Character.charAttacks;
-
-        Character t_Character = somePath[somePath.Count - 1].character;
-        List<Utility.char_Attack> t_Attack = t_Character.charAttacks;
-
-        somePath.RemoveAt(somePath.Count - 1);
-        if (somePath.Count > 1)
-        {
-            yield return Server_Move(somePath);
-        }
-
-        if (!Utility.InAttackRange(a_Character.hex, t_Character.hex)) yield break;
-
-        yield return Server_BlockActions(a_Character);
-
-        int attacksCount_attacker = 0;
-        if (a_Attack.Count > attackId)
-            attacksCount_attacker = a_Attack[attackId].attackCount;
-
-        int attacksCount_target = 0;
-        if (t_Attack.Count > attackId)
-            attacksCount_target = t_Attack[attackId].attackCount;
-
-        while (attacksCount_attacker > 0 || attacksCount_target > 0)
-        {
-            if (attacksCount_attacker > 0)
-            {
-                attacksCount_attacker--;
-                yield return Server_AttackAnim(a_Character.hex, t_Character.hex, attackId);
-                yield return Server_AttackResult(a_Character, t_Character, attackId);
-
-                if (t_Character.charHp.hp_cur <= 0)
-                {
-                    yield return Server_Die(t_Character.hex);
-                    yield return Server_AddExp(a_Character.hex, 3);
-                    break;
-                }
-            }
-
-            if (attacksCount_target > 0)
-            {
-                attacksCount_target--;
-                yield return Server_AttackAnim(t_Character.hex, a_Character.hex, attackId);
-                yield return Server_AttackResult(t_Character, a_Character, attackId);
-
-                if (a_Character.charHp.hp_cur <= 0)
-                {
-                    yield return Server_Die(a_Character.hex);
-                    yield return Server_AddExp(t_Character.hex, 3);
-                    break;
-                }
-            }
-            yield return null;
-        }
-
-        if (a_Character.charHp.hp_cur > 0)
-        {
-            yield return Server_AddExp(a_Character.hex, 1);
-
-            if (a_Character.charExp.exp_cur >= a_Character.charExp.exp_max)
-                yield return Server_LevelUp(a_Character);
-        }
-        if (t_Character.charHp.hp_cur > 0)
-        {
-            yield return Server_AddExp(t_Character.hex, 1);
-
-            if (t_Character.charExp.exp_cur >= t_Character.charExp.exp_max)
-                yield return Server_LevelUp(t_Character);
-        }
-        yield return null;
-    }
-    #endregion
-
-    #region Attack anim
-    private IEnumerator Server_AttackAnim(Hex attackerHex, Hex targetHex, int attackId)
-    {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        AttackAnimation attackAnimation = new AttackAnimation();
-        Utility.GridCoord aCoords = gridManager.Get_GridCoord_ByHex(attackerHex);
-        Utility.GridCoord tCoords = gridManager.Get_GridCoord_ByHex(targetHex);
-        attackAnimation.a_coord_x = aCoords.coord_x;
-        attackAnimation.a_coord_y = aCoords.coord_y;
-        attackAnimation.t_coord_x = tCoords.coord_x;
-        attackAnimation.t_coord_y = tCoords.coord_y;
-        attackAnimation.attackId = attackId;
+        Character attacker = somePath[0].character;
+        Character target = somePath[somePath.Count - 1].character;
+
+        somePath.RemoveAt(somePath.Count - 1);
+        if (somePath.Count > 1) yield return Server_Move(somePath);
+        if (!Utility.InAttackRange(attacker.hex, target.hex)) yield break;
+
+        yield return Server_BlockActions(attacker);
+
+        AttackResult attackResult = new AttackResult();
+        Utility.GridCoord a_gridCoord = gridManager.Get_GridCoord_ByHex(attacker.hex);
+        Utility.GridCoord t_gridCoord = gridManager.Get_GridCoord_ByHex(target.hex);
+        attackResult.a_coord_x = a_gridCoord.coord_x;
+        attackResult.a_coord_y = a_gridCoord.coord_y;
+        attackResult.t_coord_x = t_gridCoord.coord_x;
+        attackResult.t_coord_y = t_gridCoord.coord_y;
+        attackResult.attackId = attackId;
+        attackResult.AttackData_Calculation(attacker, target, attackId);
+        // Send to client
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
             if (somePlayer.isServer || somePlayer.isNeutral) continue;
 
             somePlayer.isAvailable = false;
-            yield return server.netProcessor.Send(server.players[x].address, attackAnimation, DeliveryMethod.ReliableOrdered);
+            yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
         }
 
-        yield return attackerHex.character.AttackAnimation(targetHex, attackId);
+        yield return attackResult.Implementation(gridManager);
         yield return new WaitUntil(() => server.player.isAvailable);
     }
 
-    public IEnumerator Client_AttackAnim(AttackAnimation attackAnimation)
+    public IEnumerator Client_Attack(AttackResult attackResult)
     {
-        Character a_Character = gridManager.Get_GridItem_ByCoords(attackAnimation.a_coord_x, attackAnimation.a_coord_y).hex.character;
-        Hex tHex = gridManager.Get_GridItem_ByCoords(attackAnimation.t_coord_x, attackAnimation.t_coord_y).hex;
-
-        yield return a_Character.AttackAnimation(tHex, attackAnimation.attackId);
-
-        yield return Reply_TaskDone("Attack animation");
+        yield return attackResult.Implementation(gridManager);
+        yield return Reply_TaskDone("Attack done");
     }
     #endregion
 
     #region Level up
-    private IEnumerator Server_LevelUp(Character character)
+    public IEnumerator Server_LevelUp(Character character)
     {
         if (character.owner.name == "Neutrals" || character.owner != currentTurn || character.upgradeList.Count < 2)
         {
@@ -481,21 +414,21 @@ public class GameMain : MonoBehaviour
 
         Character c = targetHex.character;
         int resultDmg = Convert.ToInt32((float)amount - (float)amount * c.charDef.magic_resistance);
-        c.RecieveDmg(resultDmg);
+        //c.RecieveDmg(resultDmg);
 
-        AttackResult attackResult = new AttackResult();
-        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(targetHex);
-        attackResult.coord_x = gridCoord.coord_x;
-        attackResult.coord_y = gridCoord.coord_y;
-        attackResult.amount = resultDmg;
-        for (int x = 0; x < server.players.Count; x++)
-        {
-            Player somePlayer = server.players[x];
-            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+        //AttackResult attackResult = new AttackResult();
+        //Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(targetHex);
+        //attackResult.coord_x = gridCoord.coord_x;
+        //attackResult.coord_y = gridCoord.coord_y;
+        //attackResult.amount = resultDmg;
+        //for (int x = 0; x < server.players.Count; x++)
+        //{
+        //    Player somePlayer = server.players[x];
+        //    if (somePlayer.isServer || somePlayer.isNeutral) continue;
 
-            somePlayer.isAvailable = false;
-            yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
-        }
+        //    somePlayer.isAvailable = false;
+        //    yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
+        //}
         yield return new WaitUntil(() => server.player.isAvailable);
 
         if (c.charHp.hp_cur <= 0)
@@ -593,7 +526,7 @@ public class GameMain : MonoBehaviour
     #endregion
 
     #region Add exp
-    private IEnumerator Server_AddExp(Hex charactersHex, int expAmount)
+    public IEnumerator Server_AddExp(Hex charactersHex, int expAmount)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
         if (charactersHex == null) yield break;
@@ -666,7 +599,7 @@ public class GameMain : MonoBehaviour
     #endregion
 
     #region Die
-    private IEnumerator Server_Die(Hex dieAtHex)
+    public IEnumerator Server_Die(Hex dieAtHex)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
@@ -710,80 +643,13 @@ public class GameMain : MonoBehaviour
     }
     #endregion
 
-    #region Attack result
-    private IEnumerator Server_AttackResult(Character a_Character, Character t_Character, int attackId)
-    {
-        if (server.players.Count > 2) server.player.isAvailable = false;
-
-        int attackDmg_cur = a_Character.charAttacks[attackId].attackDmg_cur;
-        int resultDmg = 0;
-        string attackBuffId = "";
-
-        int dodge = t_Character.charDef.dodgeChance + t_Character.hex.dodge;
-        if (UnityEngine.Random.Range(0, 101) > dodge)
-        {
-            resultDmg = attackDmg_cur;
-            switch (a_Character.charAttacks[attackId].attackDmgType)
-            {
-                case Utility.char_attackDmgType.Blade:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.blade_resistance);
-                    break;
-                case Utility.char_attackDmgType.Pierce:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.pierce_resistance);
-                    break;
-                case Utility.char_attackDmgType.Impact:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.impact_resistance);
-                    break;
-                case Utility.char_attackDmgType.Magic:
-                    resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * t_Character.charDef.magic_resistance);
-                    break;
-            }
-
-            for (int x = 0; x < a_Character.charBuffs.Count; x++)
-            {
-                if (a_Character.charBuffs[x].buffType != Utility.buff_Type.onAttack) continue;
-
-                attackBuffId = attackBuffId + "|" + a_Character.charBuffs[x].buffId;
-            }
-        }
-        t_Character.RecieveDmg(resultDmg);
-        t_Character.RecieveBuffOnAttack(attackBuffId);
-
-        AttackResult attackResult = new AttackResult();
-        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(t_Character.hex);
-        attackResult.coord_x = gridCoord.coord_x;
-        attackResult.coord_y = gridCoord.coord_y;
-        attackResult.amount = resultDmg;
-        attackResult.attackBuffId = attackBuffId;
-        for (int x = 0; x < server.players.Count; x++)
-        {
-            Player somePlayer = server.players[x];
-            if (somePlayer.isServer || somePlayer.isNeutral) continue;
-
-            somePlayer.isAvailable = false;
-            yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
-        }
-        yield return new WaitUntil(() => server.player.isAvailable);
-    }
-
-    public IEnumerator Client_AttackResult(AttackResult attackResult)
-    {
-        Character t_Character = gridManager.Get_GridItem_ByCoords(attackResult.coord_x, attackResult.coord_y).hex.character;
-
-        t_Character.RecieveDmg(attackResult.amount);
-        t_Character.RecieveBuffOnAttack(attackResult.attackBuffId);
-
-        yield return Reply_TaskDone("Attack result");
-    }
-    #endregion
-
     #region Receive poison dmg
     public IEnumerator Server_ReceivePoisonDmg(Hex charHex, int amount)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
         Character someChar = charHex.character;
-        someChar.RecieveDmg(amount);
+        //someChar.RecieveDmg(amount);
         if (someChar.charHp.hp_cur <= 0) someChar.charHp.hp_cur = 1;
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charHex);
@@ -806,7 +672,7 @@ public class GameMain : MonoBehaviour
     public IEnumerator Client_ReceivePoisonDmg(ReceivePoisonDmg poison)
     {
         Character someChar = gridManager.Get_GridItem_ByCoords(poison.coord_x, poison.coord_y).hex.character;
-        someChar.RecieveDmg(poison.amount);
+        //someChar.RecieveDmg(poison.amount);
         someChar.charHp.hp_cur = poison.hpLeft;
 
         yield return Reply_TaskDone("Poison dmg is done");
@@ -1796,6 +1662,11 @@ public class GameMain : MonoBehaviour
     {
         spellData = GetComponent<SpellData>();
         GameObject.Find("UI").GetComponent<Ingame_Input>().spData = spellData;
+    }
+
+    private void Setup_ABuffData()
+    {
+        aBuffData = GetComponent<ABuffData>();
     }
 
     private void Setup_Fog()

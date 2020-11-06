@@ -61,15 +61,6 @@ public class ClientSubscriptions
         });
     }
 
-    public void AttackAnimation()
-    {
-        netProcessor.SubscribeReusable<AttackAnimation>((data) => {
-            client.player.isAvailable = false;
-
-            client.StartCoroutine(GameMain.inst.Client_AttackAnim(data));
-        });
-    }
-
     public void ReceivePoisonDmg()
     {
         netProcessor.SubscribeReusable<ReceivePoisonDmg>((data) => {
@@ -84,7 +75,7 @@ public class ClientSubscriptions
         netProcessor.SubscribeReusable<AttackResult>((data) => {
             client.player.isAvailable = false;
 
-            client.StartCoroutine(GameMain.inst.Client_AttackResult(data));
+            client.StartCoroutine(GameMain.inst.Client_Attack(data));
         });
     }
 

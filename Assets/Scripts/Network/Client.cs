@@ -76,7 +76,6 @@ public class Client : MonoBehaviour
         cSubscription.CharacterDie();
         cSubscription.AddExp();
         cSubscription.AddMaxHealth();
-        cSubscription.AttackAnimation();
         cSubscription.OpenUpgradeMenu();
         cSubscription.Replace();
     }

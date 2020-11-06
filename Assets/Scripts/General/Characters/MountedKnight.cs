@@ -22,8 +22,8 @@ public class MountedKnight : Character
 		// Item icon
 		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-		charImage = Resources.Load<Sprite>("Images/Horseman");
-		charName = "Horseman";
+		charImage = Resources.Load<Sprite>("Images/MountedKnight");
+		charName = "Mounted Knight";
 		charId = 31;
 		charCost = 40;
 

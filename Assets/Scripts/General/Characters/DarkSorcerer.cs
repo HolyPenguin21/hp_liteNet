@@ -63,8 +63,5 @@ public class DarkSorcerer : Character
         attack2.attackDmg_base = 13;
         attack2.attackDmg_cur = attack2.attackDmg_base;
         charAttacks.Add(attack2);
-
-        charSpell_1 = new Heal(6);
-        charSpell_2 = new SummonBat();
     }
 }
