@@ -20,7 +20,7 @@ public class Necrophage : Character
         // Item icon
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-        charImage = Resources.Load<Sprite>("Images/ZombieArmored");
+        charImage = Resources.Load<Sprite>("Images/Necrophage");
         charName = "Necrophage";
         charId = 15;
         charCost = 27;
@@ -52,6 +52,7 @@ public class Necrophage : Character
         attack1.attackCount = 3;
         attack1.attackDmg_base = 7;
         attack1.attackDmg_cur = attack1.attackDmg_base;
+        attack1.attackBuff = new ABuff_PoisonTouch();
         charAttacks.Add(attack1);
     }
 }

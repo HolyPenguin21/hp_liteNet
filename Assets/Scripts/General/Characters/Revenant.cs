@@ -23,7 +23,7 @@ public class Revenant : Character
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
         charImage = Resources.Load<Sprite>("Images/Skeleton2");
-        charName = "Armored Skeleton";
+        charName = "Revenant";
         charId = 13;
         charCost = 28;
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MountedKnight : Character
+public class Knight : Character
 {
-	public MountedKnight(Transform tr, Player owner, bool isHero)
+	public Knight(Transform tr, Player owner, bool isHero)
 	{
 		base.tr = tr;
 		base.owner = owner;
@@ -23,7 +23,7 @@ public class MountedKnight : Character
 		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
 		charImage = Resources.Load<Sprite>("Images/MountedKnight");
-		charName = "Mounted Knight";
+		charName = "Knight";
 		charId = 31;
 		charCost = 40;
 
@@ -52,6 +52,7 @@ public class MountedKnight : Character
 		char_Attack.attackCount = 2;
 		char_Attack.attackDmg_base = 14;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
+		char_Attack.attackBuff = new ABuff_Charge();
 		charAttacks.Add(char_Attack);
 	}
 }

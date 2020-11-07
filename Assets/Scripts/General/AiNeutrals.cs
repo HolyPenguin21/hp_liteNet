@@ -22,9 +22,9 @@ public class AiNeutrals
             if (spawnPoint.isVillage && spawnPoint.villageOwner.name != "" && spawnPoint.villageOwner.name != "Neutrals") continue;
 
             int spawnChance = Random.Range(1, 101);
-            if (spawnChance < 50) continue; // 80
+            if (spawnChance < 80) continue;
 
-            int charId = Random.Range(12, 13); // 31
+            int charId = Random.Range(1, 34);
             yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
         }
 

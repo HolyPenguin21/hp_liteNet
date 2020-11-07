@@ -73,6 +73,7 @@ public class Client : MonoBehaviour
         cSubscription.SpellHeal();
         cSubscription.AttackResult();
         cSubscription.ReceivePoisonDmg();
+        cSubscription.ReceiveSpellDmg();
         cSubscription.CharacterDie();
         cSubscription.AddExp();
         cSubscription.AddMaxHealth();

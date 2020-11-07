@@ -50,6 +50,7 @@ public class BloodBat : Character
         attack1.attackCount = 3;
         attack1.attackDmg_base = 5;
         attack1.attackDmg_cur = attack1.attackDmg_base;
+        attack1.attackBuff = new ABuff_DrainLife();
         charAttacks.Add(attack1);
     }
 }

@@ -86,15 +86,16 @@ MonoBehaviour:
   pikeman: {fileID: 5081544297305505078, guid: 55381dfd2f649784280f7c00aec09a80, type: 3}
   swordman: {fileID: 6934696929566613636, guid: 7bb42f993364de4418b8038b2ee351a0,
     type: 3}
-  knight: {fileID: 1844222379328976759, guid: 7a860bfc3a43201499804bf9a5b06a5f, type: 3}
-  knightHalberd: {fileID: 7940948817180614613, guid: 580c40c034983ad4f9c89a7e4022e70c,
+  royalGuard: {fileID: 1844222379328976759, guid: 7a860bfc3a43201499804bf9a5b06a5f,
     type: 3}
-  humArcher: {fileID: 4145327562660652325, guid: 5ca67dc8a798edd4c88df8a7eb4969a3,
+  halberdier: {fileID: 7940948817180614613, guid: 580c40c034983ad4f9c89a7e4022e70c,
     type: 3}
-  trainedArcher: {fileID: 1743600373186000291, guid: 3d17a7b4ae1358845b986d3928825277,
+  bowman: {fileID: 4145327562660652325, guid: 5ca67dc8a798edd4c88df8a7eb4969a3, type: 3}
+  longbowman: {fileID: 1743600373186000291, guid: 3d17a7b4ae1358845b986d3928825277,
     type: 3}
-  hunter: {fileID: 7524226168957027308, guid: b6cc29d44b3994d459dbe2223ebed3d9, type: 3}
-  humMage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
+  masterBowman: {fileID: 7524226168957027308, guid: b6cc29d44b3994d459dbe2223ebed3d9,
+    type: 3}
+  mage: {fileID: 6384437118810408924, guid: 0718adac8ee78f94682ad358c9830a07, type: 3}
   rogue: {fileID: 5165242745472272674, guid: 2be141cfed9612748af1af81d0f770fe, type: 3}
   cavalryman: {fileID: 4938322891378261139, guid: ec5b066d2ff7e5b48a5feca0173d19ad,
     type: 3}
@@ -105,14 +106,13 @@ MonoBehaviour:
     type: 3}
   horseman: {fileID: 2496570860475680204, guid: e22405572b607b74486feb473a877539,
     type: 3}
-  mountedKnight: {fileID: 7657433874125563273, guid: 11a24049d4618fd448ed1900c2c8cbc4,
-    type: 3}
+  knight: {fileID: 7657433874125563273, guid: 11a24049d4618fd448ed1900c2c8cbc4, type: 3}
   skeleton: {fileID: 8628043480497169961, guid: cea3a245e254b114f8645aa75ef7d091,
     type: 3}
-  armoredSkeleton: {fileID: 5884620163833239470, guid: 95d4083e28946b64cb36d1d1cec9b499,
+  revenant: {fileID: 5884620163833239470, guid: 95d4083e28946b64cb36d1d1cec9b499,
     type: 3}
-  zombie: {fileID: 6710331954463582736, guid: 32e41a2bb48d2cf4291065c9efcc4d18, type: 3}
-  armoredZombie: {fileID: 8589770047132162992, guid: 8bd12b62e1f92334b9d1b09a8d0939e9,
+  ghoul: {fileID: 6710331954463582736, guid: 32e41a2bb48d2cf4291065c9efcc4d18, type: 3}
+  necrophage: {fileID: 8589770047132162992, guid: 8bd12b62e1f92334b9d1b09a8d0939e9,
     type: 3}
   skelArcher: {fileID: 2193709298504832577, guid: e646241f46d343c42b726410fbbb9abf,
     type: 3}
@@ -128,6 +128,10 @@ MonoBehaviour:
     type: 3}
   reaper: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
   deathblade: {fileID: 3678949775293388011, guid: 9308bd5ae6ac77941baa48505029a0c9,
+    type: 3}
+  walkingCorpse: {fileID: 3155023147114576335, guid: 809d89950284c2b449b15b96872b9528,
+    type: 3}
+  soulless: {fileID: 5931035188004227691, guid: 95cb7872867fefb47b382ff709111605,
     type: 3}
   grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
   fireEmber: {fileID: 7508290312353660163, guid: 69a34d8d85ca0484fad2aa759f1c4fe3,

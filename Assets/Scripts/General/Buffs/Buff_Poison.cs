@@ -21,7 +21,7 @@ public class Buff_Poison : Buff
         // Server
         if (!Utility.IsServer()) yield break;
 
-        yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex, Utility.villageHeal);
+        yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex);
     }
 
     public override IEnumerator Buff_Remove(Character character)

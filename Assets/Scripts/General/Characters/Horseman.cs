@@ -54,6 +54,7 @@ public class Horseman : Character
 		char_Attack.attackCount = 2;
 		char_Attack.attackDmg_base = 9;
 		char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
+		char_Attack.attackBuff = new ABuff_Charge();
 		charAttacks.Add(char_Attack);
 	}
 }

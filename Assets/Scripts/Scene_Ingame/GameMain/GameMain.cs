@@ -178,7 +178,8 @@ public class GameMain : MonoBehaviour
         attackResult.t_coord_y = t_gridCoord.coord_y;
         attackResult.attackId = attackId;
         attackResult.AttackData_Calculation(attacker, target, attackId);
-        // Send to client
+        
+        // Send
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
@@ -188,13 +189,13 @@ public class GameMain : MonoBehaviour
             yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
         }
 
-        yield return attackResult.Implementation(gridManager);
+        yield return attackResult.Implementation();
         yield return new WaitUntil(() => server.player.isAvailable);
     }
 
     public IEnumerator Client_Attack(AttackResult attackResult)
     {
-        yield return attackResult.Implementation(gridManager);
+        yield return attackResult.Implementation();
         yield return Reply_TaskDone("Attack done");
     }
     #endregion
@@ -214,7 +215,9 @@ public class GameMain : MonoBehaviour
             }
             else
             {
-                yield return Server_UpgradeCharacter(character, character.charId);
+                yield return 
+                    
+                    (character, character.charId);
             }
         }
         else if (character.owner.name == server.player.name)
@@ -409,33 +412,35 @@ public class GameMain : MonoBehaviour
     public IEnumerator Server_SpellDamage(Hex casterHex, Hex targetHex, int amount)
     {
         if (targetHex.character == null) yield break;
-
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        Character c = targetHex.character;
-        int resultDmg = Convert.ToInt32((float)amount - (float)amount * c.charDef.magic_resistance);
-        //c.RecieveDmg(resultDmg);
+        SpellDamage spellDamage = new SpellDamage();
+        yield return spellDamage.Setup(targetHex, amount);
+        yield return spellDamage.Implementation();
 
-        //AttackResult attackResult = new AttackResult();
-        //Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(targetHex);
-        //attackResult.coord_x = gridCoord.coord_x;
-        //attackResult.coord_y = gridCoord.coord_y;
-        //attackResult.amount = resultDmg;
-        //for (int x = 0; x < server.players.Count; x++)
-        //{
-        //    Player somePlayer = server.players[x];
-        //    if (somePlayer.isServer || somePlayer.isNeutral) continue;
+        // Send
+        for (int x = 0; x < server.players.Count; x++)
+        {
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
 
-        //    somePlayer.isAvailable = false;
-        //    yield return server.netProcessor.Send(server.players[x].address, attackResult, DeliveryMethod.ReliableOrdered);
-        //}
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, spellDamage, DeliveryMethod.ReliableOrdered);
+        }
+
         yield return new WaitUntil(() => server.player.isAvailable);
 
-        if (c.charHp.hp_cur <= 0)
+        if (targetHex.character.charHp.hp_cur <= 0)
         {
             yield return Server_Die(targetHex); // Server is blocked
             yield return Server_AddExp(casterHex, 3); // Server is blocked
         }
+    }
+
+    public IEnumerator Client_SpellDamage(SpellDamage spellDamage)
+    {
+        yield return spellDamage.Implementation();
+        yield return Reply_TaskDone("Spell damage is done");
     }
 
     public IEnumerator Server_SpellHeal(Hex targetHex, int amount)
@@ -470,7 +475,7 @@ public class GameMain : MonoBehaviour
 
         c.RecieveHeal(spellHeal.amount);
 
-        yield return Reply_TaskDone("Healing done");
+        yield return Reply_TaskDone("Spell healing is done");
     }
 
     public IEnumerator Server_SpellSummon(Hex casterHex, Hex targetHex, int summonId)
@@ -644,20 +649,15 @@ public class GameMain : MonoBehaviour
     #endregion
 
     #region Receive poison dmg
-    public IEnumerator Server_ReceivePoisonDmg(Hex charHex, int amount)
+    public IEnumerator Server_ReceivePoisonDmg(Hex charHex)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        Character someChar = charHex.character;
-        //someChar.RecieveDmg(amount);
-        if (someChar.charHp.hp_cur <= 0) someChar.charHp.hp_cur = 1;
-
-        Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(charHex);
         ReceivePoisonDmg poison = new ReceivePoisonDmg();
-        poison.coord_x = gridCoord.coord_x;
-        poison.coord_y = gridCoord.coord_y;
-        poison.amount = amount;
-        poison.hpLeft = someChar.charHp.hp_cur;
+        yield return poison.Setup(charHex);
+        yield return poison.Implementation();
+
+        // Send
         for (int x = 0; x < server.players.Count; x++)
         {
             Player somePlayer = server.players[x];
@@ -671,10 +671,7 @@ public class GameMain : MonoBehaviour
 
     public IEnumerator Client_ReceivePoisonDmg(ReceivePoisonDmg poison)
     {
-        Character someChar = gridManager.Get_GridItem_ByCoords(poison.coord_x, poison.coord_y).hex.character;
-        //someChar.RecieveDmg(poison.amount);
-        someChar.charHp.hp_cur = poison.hpLeft;
-
+        yield return poison.Implementation();
         yield return Reply_TaskDone("Poison dmg is done");
     }
     #endregion

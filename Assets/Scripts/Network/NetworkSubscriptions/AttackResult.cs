@@ -50,17 +50,21 @@ public class AttackResult
             if (t_AttackCount > 0)
             {
                 Utility.char_Attack t_Attack = t_Attacks[attackId];
+                int t_buff = 0;
+                if (t_Attack.attackBuff != null) t_buff = t_Attack.attackBuff.buffId;
+
                 int a_buff = 0;
-                if (t_Attack.attackBuff != null) a_buff = t_Attack.attackBuff.buffId;
+                if (a_Attack.attackBuff != null) a_buff = a_Attack.attackBuff.buffId;
 
-                int dmg = Dmg_Calculation(a_buff, t_Attack, attacker.charDef, attacker.hex);
+                int dmg = Dmg_Calculation(t_buff, t_Attack, attacker.charDef, attacker.hex);
+                if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
 
-                t_Health = Buff_HealthModification(t_Health, t_HealthMax, dmg, a_buff);
+                t_Health = Buff_HealthModification(t_Health, t_HealthMax, dmg, t_buff);
                 if (dmg != -1) a_Health -= dmg;
 
                 string charBuffs = Get_CharacterBuffs(target);
 
-                attackData += "t;" + t_Health + ";" + a_buff + ";" + dmg + ";" + a_Health + ";" + charBuffs + "]";
+                attackData += "t;" + t_Health + ";" + t_buff + ";" + dmg + ";" + a_Health + ";" + charBuffs + "]";
 
                 if (a_Health <= 0) break;
 
@@ -72,18 +76,18 @@ public class AttackResult
         if (attackData[attackData.Length - 1].ToString() == "]") attackData = attackData.Remove(attackData.Length - 1);
     }
 
-    public IEnumerator Implementation(GridManager gridManager)
+    public IEnumerator Implementation()
     {
         Debug.Log(attackData);
 
-        Character attacker = gridManager.Get_GridItem_ByCoords(a_coord_x, a_coord_y).hex.character;
+        Character attacker = GameMain.inst.gridManager.Get_GridItem_ByCoords(a_coord_x, a_coord_y).hex.character;
         List<int> attackerCharBuffs = new List<int>();
-        Character target = gridManager.Get_GridItem_ByCoords(t_coord_x, t_coord_y).hex.character;
+        Character target = GameMain.inst.gridManager.Get_GridItem_ByCoords(t_coord_x, t_coord_y).hex.character;
 
         string[] attackResultData = attackData.Split(']');
         for (int x = 0; x < attackResultData.Length; x++)
         {
-            Debug.Log(attackResultData[x]);
+            //Debug.Log(attackResultData[x]);
             string[] singleAttackData = attackResultData[x].Split(';');
             int a_health = int.Parse(singleAttackData[1]);                                              // [1] attacker health after attack
             ABuff attackBuff = GameMain.inst.aBuffData.Get_ABuff_byId(int.Parse(singleAttackData[2]));  // [2] attacker attack buff
@@ -121,11 +125,11 @@ public class AttackResult
                 {
                     target.Recieve_ABuff_AsAttacker(attackBuff, a_health);
                     attacker.Recieve_ABuff_AsTarget(attackBuff);
-                }
+                }                
                 attacker.RecieveDmg(dmg, t_health);
 
                 if (Utility.IsServer())
-                    if (a_health <= 0)
+                    if (t_health <= 0)
                     {
                         yield return GameMain.inst.Server_Die(attacker.hex);
                         yield return GameMain.inst.Server_AddExp(target.hex, 3);
@@ -156,6 +160,7 @@ public class AttackResult
     private int Dmg_Calculation(int a_buff, Utility.char_Attack attack, Utility.char_Defence defence, Hex targetHex)
     {
         int dmg = attack.attackDmg_cur;
+        if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
 
         // hit or miss
         int dodge = defence.dodgeChance + targetHex.dodge;
@@ -191,9 +196,9 @@ public class AttackResult
             return charBuffs;
     }
 
-    private int Buff_HealthModification(int health, int healthMax, int dmg, int buffId)
+    private int Buff_HealthModification(int health, int healthMax, int dmg, int a_buff)
     {
-        switch (buffId)
+        switch (a_buff)
         {
             case 1:
                 if (health < healthMax)

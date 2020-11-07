@@ -9,24 +9,24 @@ public class CharactersData : MonoBehaviour
 	public GameObject veteranSpearman;  // 2
 	public GameObject pikeman;          // 3
 	public GameObject swordman;         // 4
-	public GameObject knight;           // 5
-	public GameObject knightHalberd;    // 6
-	public GameObject humArcher;        // 7
-	public GameObject trainedArcher;    // 8
-	public GameObject hunter;           // 9
-	public GameObject humMage;          // 10
+	public GameObject royalGuard;       // 5
+	public GameObject halberdier;		// 6
+	public GameObject bowman;			// 7
+	public GameObject longbowman;		// 8
+	public GameObject masterBowman;     // 9
+	public GameObject mage;				// 10
 	public GameObject rogue;            // 11
 	public GameObject cavalryman;       // 26
 	public GameObject dragoon;          // 27
 	public GameObject heavyinfantry;    // 28
 	public GameObject shocktrooper;     // 29
 	public GameObject horseman;			// 30
-	public GameObject mountedKnight;    // 31
+	public GameObject knight;			// 31
 	[Header("Undeads")]
 	public GameObject skeleton;         // 12
-	public GameObject armoredSkeleton;  // 13
-	public GameObject zombie;           // 14
-	public GameObject armoredZombie;    // 15
+	public GameObject revenant;			// 13
+	public GameObject ghoul;			// 14
+	public GameObject necrophage;		// 15
 	public GameObject skelArcher;       // 16
 	public GameObject skelMage;         // 17
 	public GameObject batWhite;         // 18
@@ -35,7 +35,9 @@ public class CharactersData : MonoBehaviour
 	public GameObject darkFigure;       // 21
 	public GameObject necromancer;      // 22
 	public GameObject reaper;           // 23
-	public GameObject deathblade;		// 25
+	public GameObject deathblade;       // 25
+	public GameObject walkingCorpse;    // 32
+	public GameObject soulless;			// 33
 	[Header("Orcs")]
 	public GameObject grunt;
 	[Header("Other")]
@@ -85,28 +87,28 @@ public class CharactersData : MonoBehaviour
 				character = new Swordsman(swordmanObj.transform, gameClient, isHero);
 				break;
 			case 5:
-				GameObject knightObj = Instantiate(knight, position, Quaternion.identity);
-				character = new RoyalGuard(knightObj.transform, gameClient, isHero);
+				GameObject royalGuardObj = Instantiate(royalGuard, position, Quaternion.identity);
+				character = new RoyalGuard(royalGuardObj.transform, gameClient, isHero);
 				break;
 			case 6:
-				GameObject knightHalberdObj = Instantiate(knightHalberd, position, Quaternion.identity);
-				character = new Halberdier(knightHalberdObj.transform, gameClient, isHero);
+				GameObject halberdierObj = Instantiate(halberdier, position, Quaternion.identity);
+				character = new Halberdier(halberdierObj.transform, gameClient, isHero);
 				break;
 			case 7:
-				GameObject humArcherObj = Instantiate(humArcher, position, Quaternion.identity);
-				character = new Bowman(humArcherObj.transform, gameClient, isHero);
+				GameObject bowmanObj = Instantiate(bowman, position, Quaternion.identity);
+				character = new Bowman(bowmanObj.transform, gameClient, isHero);
 				break;
 			case 8:
-				GameObject trainedArcherObj = Instantiate(trainedArcher, position, Quaternion.identity);
-				character = new Longbowman(trainedArcherObj.transform, gameClient, isHero);
+				GameObject longbowmanObj = Instantiate(longbowman, position, Quaternion.identity);
+				character = new Longbowman(longbowmanObj.transform, gameClient, isHero);
 				break;
 			case 9:
-				GameObject hunterObj = Instantiate(hunter, position, Quaternion.identity);
-				character = new MasterBowman(hunterObj.transform, gameClient, isHero);
+				GameObject masterBowmanObj = Instantiate(masterBowman, position, Quaternion.identity);
+				character = new MasterBowman(masterBowmanObj.transform, gameClient, isHero);
 				break;
 			case 10:
-				GameObject humMageObj = Instantiate(humMage, position, Quaternion.identity);
-				character = new Mage(humMageObj.transform, gameClient, isHero);
+				GameObject mageObj = Instantiate(mage, position, Quaternion.identity);
+				character = new Mage(mageObj.transform, gameClient, isHero);
 				break;
 			case 11:
 				GameObject rogueObj = Instantiate(rogue, position, Quaternion.identity);
@@ -117,16 +119,16 @@ public class CharactersData : MonoBehaviour
 				character = new Skeleton(skeletonObj.transform, gameClient, isHero);
 				break;
 			case 13:
-				GameObject armSkeletonObj = Instantiate(armoredSkeleton, position, Quaternion.identity);
-				character = new Revenant(armSkeletonObj.transform, gameClient, isHero);
+				GameObject revenantObj = Instantiate(revenant, position, Quaternion.identity);
+				character = new Revenant(revenantObj.transform, gameClient, isHero);
 				break;
 			case 14:
-				GameObject zombieObj = Instantiate(zombie, position, Quaternion.identity);
-				character = new Ghoul(zombieObj.transform, gameClient, isHero);
+				GameObject ghoulObj = Instantiate(ghoul, position, Quaternion.identity);
+				character = new Ghoul(ghoulObj.transform, gameClient, isHero);
 				break;
 			case 15:
-				GameObject armoredZombieObj = Instantiate(armoredZombie, position, Quaternion.identity);
-				character = new Necrophage(armoredZombieObj.transform, gameClient, isHero);
+				GameObject necrophageObj = Instantiate(necrophage, position, Quaternion.identity);
+				character = new Necrophage(necrophageObj.transform, gameClient, isHero);
 				break;
 			case 16:
 				GameObject skeArcherObj = Instantiate(skelArcher, position, Quaternion.identity);
@@ -189,8 +191,16 @@ public class CharactersData : MonoBehaviour
 				character = new Horseman(horsemanObj.transform, gameClient, isHero);
 				break;
 			case 31:
-				GameObject mountedKnightObj = Instantiate(mountedKnight, position, Quaternion.identity);
-				character = new MountedKnight(mountedKnightObj.transform, gameClient, isHero);
+				GameObject mountedKnightObj = Instantiate(knight, position, Quaternion.identity);
+				character = new Knight(mountedKnightObj.transform, gameClient, isHero);
+				break;
+			case 32:
+				GameObject walkingCorpseObj = Instantiate(walkingCorpse, position, Quaternion.identity);
+				character = new WalkingCorpse(walkingCorpseObj.transform, gameClient, isHero);
+				break;
+			case 33:
+				GameObject soullessObj = Instantiate(soulless, position, Quaternion.identity);
+				character = new Soulless(soullessObj.transform, gameClient, isHero);
 				break;
 		}
 
@@ -301,7 +311,13 @@ public class CharactersData : MonoBehaviour
 				result = new Horseman(null, null, false);
 				break;
 			case 31:
-				result = new MountedKnight(null, null, false);
+				result = new Knight(null, null, false);
+				break;
+			case 32:
+				result = new WalkingCorpse(null, null, false);
+				break;
+			case 33:
+				result = new Soulless(null, null, false);
 				break;
 		}
 		return result;

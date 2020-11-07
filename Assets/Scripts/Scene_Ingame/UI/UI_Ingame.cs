@@ -625,7 +625,7 @@ public class UI_Ingame : MonoBehaviour
 				recruit_4_button.gameObject.SetActive(true);
 				recruit_5_button.gameObject.SetActive(true);
 				recruit_6_button.gameObject.SetActive(true);
-				recruit_7_button.gameObject.SetActive(false);
+				recruit_7_button.gameObject.SetActive(true);
 
 				if (!recrutable_dict.ContainsKey(recruit_1_button))
 				{
@@ -679,6 +679,15 @@ public class UI_Ingame : MonoBehaviour
 					GameObject.Find("recruit_6_Char_Image").GetComponent<Image>().sprite = bat.charImage;
 					GameObject.Find("recruit_6_CharName_Text").GetComponent<Text>().text = (bat.charName ?? "");
 					GameObject.Find("recruit_6_CharPrice_Text").GetComponent<Text>().text = string.Concat(bat.charCost);
+				}
+
+				if (!recrutable_dict.ContainsKey(recruit_7_button))
+				{
+					Character walkingCorpse = new WalkingCorpse(null, gameClient, isHero: false);
+					recrutable_dict[recruit_7_button] = walkingCorpse;
+					GameObject.Find("recruit_7_Char_Image").GetComponent<Image>().sprite = walkingCorpse.charImage;
+					GameObject.Find("recruit_7_CharName_Text").GetComponent<Text>().text = (walkingCorpse.charName ?? "");
+					GameObject.Find("recruit_7_CharPrice_Text").GetComponent<Text>().text = string.Concat(walkingCorpse.charCost);
 				}
 				break;
 		}

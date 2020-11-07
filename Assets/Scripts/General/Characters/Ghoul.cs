@@ -22,7 +22,7 @@ public class Ghoul : Character
         // Item icon
         if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 
-        charImage = Resources.Load<Sprite>("Images/Zombie");
+        charImage = Resources.Load<Sprite>("Images/Ghoul");
         charName = "Ghoul";
         charId = 14;
         charCost = 16;
@@ -54,6 +54,7 @@ public class Ghoul : Character
         attack1.attackCount = 2;
         attack1.attackDmg_base = 3;
         attack1.attackDmg_cur = attack1.attackDmg_base;
+        attack1.attackBuff = new ABuff_PoisonTouch();
         charAttacks.Add(attack1);
     }
 }
