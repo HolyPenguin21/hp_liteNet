@@ -46,11 +46,17 @@ public class Hex : MonoBehaviour
     public void Show_Fog()
     {
         fog.SetActive(true);
+
+        if (item != null) itemObj.SetActive(false);
+        if (character != null) character.tr.gameObject.SetActive(false);
     }
 
     public void Hide_Fog()
     {
         fog.SetActive(false);
+
+        if (item != null) itemObj.SetActive(true);
+        if (character != null) character.tr.gameObject.SetActive(true);
     }
     #endregion
 

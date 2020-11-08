@@ -16,12 +16,7 @@ public static class Utility
     public static int villageHeal = 5;
     public static int villageIncome = 2;
 
-    public enum dayTime { dawn, day1, day2, evening, night1, night2 };
-    public enum char_moveType { ground, air };
-    public enum char_attackType { none, Melee, Ranged };
-    public enum char_attackDmgType { Blade, Pierce, Impact, Magic };
-    public enum char_Type { day, night, neutral };
-
+    public enum dayTime { dawn, day1, day2, evening, night1, night2 }; 
     public enum buff_Type { onEquip, onTurn, onAttack, active};
     public enum spell_Area { single, circle, cone};
 
@@ -29,56 +24,11 @@ public static class Utility
     {
         public int coord_x;
         public int coord_y;
-    }
-
-    [System.Serializable]
-    public struct InstanceReady
-    {
-        public bool ready;
-        public int taskId;
-    }
-
-    [System.Serializable]
-    public struct char_Attack
-    {
-        public char_attackType attackType;
-        public char_attackDmgType attackDmgType;
-        public int attackCount;
-        public int attackDmg_base;
-        public int attackDmg_cur;
-        public ABuff attackBuff;
-    }
-
-    [System.Serializable]
-    public struct char_Defence
-    {
-        public int dodgeChance;
-        public float blade_resistance;
-        public float pierce_resistance;
-        public float impact_resistance;
-        public float magic_resistance;
-    }
-
-    [System.Serializable]
-    public struct char_Hp
-    {
-        public int hp_cur;
-        public int hp_max;
-    }
-
-    [System.Serializable]
-    public struct char_Exp
-    {
-        public int exp_cur;
-        public int exp_max;
-    }
-
-    [System.Serializable]
-    public struct char_Move
-    {
-        public char_moveType moveType;
-        public int movePoints_cur;
-        public int movePoints_max;
+        public GridCoord(int x, int y)
+        {
+            coord_x = x;
+            coord_y = y;
+        }
     }
 
     public static bool IsServer()
@@ -213,9 +163,4 @@ public static class Utility
 
         return true;
     }
-
-    //public static void LoadScene_byString(string sceneName)
-    //{
-    //    SceneManager.LoadScene(sceneName);
-    //}
 }

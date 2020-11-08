@@ -88,7 +88,7 @@ public class Pathfinding
 
                 switch (startHex.character.charMovement.moveType)
                 {
-                    case Utility.char_moveType.ground:
+                    case CharVars.char_moveType.ground:
                         if (next.groundMove && (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]))
                         {
                             costSoFar[next] = newCost;
@@ -96,7 +96,7 @@ public class Pathfinding
                             groupToVisit.Enqueue(next);
                         }
                         break;
-                    case Utility.char_moveType.air:
+                    case CharVars.char_moveType.air:
                         if (next.airMove && (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]))
                         {
                             costSoFar[next] = newCost;

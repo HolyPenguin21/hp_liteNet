@@ -15,12 +15,12 @@ public class AttackResult
 
     public void AttackData_Calculation(Character attacker, Character target, int attackId)
     {
-        Utility.char_Attack a_Attack = attacker.charAttacks[attackId];
+        CharVars.char_Attack a_Attack = attacker.charAttacks[attackId];
         int a_AttackCount = a_Attack.attackCount;
         int a_Health = attacker.charHp.hp_cur;
         int a_HealthMax = attacker.charHp.hp_max;
 
-        List<Utility.char_Attack> t_Attacks = target.charAttacks;
+        List<CharVars.char_Attack> t_Attacks = target.charAttacks;
         int t_AttackCount = 0;
         if (t_Attacks.Count > attackId) t_AttackCount = t_Attacks[attackId].attackCount;
         int t_Health = target.charHp.hp_cur;
@@ -49,7 +49,7 @@ public class AttackResult
 
             if (t_AttackCount > 0)
             {
-                Utility.char_Attack t_Attack = t_Attacks[attackId];
+                CharVars.char_Attack t_Attack = t_Attacks[attackId];
                 int t_buff = 0;
                 if (t_Attack.attackBuff != null) t_buff = t_Attack.attackBuff.buffId;
 
@@ -157,7 +157,7 @@ public class AttackResult
         }
     }
 
-    private int Dmg_Calculation(int a_buff, Utility.char_Attack attack, Utility.char_Defence defence, Hex targetHex)
+    private int Dmg_Calculation(int a_buff, CharVars.char_Attack attack, CharVars.char_Defence defence, Hex targetHex)
     {
         int dmg = attack.attackDmg_cur;
         //if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
@@ -168,13 +168,13 @@ public class AttackResult
 
         switch (attack.attackDmgType)
         {
-            case Utility.char_attackDmgType.Blade:
+            case CharVars.char_attackDmgType.Blade:
                 return Convert.ToInt32(dmg - dmg * defence.blade_resistance);
-            case Utility.char_attackDmgType.Pierce:
+            case CharVars.char_attackDmgType.Pierce:
                 return Convert.ToInt32(dmg - dmg * defence.pierce_resistance);
-            case Utility.char_attackDmgType.Impact:
+            case CharVars.char_attackDmgType.Impact:
                 return Convert.ToInt32(dmg - dmg * defence.impact_resistance);
-            case Utility.char_attackDmgType.Magic:
+            case CharVars.char_attackDmgType.Magic:
                 return Convert.ToInt32(dmg - dmg * defence.magic_resistance);
         }
 

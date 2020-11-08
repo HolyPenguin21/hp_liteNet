@@ -22,49 +22,27 @@ public class Fog
 			Hex hex = g.grids[i].hex;
 			hex.Show_Fog();
 
-			if (hex.item != null)
-				hex.itemObj.SetActive(false);
-
 			if (Utility.IsServer())
 			{
-				// Hide characters
-				if (hex.character != null && hex.character.owner.name != s.player.name)
-					hex.character.tr.gameObject.SetActive(false);
-
 				for (int x = 0; x < GameMain.inst.allCharacters.Count; x++)
 				{
 					Character character = GameMain.inst.allCharacters[x];
 					if (character.owner.name == s.player.name &&
-					 Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.lookRange)
+					Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.charMovement.movePoints_max)
 					{
 						hex.Hide_Fog();
-
-						if (hex.character != null)
-							hex.character.tr.gameObject.SetActive(true);
-
-						if (hex.item != null)
-							hex.itemObj.SetActive(true);
 					}
 				}
 			}
 			else
 			{
-				// Hide characters
-				if (hex.character != null && hex.character.owner.name != c.player.name)
-					hex.character.tr.gameObject.SetActive(false);
-
 				for (int x = 0; x < GameMain.inst.allCharacters.Count; x++)
 				{
 					Character character = GameMain.inst.allCharacters[x];
 					if (character.owner.name == c.player.name &&
-					Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.lookRange)
+					Vector3.Distance(character.hex.transform.position, hex.transform.position) < Utility.distHexes * (float)character.charMovement.movePoints_max)
 					{
 						hex.Hide_Fog();
-						if (hex.character != null)
-							hex.character.tr.gameObject.SetActive(true);
-
-						if (hex.item != null)
-							hex.itemObj.SetActive(true);
 					}
 				}
 			}

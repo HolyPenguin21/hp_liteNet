@@ -58,9 +58,7 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < hexPath.Count; x++)
         {
             GridItem gridItem = Get_GridItem_ByHex(hexPath[x]);
-            Utility.GridCoord coord;
-            coord.coord_x = gridItem.coord_x;
-            coord.coord_y = gridItem.coord_y;
+            Utility.GridCoord coord = new Utility.GridCoord(gridItem.coord_x, gridItem.coord_y);
             coordPath.Add(coord);
         }
 

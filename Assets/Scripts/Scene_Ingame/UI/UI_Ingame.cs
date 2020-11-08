@@ -858,8 +858,8 @@ public class UI_Ingame : MonoBehaviour
 
 		Character attacker = attackPath[0].character;
 		Character target = attackPath[attackPath.Count - 1].character;
-		List<Utility.char_Attack> a_Attacks = attacker.charAttacks;
-		List<Utility.char_Attack> t_Attacks = target.charAttacks;
+		List<CharVars.char_Attack> a_Attacks = attacker.charAttacks;
+		List<CharVars.char_Attack> t_Attacks = target.charAttacks;
 
 		attackerImage.sprite = attacker.charImage;
 		targetImage.sprite = target.charImage;
@@ -947,28 +947,28 @@ public class UI_Ingame : MonoBehaviour
 		}
 	}
 
-	private Sprite Get_AttackTypeImage(Utility.char_attackDmgType attackDmgType)
+	private Sprite Get_AttackTypeImage(CharVars.char_attackDmgType attackDmgType)
 	{
 		Sprite result = null;
 		switch (attackDmgType)
 		{
-			case Utility.char_attackDmgType.Blade:
+			case CharVars.char_attackDmgType.Blade:
 				result = Resources.Load<Sprite>("DamageType/IronSword");
 				break;
-			case Utility.char_attackDmgType.Pierce:
+			case CharVars.char_attackDmgType.Pierce:
 				result = Resources.Load<Sprite>("DamageType/Arrow");
 				break;
-			case Utility.char_attackDmgType.Impact:
+			case CharVars.char_attackDmgType.Impact:
 				result = Resources.Load<Sprite>("DamageType/Hammer");
 				break;
-			case Utility.char_attackDmgType.Magic:
+			case CharVars.char_attackDmgType.Magic:
 				result = Resources.Load<Sprite>("DamageType/RubyStaff");
 				break;
 		}
 		return result;
 	}
 
-	private string Get_AttackTooltip(Utility.char_Attack attack)
+	private string Get_AttackTooltip(CharVars.char_Attack attack)
 	{
 		if(attack.attackBuff != null)
 			return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount + "\n -"+ attack.attackBuff.buffName;
@@ -976,22 +976,22 @@ public class UI_Ingame : MonoBehaviour
 			return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
 	}
 
-	private string Calculate_AttackValue(Utility.char_Attack attack, Character target)
+	private string Calculate_AttackValue(CharVars.char_Attack attack, Character target)
 	{
 		int attackDmg_cur = attack.attackDmg_cur;
 		int resultDmg = 0;
 		switch (attack.attackDmgType)
 		{
-			case Utility.char_attackDmgType.Blade:
+			case CharVars.char_attackDmgType.Blade:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.blade_resistance);
 				break;
-			case Utility.char_attackDmgType.Pierce:
+			case CharVars.char_attackDmgType.Pierce:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.pierce_resistance);
 				break;
-			case Utility.char_attackDmgType.Impact:
+			case CharVars.char_attackDmgType.Impact:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.impact_resistance);
 				break;
-			case Utility.char_attackDmgType.Magic:
+			case CharVars.char_attackDmgType.Magic:
 				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.magic_resistance);
 				break;
 		}
