@@ -57,7 +57,7 @@ public class AttackResult
                 if (a_Attack.attackBuff != null) a_buff = a_Attack.attackBuff.buffId;
 
                 int dmg = Dmg_Calculation(t_buff, t_Attack, attacker.charDef, attacker.hex);
-                if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
+                //if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
 
                 t_Health = Buff_HealthModification(t_Health, t_HealthMax, dmg, t_buff);
                 if (dmg != -1) a_Health -= dmg;
@@ -160,7 +160,7 @@ public class AttackResult
     private int Dmg_Calculation(int a_buff, Utility.char_Attack attack, Utility.char_Defence defence, Hex targetHex)
     {
         int dmg = attack.attackDmg_cur;
-        if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
+        //if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
 
         // hit or miss
         int dodge = defence.dodgeChance + targetHex.dodge;
