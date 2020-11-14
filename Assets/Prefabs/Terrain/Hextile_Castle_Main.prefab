@@ -63,6 +63,7 @@ MonoBehaviour:
     isAvailable: 0
     name: 
     race: 0
+    heroId: 0
     gold: 0
     villages: 0
   isMountain: 0
@@ -72,7 +73,7 @@ MonoBehaviour:
   airMove: 1
   neighbors: []
   moveCost: 1
-  dodge: 20
+  dodge: 30
 --- !u!135 &3995019693188363864
 SphereCollider:
   m_ObjectHideFlags: 0

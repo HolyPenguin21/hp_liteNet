@@ -8,8 +8,8 @@ public class Soulless : Character
     {
         Init(tr, owner, isHero);
 
-        charImage = Resources.Load<Sprite>("Images/Zombie");
-        charName = "Walking Corpse";
+        charImage = Resources.Load<Sprite>("Images/Soulless");
+        charName = "Soulless";
         charId = 33;
         charCost = 13;
 

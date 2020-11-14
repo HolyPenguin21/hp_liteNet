@@ -178,7 +178,7 @@ public static class SaveLoad
                 Player villageOwner = null;
                 if(someHexData.villageOwnerId == 0)
                 {
-                    villageOwner = Utility.Get_Client_byString("Neutrals", GameMain.inst.server.players);
+                    villageOwner = Utility.Get_Client_byString("Neutrals");
                 }
                 else if(someHexData.villageOwnerId == 1)
                     villageOwner = GameMain.inst.server.players[0];

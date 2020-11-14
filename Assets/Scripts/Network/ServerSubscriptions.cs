@@ -24,20 +24,15 @@ public class ServerSubscriptions
         });
     }
 
-    public void Attack()
+    public void AttackRequest()
     {
-        netProcessor.SubscribeReusable<Attack>((data) => {
-            List<Hex> somePath = new List<Hex>();
-            string[] pathData = data.path.Split('|');
-            for (int j = 1; j < pathData.Length; j++)
-            {
-                string[] hexCoords = pathData[j].Split(';');
-                int posX = int.Parse(hexCoords[0]);
-                int posY = int.Parse(hexCoords[1]);
-                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX, posY).hex);
-            }
+        netProcessor.SubscribeReusable<AttackRequest>((data) => {
+            Character a_character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.a_coord_x, data.a_coord_y).hex.character;
+            int a_attackId = data.a_attackId;
+            Character t_character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.t_coord_x, data.t_coord_y).hex.character;
+            int t_attackId = data.t_attackId;
 
-            server.StartCoroutine(GameMain.inst.Server_Attack(somePath, data.attackId));
+            server.StartCoroutine(GameMain.inst.Server_Attack(a_character, a_attackId, t_character, t_attackId));
         });
     }
 
@@ -93,19 +88,13 @@ public class ServerSubscriptions
         });
     }
 
-    public void Move()
+    public void MoveRequest()
     {
-        netProcessor.SubscribeReusable<Move>((data) => {
-            List<Hex> somePath = new List<Hex>();
-            string[] pathData = data.pathData.Split('|');
-            for (int j = 1; j < pathData.Length; j++)
-            {
-                string[] hexCoords = pathData[j].Split(';');
-                int posX = int.Parse(hexCoords[0]);
-                int posY = int.Parse(hexCoords[1]);
-                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX, posY).hex);
-            }
-            server.StartCoroutine(GameMain.inst.Server_Move(somePath));
+        netProcessor.SubscribeReusable<MoveRequest>((data) => {
+            Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.c_coord_x, data.c_coord_y).hex.character;
+            Hex destination = GameMain.inst.gridManager.Get_GridItem_ByCoords(data.d_coord_x, data.d_coord_y).hex;
+
+            server.StartCoroutine(GameMain.inst.Server_Move(character, destination));
         });
     }
 

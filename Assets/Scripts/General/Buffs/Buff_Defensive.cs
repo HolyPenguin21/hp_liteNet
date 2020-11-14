@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buff_Hp_up_5 : Buff
+public class Buff_Defensive : Buff
 {
-    public Buff_Hp_up_5 ()
+    public Buff_Defensive()
     {
-        base.buffId = 1;
-        base.buffName = "HP bonus : + 5";
-        base.buffDescription = "Adds 5 HP to character health pull.";
+        base.buffId = 6;
+        base.buffName = "Defensive";
+        base.buffDescription = "Character will recieve less damage than should.";
 
         base.buffType = Utility.buff_Type.onEquip;
     }
@@ -21,14 +21,11 @@ public class Buff_Hp_up_5 : Buff
         // Server
         if (!Utility.IsServer()) yield break;
 
-        yield return GameMain.inst.Server_ChangeMaxHealth(character.hex, 5);
+        //yield return GameMain.inst.Server_ReceivePoisonDmg(character.hex);
     }
 
     public override IEnumerator Buff_Remove(Character character)
     {
-        // Server
-        if (!Utility.IsServer()) yield break;
-
-        yield return GameMain.inst.Server_ChangeMaxHealth(character.hex, -5);
+        yield return null;
     }
 }

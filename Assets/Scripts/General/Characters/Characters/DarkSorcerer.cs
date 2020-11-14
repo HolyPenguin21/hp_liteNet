@@ -17,7 +17,7 @@ public class DarkSorcerer : Character
         charHp = new CharVars.char_Hp(48);
         charExp = new CharVars.char_Exp(45);
 
-        charDef.dodgeChance = 5;
+        charDef.dodgeChance = 0;
         charDef.blade_resistance = 0.0f;
         charDef.pierce_resistance = 0.0f;
         charDef.impact_resistance = 0.0f;

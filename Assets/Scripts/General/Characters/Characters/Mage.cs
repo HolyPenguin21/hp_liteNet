@@ -17,7 +17,7 @@ public class Mage : Character
 		charHp = new CharVars.char_Hp(24);
 		charExp = new CharVars.char_Exp(27);
 
-		charDef.dodgeChance = 5;
+		charDef.dodgeChance = 0;
 		charDef.blade_resistance = 0.0f;
 		charDef.pierce_resistance = 0.0f;
 		charDef.impact_resistance = 0.0f;
@@ -26,7 +26,7 @@ public class Mage : Character
 		charMovement.moveType = CharVars.char_moveType.ground;
 		charMovement.movePoints_max = 5;
 
-		// upgradeList.Add(2);
+		upgradeList.Add(34);
 
 		charAttacks = new List<CharVars.char_Attack>();
 		CharVars.char_Attack char_Attack = default(CharVars.char_Attack);

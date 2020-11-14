@@ -8,7 +8,7 @@ public class WalkingCorpse : Character
     {
         Init(tr, owner, isHero);
 
-        charImage = Resources.Load<Sprite>("Images/Zombie");
+        charImage = Resources.Load<Sprite>("Images/WalkingCorpse");
         charName = "Walking Corpse";
         charId = 32;
         charCost = 8;

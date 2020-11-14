@@ -34,7 +34,7 @@ public class Server : MonoBehaviour
         player.isServer = true;
         player.isAvailable = true;
         player.name = hostName;
-        player.heroId = 10;
+        player.heroId = 34;
         players.Add(player);
 
         //Debug.Log("Starting server ...");
@@ -87,14 +87,14 @@ public class Server : MonoBehaviour
         sSubscription.ChatMessage();
         sSubscription.ResponsOnTaskDone();
         sSubscription.EndTurn();
-        sSubscription.Move();
+        sSubscription.MoveRequest();
         sSubscription.ItemPickup();
         sSubscription.ItemDrop();
         sSubscription.ItemUse();
         sSubscription.RecruitCharacter();
         sSubscription.CastSpell();
         sSubscription.CastItemSpell();
-        sSubscription.Attack();
+        sSubscription.AttackRequest();
         sSubscription.UpgradeCharacter();
     }
 

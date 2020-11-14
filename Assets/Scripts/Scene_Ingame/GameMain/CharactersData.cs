@@ -21,7 +21,8 @@ public class CharactersData : MonoBehaviour
 	public GameObject heavyinfantry;    // 28
 	public GameObject shocktrooper;     // 29
 	public GameObject horseman;			// 30
-	public GameObject knight;			// 31
+	public GameObject knight;           // 31
+	public GameObject redMage;			// 34
 	[Header("Undeads")]
 	public GameObject skeleton;         // 12
 	public GameObject revenant;			// 13
@@ -34,7 +35,7 @@ public class CharactersData : MonoBehaviour
 	public GameObject ghost;            // 20
 	public GameObject darkFigure;       // 21
 	public GameObject necromancer;      // 22
-	public GameObject reaper;           // 23
+	public GameObject wraith;           // 23
 	public GameObject deathblade;       // 25
 	public GameObject walkingCorpse;    // 32
 	public GameObject soulless;			// 33
@@ -58,15 +59,7 @@ public class CharactersData : MonoBehaviour
 	{
 		Vector3 position = createAt.transform.position;
 		Character character = null;
-		Player gameClient = null;
-		if (Utility.IsServer())
-		{
-			gameClient = Utility.Get_Client_byString(ownerName, server.players);
-		}
-		if (client != null)
-		{
-			gameClient = Utility.Get_Client_byString(ownerName, client.players);
-		}
+		Player gameClient = Utility.Get_Client_byString(ownerName);
 
 		switch (characterId)
 		{
@@ -159,7 +152,7 @@ public class CharactersData : MonoBehaviour
 				character = new DarkSorcerer(necromancerObj.transform, gameClient, isHero);
 				break;
 			case 23:
-				GameObject reaperObj = Instantiate(reaper, position, Quaternion.identity);
+				GameObject reaperObj = Instantiate(wraith, position, Quaternion.identity);
 				character = new Wraith(reaperObj.transform, gameClient, isHero);
 				break;
 			case 24:
@@ -201,6 +194,10 @@ public class CharactersData : MonoBehaviour
 			case 33:
 				GameObject soullessObj = Instantiate(soulless, position, Quaternion.identity);
 				character = new Soulless(soullessObj.transform, gameClient, isHero);
+				break;
+			case 34:
+				GameObject redMageObj = Instantiate(redMage, position, Quaternion.identity);
+				character = new RedMage(redMageObj.transform, gameClient, isHero);
 				break;
 		}
 
@@ -318,6 +315,9 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 33:
 				result = new Soulless(null, null, false);
+				break;
+			case 34:
+				result = new RedMage(null, null, false);
 				break;
 		}
 		return result;

@@ -32,8 +32,8 @@ public class Ghoul : Character
         CharVars.char_Attack attack1 = new CharVars.char_Attack();
         attack1.attackType = CharVars.char_attackType.Melee;
         attack1.attackDmgType = CharVars.char_attackDmgType.Blade;
-        attack1.attackCount = 2;
-        attack1.attackDmg_base = 3;
+        attack1.attackCount = 3;
+        attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
         attack1.attackBuff = new ABuff_PoisonTouch();
         charAttacks.Add(attack1);

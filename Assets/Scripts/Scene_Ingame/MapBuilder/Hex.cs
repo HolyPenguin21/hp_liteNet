@@ -51,6 +51,11 @@ public class Hex : MonoBehaviour
         if (character != null) character.tr.gameObject.SetActive(false);
     }
 
+    public void Show_MoveFog()
+    {
+        fog.SetActive(true);
+    }
+
     public void Hide_Fog()
     {
         fog.SetActive(false);

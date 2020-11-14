@@ -16,9 +16,9 @@ public static class Utility
     public static int villageHeal = 5;
     public static int villageIncome = 2;
 
-    public enum dayTime { dawn, day1, day2, evening, night1, night2 }; 
-    public enum buff_Type { onEquip, onTurn, onAttack, active};
-    public enum spell_Area { single, circle, cone};
+    public enum dayTime { dawn, day1, day2, evening, night1, night2 };
+    public enum buff_Type { onEquip, onTurn, onAttack, active };
+    public enum spell_Area { single, circle, cone };
 
     public struct GridCoord
     {
@@ -68,6 +68,14 @@ public static class Utility
         return false;
     }
 
+    public static bool IsHexVisibleForChar(Hex h, Character c)
+    {
+        if (c == null) return false;
+        if (Vector3.Distance(c.hex.transform.position, h.transform.position) < distHexes * (float)c.charMovement.movePoints_max)
+            return true;
+
+        return false;
+    }
     public static bool HexIsVisible(Hex hex)
     {
         if (hex.fog.activeInHierarchy)
@@ -83,16 +91,16 @@ public static class Utility
         return false;
     }
 
-    public static bool IsMyCharacter(Character someCharacter)
+    public static bool IsMyCharacter(Character character)
     {
         if (IsServer())
         {
-            if (someCharacter.owner.name == GameMain.inst.server.player.name)
+            if (character.owner.name == GameMain.inst.server.player.name)
                 return true;
         }
         else
         {
-            if (someCharacter.owner.name == GameMain.inst.client.player.name)
+            if (character.owner.name == GameMain.inst.client.player.name)
                 return true;
         }
         return false;
@@ -146,9 +154,12 @@ public static class Utility
         return initialList;
     }
 
-    public static Player Get_Client_byString(string someName, List<Player> initialList)
+    public static Player Get_Client_byString(string someName)
     {
-        return initialList.Find(x => x.name == someName);
+        if (IsServer())
+            return GameMain.inst.server.players.Find(x => x.name == someName);
+        else
+            return GameMain.inst.client.players.Find(x => x.name == someName);
     }
 
     public static bool AreAllPlayersAvailable()

@@ -8,21 +8,22 @@ public class AttackResult
 {
     public int a_coord_x { get; set; }
     public int a_coord_y { get; set; }
+    public int a_attackId { get; set; }
     public int t_coord_x { get; set; }
     public int t_coord_y { get; set; }
-    public int attackId { get; set; }
+    public int t_attackId { get; set; }
     public string attackData { get; set; }
 
-    public void AttackData_Calculation(Character attacker, Character target, int attackId)
+    public void AttackData_Calculation(Character attacker, Character target)
     {
-        CharVars.char_Attack a_Attack = attacker.charAttacks[attackId];
+        CharVars.char_Attack a_Attack = attacker.charAttacks[a_attackId];
         int a_AttackCount = a_Attack.attackCount;
         int a_Health = attacker.charHp.hp_cur;
         int a_HealthMax = attacker.charHp.hp_max;
 
         List<CharVars.char_Attack> t_Attacks = target.charAttacks;
         int t_AttackCount = 0;
-        if (t_Attacks.Count > attackId) t_AttackCount = t_Attacks[attackId].attackCount;
+        if (t_Attacks.Count > t_attackId) t_AttackCount = t_Attacks[t_attackId].attackCount;
         int t_Health = target.charHp.hp_cur;
         int t_HealthMax = attacker.charHp.hp_max;
 
@@ -33,7 +34,7 @@ public class AttackResult
                 int a_buff = 0;
                 if (a_Attack.attackBuff != null) a_buff = a_Attack.attackBuff.buffId;
 
-                int dmg = Dmg_Calculation(a_buff, a_Attack, target.charDef, target.hex);
+                int dmg = AttackResult_Calculation(attacker, attacker, target);
 
                 a_Health = Buff_HealthModification(a_Health, a_HealthMax, dmg, a_buff);
                 if (dmg != -1) t_Health -= dmg;
@@ -49,15 +50,14 @@ public class AttackResult
 
             if (t_AttackCount > 0)
             {
-                CharVars.char_Attack t_Attack = t_Attacks[attackId];
+                CharVars.char_Attack t_Attack = t_Attacks[t_attackId];
                 int t_buff = 0;
                 if (t_Attack.attackBuff != null) t_buff = t_Attack.attackBuff.buffId;
 
                 int a_buff = 0;
                 if (a_Attack.attackBuff != null) a_buff = a_Attack.attackBuff.buffId;
 
-                int dmg = Dmg_Calculation(t_buff, t_Attack, attacker.charDef, attacker.hex);
-                //if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
+                int dmg = AttackResult_Calculation(attacker, target, attacker);
 
                 t_Health = Buff_HealthModification(t_Health, t_HealthMax, dmg, t_buff);
                 if (dmg != -1) a_Health -= dmg;
@@ -80,9 +80,12 @@ public class AttackResult
     {
         Debug.Log(attackData);
 
-        Character attacker = GameMain.inst.gridManager.Get_GridItem_ByCoords(a_coord_x, a_coord_y).hex.character;
+        Hex a_Hex = GameMain.inst.gridManager.Get_GridItem_ByCoords(a_coord_x, a_coord_y).hex;
+        Character attacker = a_Hex.character;
         List<int> attackerCharBuffs = new List<int>();
-        Character target = GameMain.inst.gridManager.Get_GridItem_ByCoords(t_coord_x, t_coord_y).hex.character;
+
+        Hex t_Hex = GameMain.inst.gridManager.Get_GridItem_ByCoords(t_coord_x, t_coord_y).hex;
+        Character target = t_Hex.character;
 
         string[] attackResultData = attackData.Split(']');
         for (int x = 0; x < attackResultData.Length; x++)
@@ -102,37 +105,39 @@ public class AttackResult
             // attack iteration
             if (singleAttackData[0] == "a")                                                             // [0] attacker identifier
             {
-                yield return attacker.AttackAnimation(target.hex, attackId);                
+                yield return attacker.AttackAnimation(target.hex, a_attackId);
                 if (attackBuff != null && dmg > 0)
                 {
                     attacker.Recieve_ABuff_AsAttacker(attackBuff, a_health);
                     target.Recieve_ABuff_AsTarget(attackBuff);
                 }
-                target.RecieveDmg(dmg, t_health);
+                if (dmg > 0) GameMain.inst.effectsData.Effect_Damage(t_Hex.transform.position, dmg);
+                target.Set_Health(t_health);
 
                 if (Utility.IsServer())
                     if (t_health <= 0)
                     {
                         yield return GameMain.inst.Server_Die(target.hex);
-                        yield return GameMain.inst.Server_AddExp(attacker.hex, 3);
+                        yield return GameMain.inst.Server_AddExp(attacker.hex, 7);
                         break;
                     }
             }
             else
             {
-                yield return target.AttackAnimation(attacker.hex, attackId);
+                yield return target.AttackAnimation(attacker.hex, t_attackId);
                 if (attackBuff != null && dmg > 0)
                 {
                     target.Recieve_ABuff_AsAttacker(attackBuff, a_health);
                     attacker.Recieve_ABuff_AsTarget(attackBuff);
-                }                
-                attacker.RecieveDmg(dmg, t_health);
+                }
+                if (dmg > 0) GameMain.inst.effectsData.Effect_Damage(a_Hex.transform.position, dmg);
+                attacker.Set_Health(t_health);
 
                 if (Utility.IsServer())
                     if (t_health <= 0)
                     {
                         yield return GameMain.inst.Server_Die(attacker.hex);
-                        yield return GameMain.inst.Server_AddExp(target.hex, 3);
+                        yield return GameMain.inst.Server_AddExp(target.hex, 7);
                         break;
                     }
             }
@@ -157,25 +162,68 @@ public class AttackResult
         }
     }
 
-    private int Dmg_Calculation(int a_buff, CharVars.char_Attack attack, CharVars.char_Defence defence, Hex targetHex)
+    private int AttackResult_Calculation(Character firstStrikeChar, Character attacker, Character target)
     {
-        int dmg = attack.attackDmg_cur;
-        //if (a_buff == 3) dmg = dmg * 2;  // Charge Buff - remake this
-
         // hit or miss
-        int dodge = defence.dodgeChance + targetHex.dodge;
+        int dodge = target.charDef.dodgeChance + target.hex.dodge;
         if (UnityEngine.Random.Range(0, 101) < dodge) return -1;
+        else return DmgCalculation(firstStrikeChar, attacker, target);
+    }
+    
+    public int DmgCalculation(Character firstStrikeChar, Character attacker, Character target)
+    {
+        CharVars.char_Attack a_Attack = attacker.charAttacks[a_attackId];
+        CharVars.char_Defence t_Defence = target.charDef;
+        ABuff a_ABuff = a_Attack.attackBuff;
+        List<Buff> a_charBuffs = attacker.charBuffs;
+        List<Buff> t_charBuffs = target.charBuffs;
 
-        switch (attack.attackDmgType)
+        int dmg = a_Attack.attackDmg_cur;
+
+        // Attack Buff
+        switch (a_ABuff)
+        {
+            case ABuff_Charge charge:
+                if (firstStrikeChar == attacker)
+                {
+                    dmg += dmg;
+                }
+                break;
+        }
+
+        // Attacker buffs
+        for (int x = 0; x < a_charBuffs.Count; x++)
+        {
+            switch (a_charBuffs[x])
+            {
+                case Buff_Berserk berserk:
+                    Debug.Log("Berserk");
+                    break;
+            }
+        }
+
+        // Target buffs
+        for (int x = 0; x < t_charBuffs.Count; x++)
+        {
+            switch (t_charBuffs[x])
+            {
+                case Buff_Defensive defensive:
+                    if (firstStrikeChar != target)
+                        dmg -= dmg / 2;
+                    break;
+            }
+        }
+
+        switch (a_Attack.attackDmgType)
         {
             case CharVars.char_attackDmgType.Blade:
-                return Convert.ToInt32(dmg - dmg * defence.blade_resistance);
+                return Convert.ToInt32(dmg - dmg * t_Defence.blade_resistance);
             case CharVars.char_attackDmgType.Pierce:
-                return Convert.ToInt32(dmg - dmg * defence.pierce_resistance);
+                return Convert.ToInt32(dmg - dmg * t_Defence.pierce_resistance);
             case CharVars.char_attackDmgType.Impact:
-                return Convert.ToInt32(dmg - dmg * defence.impact_resistance);
+                return Convert.ToInt32(dmg - dmg * t_Defence.impact_resistance);
             case CharVars.char_attackDmgType.Magic:
-                return Convert.ToInt32(dmg - dmg * defence.magic_resistance);
+                return Convert.ToInt32(dmg - dmg * t_Defence.magic_resistance);
         }
 
         return -999; // should not get here
@@ -191,9 +239,9 @@ public class AttackResult
             charBuffs += attacker.charBuffs[x].buffId + ";";
         }
 
-        if(charBuffs != "") if (charBuffs[charBuffs.Length - 1].ToString() == ";") charBuffs = charBuffs.Remove(charBuffs.Length - 1);
+        if (charBuffs != "") if (charBuffs[charBuffs.Length - 1].ToString() == ";") charBuffs = charBuffs.Remove(charBuffs.Length - 1);
 
-            return charBuffs;
+        return charBuffs;
     }
 
     private int Buff_HealthModification(int health, int healthMax, int dmg, int a_buff)

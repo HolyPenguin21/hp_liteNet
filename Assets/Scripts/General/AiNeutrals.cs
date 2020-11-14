@@ -6,7 +6,7 @@ public class AiNeutrals
 {
     private GameMain manager;
 
-    public AiNeutrals (GameMain manager)
+    public AiNeutrals(GameMain manager)
     {
         this.manager = manager;
     }
@@ -24,7 +24,7 @@ public class AiNeutrals
             int spawnChance = Random.Range(1, 101);
             if (spawnChance < 80) continue;
 
-            int charId = Random.Range(1, 34);
+            int charId = Random.Range(1, 35); // 35
             yield return manager.Server_CreateCharacter(spawnPoint, charId, "Neutrals", false); // Server is blocked
         }
 
@@ -37,9 +37,9 @@ public class AiNeutrals
             // if(aiChar.charHp.hp_cur == aiChar.charHp.hp_max) continue;
 
             yield return Attack_NearbyEnemy(aiChar);
-            if(aiChar == null) continue;
+            if (aiChar == null) continue;
 
-            if(Get_Enemys_InRange(aiChar).Count > 0)
+            if (Get_Enemys_InRange(aiChar).Count > 0)
                 yield return Move_ToRandomEnemyInRange(aiChar);
             else
                 yield return Move_Random(aiChar);
@@ -51,57 +51,53 @@ public class AiNeutrals
     }
 
     #region Logic
-    private IEnumerator Attack_NearbyEnemy(Character character)
+    private IEnumerator Attack_NearbyEnemy(Character a_character)
     {
-        if(character.canAct)
-		{
-			Hex enemyHex = Get_NearbyEnemyHex(character);
-            if(enemyHex != null)
+        if (a_character.canAct)
+        {
+            Hex enemyHex = Get_NearbyEnemyHex(a_character);
+            if (enemyHex != null)
             {
-                List<Hex> path = new List<Hex>();
-                path.Add(character.hex);
-                path.Add(enemyHex);
-
-                int attackId = 0;
+                int a_attackId = 0;
                 int curMaxDmg = 0;
-                for(int x = 0; x < character.charAttacks.Count; x++)
+                for (int x = 0; x < a_character.charAttacks.Count; x++)
                 {
-                    int maxDmg = character.charAttacks[x].attackCount * character.charAttacks[x].attackDmg_base;
-                    if(maxDmg > curMaxDmg)
+                    int maxDmg = a_character.charAttacks[x].attackCount * a_character.charAttacks[x].attackDmg_base;
+                    if (maxDmg > curMaxDmg)
                     {
                         curMaxDmg = maxDmg;
-                        attackId = x;
+                        a_attackId = x;
                     }
                 }
 
-                yield return manager.Server_Attack(path, attackId);
+                yield return manager.Server_Attack(a_character, a_attackId, enemyHex.character, a_attackId);
             }
-		}
+        }
 
         yield return null;
     }
 
     private IEnumerator Move_ToRandomEnemyInRange(Character character)
     {
-        if(!character.canAct || character.charMovement.movePoints_cur == 0) yield break;
+        if (!character.canAct || character.charMovement.movePoints_cur == 0) yield break;
 
         List<Hex> enemysInRange = Get_Enemys_InRange(character);
-        if(enemysInRange.Count == 0) yield break;
+        if (enemysInRange.Count == 0) yield break;
 
-        Hex randomEnemy = enemysInRange[Random.Range(0, enemysInRange.Count)];
-        List<Hex> path = manager.pathfinding.Get_Path(character.hex, randomEnemy);
+        Hex enemyHex = enemysInRange[Random.Range(0, enemysInRange.Count)];
+        List<Hex> path = manager.pathfinding.Get_Path(character.hex, enemyHex);
 
-        if(path == null || path.Count < 2) yield break;
+        if (path == null || path.Count < 2) yield break;
 
         path.RemoveAt(path.Count - 1);
-        yield return manager.Server_Move(path);
+        yield return manager.Server_Move(character, path[path.Count - 1]);
     }
 
     private IEnumerator Move_Random(Character character)
     {
-        if(!character.canAct || character.charMovement.movePoints_cur == 0) yield break;
+        if (!character.canAct || character.charMovement.movePoints_cur == 0) yield break;
 
-        yield return manager.Server_Move(manager.pathfinding.Get_Path(character.hex, Get_RandomNeighborMoveHex(character)));
+        yield return manager.Server_Move(character, Get_RandomNeighborMoveHex(character));
     }
     #endregion
 
@@ -110,9 +106,9 @@ public class AiNeutrals
         Hex current = character.hex;
         List<Hex> availableHexes = new List<Hex>();
 
-        for(int x = 0; x < current.neighbors.Count; x++)
+        for (int x = 0; x < current.neighbors.Count; x++)
         {
-            if(current.neighbors[x].groundMove && current.neighbors[x].character == null)
+            if (current.neighbors[x].groundMove && current.neighbors[x].character == null)
                 availableHexes.Add(current.neighbors[x]);
         }
 
@@ -121,18 +117,18 @@ public class AiNeutrals
 
     private List<Hex> Get_Enemys_InRange(Character aiChar)
     {
-        if(aiChar == null) return null;
+        if (aiChar == null) return null;
         List<Hex> enemyHexes = new List<Hex>();
 
-        for(int x = 0; x < manager.allCharacters.Count; x++)
+        for (int x = 0; x < manager.allCharacters.Count; x++)
         {
-            if(manager.allCharacters[x].owner == aiChar.owner) continue;
+            if (manager.allCharacters[x].owner == aiChar.owner) continue;
 
             Character enemyCharacter = manager.allCharacters[x];
             List<Hex> pathToEnemyCharacter = manager.pathfinding.Get_Path(aiChar.hex, enemyCharacter.hex);
             int pathCost = manager.pathfinding.Get_PathCost_Between(pathToEnemyCharacter);
 
-            if(pathCost > aiChar.charMovement.movePoints_cur) continue;
+            if (pathCost > aiChar.charMovement.movePoints_cur) continue;
 
             enemyHexes.Add(enemyCharacter.hex);
         }
@@ -151,7 +147,7 @@ public class AiNeutrals
                 hexesWithEnemy.Add(current.neighbors[x]);
         }
 
-        if(hexesWithEnemy.Count > 0)
+        if (hexesWithEnemy.Count > 0)
             return hexesWithEnemy[Random.Range(0, hexesWithEnemy.Count)];
         else
             return null;

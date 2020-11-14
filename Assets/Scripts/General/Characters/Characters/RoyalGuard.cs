@@ -17,7 +17,7 @@ public class RoyalGuard : Character
 		charHp = new CharVars.char_Hp(74);
 		charExp = new CharVars.char_Exp(99);
 
-		charDef.dodgeChance = 10;
+		charDef.dodgeChance = 0;
 		charDef.blade_resistance = 0.2f;
 		charDef.pierce_resistance = 0.0f;
 		charDef.impact_resistance = 0.2f;

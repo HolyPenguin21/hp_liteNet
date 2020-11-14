@@ -24,8 +24,6 @@ public class RaceChange
 					ui_mm.player2RaceDropdown.value = raceId;
 					Set_HeroOption(ui_mm.player2RaceDropdown, ui_mm.player2HeroDropdown, GameMain.inst.server.players[1]);
 				}
-
-			Utility.Get_Client_byString(playerName, GameMain.inst.server.players).race = raceId;
 		}
 		else
 		{
@@ -40,10 +38,9 @@ public class RaceChange
 				ui_mm.player2RaceDropdown.value = raceId;
 				Set_HeroOption(ui_mm.player2RaceDropdown, ui_mm.player2HeroDropdown, GameMain.inst.client.players[1]);
 			}
-
-			Utility.Get_Client_byString(playerName, GameMain.inst.client.players).race = raceId;
 		}
 
+		Utility.Get_Client_byString(playerName).race = raceId;
 		yield return null;
 	}
 
@@ -53,10 +50,10 @@ public class RaceChange
 		{
 			case 0: // Humans
 				hero.ClearOptions();
-				List<string> humHeroes = new List<string> { "Mage", "Pikeman", "Longbowman" };
+				List<string> humHeroes = new List<string> { "Red Mage", "Pikeman", "Longbowman" };
 				hero.AddOptions(humHeroes);
 				
-				player.heroId = 10;
+				player.heroId = 34;
 				break;
 			case 1: // Orcs
 				hero.ClearOptions();
@@ -65,7 +62,7 @@ public class RaceChange
 				break;
 			case 2: // Undeads
 				hero.ClearOptions();
-				List<string> undHeroes = new List<string> { "DarkSorcerer", "Revenant", "Necrophage" };
+				List<string> undHeroes = new List<string> { "Dark Sorcerer", "Revenant", "Necrophage" };
 				hero.AddOptions(undHeroes);
 
 				player.heroId = 17;

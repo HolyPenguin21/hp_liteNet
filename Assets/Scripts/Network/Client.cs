@@ -34,7 +34,7 @@ public class Client : MonoBehaviour
         player.isServer = false;
         player.isAvailable = true;
         player.name = playerName;
-        player.heroId = 10;
+        player.heroId = 34;
 
         network.Start();
 

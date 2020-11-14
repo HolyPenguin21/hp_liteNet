@@ -25,7 +25,6 @@ public class Pathfinding
             Hide_Path();
             return;
         }
-        path.RemoveAt(0);
 
         int movePointsLeft = startHex.character.charMovement.movePoints_cur;
 
@@ -121,31 +120,26 @@ public class Pathfinding
             rebuildPoint = cameFrom[rebuildPoint];
         }
 
-        finalPath.Add(startHex);
-
         finalPath = Utility.Swap_ListItems(finalPath);
 
         return finalPath;
     }
 
     // Will return actual path that character can move on this turn
-    public List<Hex> Get_RealPath(List<Hex> somePath)
+    public List<Hex> Get_RealPath(Character character, List<Hex> somePath)
     {
         if (somePath == null) return null;
 
         List<Hex> realPath = new List<Hex>();
 
-        Character someCharacter = somePath[0].character;
+        int movePointsLeft = character.charMovement.movePoints_cur;
+        Hex current = character.hex;
+        Hex next = somePath[0];
 
-        int movePointsLeft = someCharacter.charMovement.movePoints_cur;
-        Hex current = somePath[0];
-        Hex next = somePath[1];
-
-        realPath.Add(somePath[0]);
-        for (int x = 1; x < somePath.Count; x++)
+        for (int x = 0; x < somePath.Count; x++)
         {
             movePointsLeft -= somePath[x].moveCost;
-            if (Utility.EnemyInNeighbors(someCharacter, current) && Utility.EnemyInNeighbors(someCharacter, next))
+            if (Utility.EnemyInNeighbors(character, current) && Utility.EnemyInNeighbors(character, next))
                 movePointsLeft -= Utility.enemyHexValue;
 
             if (movePointsLeft >= 0)
@@ -158,28 +152,32 @@ public class Pathfinding
             }
         }
 
-        return realPath;
+        if (realPath.Count == 0)
+            return null;
+        else
+            return realPath;
     }
 
-    public int Get_PathCost_FromStart(List<Hex> somePath)
+    public int Get_PathCost(Character character, List<Hex> path)
     {
-        if (somePath == null) return 0;
+        if (path == null) return 0;
 
         int cost = 0;
+        Hex current = character.hex;
+        Hex next = path[0];
 
-        for (int x = 0; x < somePath.Count; x++)
-            cost += somePath[x].moveCost;
+        for (int x = 0; x < path.Count; x++)
+        {
+            cost += path[x].moveCost;
+            if (Utility.EnemyInNeighbors(character, current) && Utility.EnemyInNeighbors(character, next))
+                cost += Utility.enemyHexValue;
 
-        return cost;
-    }
-    public int Get_PathCost_FromNext(List<Hex> somePath)
-    {
-        if (somePath == null) return 0;
-
-        int cost = 0;
-
-        for (int x = 1; x < somePath.Count; x++)
-            cost += somePath[x].moveCost;
+            if (x != path.Count - 1)
+            {
+                current = path[x];
+                next = path[x + 1];
+            }
+        }
 
         return cost;
     }
@@ -190,7 +188,7 @@ public class Pathfinding
 
         int cost = 0;
 
-        for (int x = 1; x < somePath.Count - 1; x++)
+        for (int x = 0; x < somePath.Count - 1; x++)
             cost += somePath[x].moveCost;
 
         return cost;

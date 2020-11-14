@@ -49,8 +49,8 @@ public class HeroChange
 		{
 			switch (hero.value)
 			{
-				case 0: // Mage
-					player.heroId = 10;
+				case 0: // Red Mage
+					player.heroId = 34;
 					break;
 				case 1: // Pikeman
 					player.heroId = 3;
@@ -79,7 +79,7 @@ public class HeroChange
 		{
 			switch (hero.value)
 			{
-				case 0: // DarkSorcerer
+				case 0: // Dark Sorcerer
 					player.heroId = 22;
 					break;
 				case 1: // Revenant

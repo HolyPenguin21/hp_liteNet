@@ -129,57 +129,56 @@ public class Ingame_Input : MonoBehaviour
 
         Set_HoverPosition(mouseOverHex);
 
-        if(castingSpell)
+        if (castingSpell)
         {
             Spellcasting_Constant(mouseOverHex);
             return;
         }
         else
         {
-            if (selectedHex != null)
+            if (selectedHex == null) return;
+
+            if (selectedHex.character != null && selectedHex.character.canAct)
             {
-                if (selectedHex.character != null && selectedHex.character.canAct)
+                if (mouseOverHex.character != null)
                 {
-                    if (mouseOverHex.character != null)
+                    if (Utility.IsMyCharacter(mouseOverHex.character))
                     {
-                        if (Utility.IsMyCharacter(mouseOverHex.character))
+                        Set_HoverImage(0);
+                    }
+                    else // Enemy character
+                    {
+                        if (Utility.CharacterIsVisible(mouseOverHex.character)) // Attack
                         {
-                            Set_HoverImage(0);
+                            pathfinding.Show_Path(selectedHex, mouseOverHex);
+                            Set_HoverImage(2);
                         }
-                        else
+                        else // Move, hex is under fog
                         {
-                            if(Utility.CharacterIsVisible(mouseOverHex.character))
-                            {
-                                pathfinding.Show_Path(selectedHex, mouseOverHex);
-                                Set_HoverImage(2);
-                            }
-                            else
-                            {
-                                pathfinding.Show_Path(selectedHex, mouseOverHex);
-                                Set_HoverImage(1);
-                            }
+                            pathfinding.Show_Path(selectedHex, mouseOverHex);
+                            Set_HoverImage(1);
+                        }
+                    }
+                }
+                else // Move to empty hex
+                {
+                    if (selectedHex.character.charMovement.movePoints_cur > 0)
+                    {
+                        if (Utility.CharacterIsVisible(selectedHex.character))
+                        {
+                            Set_HoverImage(1);
+                            pathfinding.Show_Path(selectedHex, mouseOverHex);
                         }
                     }
                     else
                     {
-                        if (selectedHex.character.charMovement.movePoints_cur > 0)
-                        {
-                            if(Utility.CharacterIsVisible(selectedHex.character))
-                            {
-                                Set_HoverImage(1);
-                                pathfinding.Show_Path(selectedHex, mouseOverHex);
-                            }
-                        }
-                        else
-                        {
-                            Set_HoverImage(0);
-                        }
+                        Set_HoverImage(0);
                     }
                 }
-                else
-                {
-                    Set_HoverImage(0);
-                }
+            }
+            else
+            {
+                Set_HoverImage(0);
             }
         }
     }
@@ -193,15 +192,15 @@ public class Ingame_Input : MonoBehaviour
             return;
         }
 
-        if(selectedHex == null)
+        if (selectedHex == null)
         {
             SelectHex(clickedHex);
             return;
         }
 
-        if(castingSpell)
+        if (castingSpell)
         {
-            if(spData.InRange(selectedHex, spell_HexConcerned[0], spell_Active) && spData.IsValidTarget(spell_HexConcerned[0], spell_Active))
+            if (spData.InRange(selectedHex, spell_HexConcerned[0], spell_Active) && spData.IsValidTarget(spell_HexConcerned[0], spell_Active))
             {
                 if (castItemSpell)
                 {
@@ -224,65 +223,64 @@ public class Ingame_Input : MonoBehaviour
         }
 
         Character selectedChar = selectedHex.character;
-        if (selectedChar != null)
+        if (selectedChar == null)
         {
-            if (Utility.IsMyCharacter(selectedChar))
+            SelectHex(clickedHex);
+            pathfinding.Hide_Path();
+            return;
+        }
+
+        if (Utility.IsMyCharacter(selectedChar))
+        {
+            if (clickedHex.character != null)
             {
-                if (clickedHex.character != null)
+                if (Utility.IsEmeny(selectedChar, clickedHex.character))
                 {
-                    if (Utility.IsEmeny(selectedChar, clickedHex.character))
-					{
-                        if(Utility.CharacterIsVisible(clickedHex.character))
+                    if (Utility.CharacterIsVisible(clickedHex.character))
+                    {
+                        if (selectedChar.canAct)
                         {
-                            if (selectedChar.canAct)
-                            {
-                                GameMain.inst.Try_Attack(selectedHex, clickedHex);
-                                pathfinding.Hide_Path();
-                            }
-                            else
-                            {
-                                SelectHex(clickedHex);
-                                pathfinding.Hide_Path();
-                            }
+                            GameMain.inst.Try_Attack(selectedHex, clickedHex);
+                            pathfinding.Hide_Path();
                         }
                         else
                         {
-                            if (selectedChar.charMovement.movePoints_cur > 0)
-                            {
-                                if (Utility.IsServer())
-                                    StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
-                                else
-                                    GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
-
-                                pathfinding.Hide_Path();
-                            }
-                            else
-                            {
-                                SelectHex(clickedHex);
-                                pathfinding.Hide_Path();
-                            }
+                            SelectHex(clickedHex);
+                            pathfinding.Hide_Path();
                         }
-					}
-					else
-					{
-						SelectHex(clickedHex);
-                        pathfinding.Hide_Path();
-					}
-                }
-                else if (selectedChar.charMovement.movePoints_cur > 0)
-                {
-                    if (Utility.IsServer())
-                        StartCoroutine(GameMain.inst.Server_Move(pathfinding.Get_Path(selectedHex, clickedHex)));
+                    }
                     else
-                        GameMain.inst.Request_Move(pathfinding.Get_Path(selectedHex, clickedHex));
+                    {
+                        if (selectedChar.canAct && selectedChar.charMovement.movePoints_cur > 0)
+                        {
+                            if (Utility.IsServer())
+                                StartCoroutine(GameMain.inst.Server_Move(selectedChar, clickedHex));
+                            else
+                                GameMain.inst.Request_Move(selectedChar, clickedHex);
 
-                    pathfinding.Hide_Path();
+                            pathfinding.Hide_Path();
+                        }
+                        else
+                        {
+                            SelectHex(clickedHex);
+                            pathfinding.Hide_Path();
+                        }
+                    }
                 }
                 else
                 {
                     SelectHex(clickedHex);
                     pathfinding.Hide_Path();
                 }
+            }
+            else if (selectedChar.canAct && selectedChar.charMovement.movePoints_cur > 0)
+            {
+                if (Utility.IsServer())
+                    StartCoroutine(GameMain.inst.Server_Move(selectedChar, clickedHex));
+                else
+                    GameMain.inst.Request_Move(selectedChar,clickedHex);
+
+                pathfinding.Hide_Path();
             }
             else
             {
@@ -291,10 +289,10 @@ public class Ingame_Input : MonoBehaviour
             }
         }
         else
-		{
+        {
             SelectHex(clickedHex);
             pathfinding.Hide_Path();
-		}
+        }
     }
 
     private void MouseInput_Hold()
@@ -322,7 +320,7 @@ public class Ingame_Input : MonoBehaviour
     private void Spellcasting_Constant(Hex someHex)
     {
         Set_HoverImage(0);
-        GameMain.inst.fog.Update_Fog();
+        GameMain.inst.fog.UpdateFog_PlayerView();
 
         // Clear previos visuals
         foreach(Hex h in spell_HexConcerned)
@@ -360,7 +358,7 @@ public class Ingame_Input : MonoBehaviour
 
         if(selectedHex != null)
             if(Utility.CharacterIsVisible(selectedHex.character))
-                GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
+                GameMain.inst.fog.UpdateFog_CharacterView(selectedHex.character);
 
         GameObject.Find("UI").GetComponent<UI_Ingame>().cInfo_Spell_Cancel.SetActive(false);
     }
@@ -388,10 +386,8 @@ public class Ingame_Input : MonoBehaviour
 
         if(selectedHex.character != null)
         {
-            GameMain.inst.fog.Update_Fog();
-
             if(Utility.CharacterIsVisible(selectedHex.character))
-                GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
+                GameMain.inst.fog.UpdateFog_CharacterView(selectedHex.character);
         }
     }
     public void SelectHex(Transform clickedHex)
@@ -403,10 +399,10 @@ public class Ingame_Input : MonoBehaviour
 
 		GameObject.Find("UI").GetComponent<UI_Ingame>().Show_HexInfo(selectedHex);
 
-        GameMain.inst.fog.Update_Fog();
+        //GameMain.inst.fog.Update_Fog();
 
         if(selectedHex.character != null)
-            GameMain.inst.fog.Show_MoveHexes(selectedHex.character);
+            GameMain.inst.fog.UpdateFog_CharacterView(selectedHex.character);
 	}
 
     public void Reset_All()
@@ -426,7 +422,7 @@ public class Ingame_Input : MonoBehaviour
 
         mouseOverUI = false;
 
-        GameMain.inst.fog.Update_Fog();
+        GameMain.inst.fog.UpdateFog_PlayerView();
     }
     private void Reset_Hover()
     {
@@ -438,17 +434,17 @@ public class Ingame_Input : MonoBehaviour
     {
         switch (id)
         {
-            case 0:
+            case 0: // nothing
                 hoverImage.enabled = true;
                 attackImage.enabled = false;
                 moveImage.enabled = false;
                 break;
-            case 1:
+            case 1: // Move
                 hoverImage.enabled = false;
                 attackImage.enabled = false;
                 moveImage.enabled = true;
                 break;
-            case 2:
+            case 2: // Attack
                 hoverImage.enabled = false;
                 attackImage.enabled = true;
                 moveImage.enabled = false;

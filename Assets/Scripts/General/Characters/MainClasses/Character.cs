@@ -163,10 +163,15 @@ public abstract class Character
 				break;
 		}
 	}
-    #endregion
+	#endregion
 
-    #region Health actions
-    private void VillageHeal()
+	#region Health actions
+	public void Set_Health(int hp_target)
+	{
+		charHp.hp_cur = hp_target;
+	}
+
+	private void VillageHeal()
 	{
 		if (!hex.isVillage) return;
 
@@ -208,7 +213,6 @@ public abstract class Character
 		if (somePath != null)
 		{
 			List<Hex> path = new List<Hex>(somePath);
-			path.RemoveAt(0);
 			while (path.Count > 0)
 			{
 				hex.character = null;
@@ -223,7 +227,7 @@ public abstract class Character
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
 
 		if (charMovement.movePoints_cur == 0)
-			GameMain.inst.fog.Update_Fog();
+			GameMain.inst.fog.UpdateFog_PlayerView();
 	}
 	private IEnumerator ActualMove(Hex hexToMove)
 	{
@@ -236,7 +240,7 @@ public abstract class Character
 			yield return null;
 		}
 
-		GameMain.inst.fog.Update_Fog();
+		GameMain.inst.fog.UpdateFog_PlayerView();
 	}
 	public void Replace(Hex replaceTo)
 	{
@@ -246,7 +250,7 @@ public abstract class Character
 
 		tr.position = replaceTo.transform.position;
 
-		GameMain.inst.fog.Update_Fog();
+		GameMain.inst.fog.UpdateFog_PlayerView();
 
 		if (Utility.IsMyCharacter(this))
 			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
@@ -298,8 +302,17 @@ public abstract class Character
 				yield return null;
 			}
 
-			if (tr.gameObject.activeInHierarchy)
-				GameMain.inst.effectsData.Effect_Lightning(target.transform.position);
+			switch (charId)
+			{
+				case 10:
+				case 34:
+				case 17:
+				case 22:
+				case 20:
+				case 23:
+					GameMain.inst.effectsData.Effect_Lightning(target.transform.position);
+					break;
+			}
 
 			t = 0f;
 			while (t < 1f)
@@ -333,17 +346,6 @@ public abstract class Character
 	public void Add_Exp(int expToAdd)
 	{
 		charExp.exp_cur += expToAdd;
-	}
-
-	public void RecieveDmg(int recievedDmg, int hp_target)
-	{
-		// change stats
-		charHp.hp_cur = hp_target;
-
-		// visual effect
-		if (recievedDmg > 0)
-			if (tr.gameObject.activeInHierarchy)
-				GameMain.inst.effectsData.Effect_Damage(hex.transform.position, recievedDmg);
 	}
 
 	public void Recieve_ABuff_AsAttacker(ABuff aBuff, int hp_target)

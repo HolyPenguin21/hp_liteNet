@@ -17,7 +17,7 @@ public class Ghost : Character
         charHp = new CharVars.char_Hp(18);
         charExp = new CharVars.char_Exp(15);
 
-        charDef.dodgeChance = 40;
+        charDef.dodgeChance = 30;
         charDef.blade_resistance = 0.5f;
         charDef.pierce_resistance = 0.5f;
         charDef.impact_resistance = 0.5f;

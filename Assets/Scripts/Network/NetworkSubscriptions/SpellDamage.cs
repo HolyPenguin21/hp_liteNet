@@ -26,7 +26,8 @@ public class SpellDamage
     public IEnumerator Implementation()
     {
         Character character = GameMain.inst.gridManager.Get_GridItem_ByCoords(coord_x, coord_y).hex.character;
-        character.RecieveDmg(amount, hpLeft);
+        if (amount > 0) GameMain.inst.effectsData.Effect_Damage(character.hex.transform.position, amount);
+        character.Set_Health(hpLeft);
 
         yield return null;
     }

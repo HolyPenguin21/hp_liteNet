@@ -174,16 +174,7 @@ public class ClientSubscriptions
         netProcessor.SubscribeReusable<Move>((data) => {
             client.player.isAvailable = false;
 
-            string[] pathData = data.pathData.Split('|');
-            List<Hex> somePath = new List<Hex>();
-            for (int j = 1; j < pathData.Length; j++)
-            {
-                string[] hexCoords = pathData[j].Split(';');
-                int posX3 = int.Parse(hexCoords[0]);
-                int posY3 = int.Parse(hexCoords[1]);
-                somePath.Add(GameMain.inst.gridManager.Get_GridItem_ByCoords(posX3, posY3).hex);
-            }
-            client.StartCoroutine(GameMain.inst.Client_Move(data.mpLeft, somePath));
+            client.StartCoroutine(GameMain.inst.Client_Move(data));
         });
     }
 

@@ -131,53 +131,46 @@ public class GameMain : MonoBehaviour
     }
 
     #region Attack
-    public void Try_Attack(Hex attacker, Hex target)
+    public void Try_Attack(Hex a_Hex, Hex t_Hex)
     {
-        List<Hex> list = new List<Hex>(pathfinding.Get_Path(attacker, target));
-        Character character = attacker.character;
-        if (list.Count <= 2 || (character.charMovement.movePoints_cur != 0 && character.charMovement.movePoints_cur >= list[1].moveCost))
-        {
-            uiIngame.Show_AttackPanel(list);
-        }
+        Character attacker = a_Hex.character;
+        Character target = t_Hex.character;
+
+        List<Hex> attackPath = new List<Hex>(pathfinding.Get_Path(a_Hex, t_Hex));
+        if (attackPath.Count <= 1 || attacker.charMovement.movePoints_cur >= attackPath[0].moveCost)
+            uiIngame.Show_AttackPanel(attacker, target);
     }
 
-    public void Request_Attack(List<Hex> somePath, int attackId)
+    public void Request_Attack(Character a_character, int a_attackId, Character t_character, int t_attackId)
     {
-        Attack attack = new Attack();
-        attack.attackId = attackId;
-        List<Utility.GridCoord> coordPath = gridManager.Get_CoordPath(somePath);
-        for (int i = 0; i < coordPath.Count; i++)
-        {
-            attack.path += "|";
-            attack.path += coordPath[i].coord_x + ";";
-            attack.path += coordPath[i].coord_y;
-        }
+        AttackRequest aRequest = new AttackRequest();
+        aRequest.Setup(a_character, a_attackId, t_character, t_attackId);
 
-        client.netProcessor.Send(client.network.GetPeerById(0), attack, DeliveryMethod.ReliableOrdered);
+        client.netProcessor.Send(client.network.GetPeerById(0), aRequest, DeliveryMethod.ReliableOrdered);
     }
 
-    public IEnumerator Server_Attack(List<Hex> somePath, int attackId)
+    public IEnumerator Server_Attack(Character a_character, int a_attackId, Character t_character, int t_attackId)
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        Character attacker = somePath[0].character;
-        Character target = somePath[somePath.Count - 1].character;
+        List<Hex> attackPath = new List<Hex>(pathfinding.Get_Path(a_character.hex, t_character.hex));
+        attackPath.RemoveAt(attackPath.Count - 1); // last hex does not needed, target is there
 
-        somePath.RemoveAt(somePath.Count - 1);
-        if (somePath.Count > 1) yield return Server_Move(somePath);
-        if (!Utility.InAttackRange(attacker.hex, target.hex)) yield break;
+        if (attackPath.Count > 0) yield return Server_Move(a_character, attackPath[attackPath.Count - 1]);
+        if (!Utility.InAttackRange(a_character.hex, t_character.hex)) yield break;
 
-        yield return Server_BlockActions(attacker);
+        yield return Server_BlockActions(a_character);
 
         AttackResult attackResult = new AttackResult();
-        Utility.GridCoord a_gridCoord = gridManager.Get_GridCoord_ByHex(attacker.hex);
-        Utility.GridCoord t_gridCoord = gridManager.Get_GridCoord_ByHex(target.hex);
+        Utility.GridCoord a_gridCoord = gridManager.Get_GridCoord_ByHex(a_character.hex);
+        Utility.GridCoord t_gridCoord = gridManager.Get_GridCoord_ByHex(t_character.hex);
         attackResult.a_coord_x = a_gridCoord.coord_x;
         attackResult.a_coord_y = a_gridCoord.coord_y;
+        attackResult.a_attackId = a_attackId;
         attackResult.t_coord_x = t_gridCoord.coord_x;
         attackResult.t_coord_y = t_gridCoord.coord_y;
-        attackResult.attackId = attackId;
-        attackResult.AttackData_Calculation(attacker, target, attackId);
+        attackResult.t_attackId = t_attackId;
+        attackResult.AttackData_Calculation(a_character, t_character);
         
         // Send
         for (int x = 0; x < server.players.Count; x++)
@@ -190,6 +183,7 @@ public class GameMain : MonoBehaviour
         }
 
         yield return attackResult.Implementation();
+        
         yield return new WaitUntil(() => server.player.isAvailable);
     }
 
@@ -700,7 +694,7 @@ public class GameMain : MonoBehaviour
     #region Remove gold
     public IEnumerator Server_RemoveGold(string clientName, int amount)
     {
-        Utility.Get_Client_byString(clientName, server.players).gold -= amount;
+        Utility.Get_Client_byString(clientName).gold -= amount;
         yield return Server_UpdateData();
     }
     #endregion
@@ -713,13 +707,13 @@ public class GameMain : MonoBehaviour
         if (someHex.villageOwner.name == "")
         {
             someHex.villageOwner = owner;
-            Utility.Get_Client_byString(owner.name, server.players).villages++;
+            Utility.Get_Client_byString(owner.name).villages++;
         }
         else
         {
-            Utility.Get_Client_byString(someHex.villageOwner.name, server.players).villages--;
+            Utility.Get_Client_byString(someHex.villageOwner.name).villages--;
             someHex.villageOwner = owner;
-            Utility.Get_Client_byString(owner.name, server.players).villages++;
+            Utility.Get_Client_byString(owner.name).villages++;
         }
 
         Utility.Set_OwnerColor(someHex.transform, owner);
@@ -753,13 +747,13 @@ public class GameMain : MonoBehaviour
         if (someHex.villageOwner.name == "")
         {
             someHex.villageOwner = character.owner;
-            Utility.Get_Client_byString(character.owner.name, server.players).villages++;
+            Utility.Get_Client_byString(character.owner.name).villages++;
         }
         else
         {
-            Utility.Get_Client_byString(someHex.villageOwner.name, server.players).villages--;
+            Utility.Get_Client_byString(someHex.villageOwner.name).villages--;
             someHex.villageOwner = character.owner;
-            Utility.Get_Client_byString(character.owner.name, server.players).villages++;
+            Utility.Get_Client_byString(character.owner.name).villages++;
         }
 
         Utility.Set_OwnerColor(someHex.transform, character.owner);
@@ -791,7 +785,7 @@ public class GameMain : MonoBehaviour
                 GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(someHex);
         }
 
-        someHex.villageOwner = Utility.Get_Client_byString(capVillage.ownerName, client.players);
+        someHex.villageOwner = Utility.Get_Client_byString(capVillage.ownerName);
         Utility.Set_OwnerColor(someHex.transform, someHex.villageOwner);
 
         yield return Reply_TaskDone("Village owner changed");
@@ -799,35 +793,50 @@ public class GameMain : MonoBehaviour
     #endregion
 
     #region Move
-    public void Request_Move(List<Hex> somePath)
+    public void Request_Move(Character character, Hex destination)
     {
-        if (somePath == null) return;
-        if (somePath.Count == 0) return;
+        MoveRequest moveRequest = new MoveRequest();
+        moveRequest.Setup(character, destination);
 
-        Character character = somePath[0].character;
-        if (!character.canAct || character.charMovement.movePoints_cur < 1) return;
+        client.netProcessor.Send(client.network.GetPeerById(0), moveRequest, DeliveryMethod.ReliableOrdered);
+    }
+
+    public IEnumerator Server_Move(Character character, Hex destination)
+    {
+        List<Hex> path = pathfinding.Get_Path(character.hex, destination);
+        if (path == null) yield break;
+
+        yield return On_Move(character, path);
+
+        yield return Server_AfterMoveCheck(character);
+    }
+
+    private IEnumerator On_Move(Character character, List<Hex> somePath)
+    {
+        if (server.players.Count > 2) server.player.isAvailable = false;
+
+        List<Hex> realPath = pathfinding.Get_RealPath(character, somePath);
+        if (realPath == null) yield break;
+        //if (realPath.Count == 0) yield break;
 
         Move move = new Move();
-        List<Utility.GridCoord> list = gridManager.Get_CoordPath(somePath);
-        for (int i = 0; i < list.Count; i++)
+        move.Setup(character, realPath);
+
+        // Send
+        for (int x = 0; x < server.players.Count; x++)
         {
-            move.pathData += "|";
-            move.pathData += list[i].coord_x + ";";
-            move.pathData += list[i].coord_y;
+            Player somePlayer = server.players[x];
+            if (somePlayer.isServer || somePlayer.isNeutral) continue;
+
+            somePlayer.isAvailable = false;
+            yield return server.netProcessor.Send(server.players[x].address, move, DeliveryMethod.ReliableOrdered);
         }
 
-        client.netProcessor.Send(client.network.GetPeerById(0), move, DeliveryMethod.ReliableOrdered);
+        yield return move.Server_Implementation(character, realPath);
+
+        yield return new WaitUntil(() => server.player.isAvailable);
     }
 
-    public IEnumerator Server_Move(List<Hex> somePath)
-    {
-        if (somePath == null) yield break;
-
-        Character someCharacter = somePath[0].character;
-        yield return On_Move(someCharacter, somePath);
-
-        yield return Server_AfterMoveCheck(someCharacter);
-    }
     public IEnumerator Server_AfterMoveCheck(Character someCharacter)
     {
         if (someCharacter.hex.isVillage && someCharacter.hex.villageOwner != someCharacter.owner)
@@ -842,41 +851,9 @@ public class GameMain : MonoBehaviour
         }
     }
 
-    private IEnumerator On_Move(Character someCharacter, List<Hex> somePath)
+    public IEnumerator Client_Move(Move move)
     {
-        if (server.players.Count > 2) server.player.isAvailable = false;
-
-        List<Hex> realPath = pathfinding.Get_RealPath(somePath);
-        someCharacter.charMovement.movePoints_cur -= pathfinding.Get_PathCost_FromNext(realPath);
-
-        Move move = new Move();
-        move.mpLeft = someCharacter.charMovement.movePoints_cur;
-        List<Utility.GridCoord> list = gridManager.Get_CoordPath(realPath);
-        for (int i = 0; i < list.Count; i++)
-        {
-            move.pathData += "|";
-            move.pathData += list[i].coord_x + ";";
-            move.pathData += list[i].coord_y;
-        }
-
-        for (int x = 0; x < server.players.Count; x++)
-        {
-            Player somePlayer = server.players[x];
-            if (somePlayer.isServer || somePlayer.isNeutral) continue;
-
-            somePlayer.isAvailable = false;
-            yield return server.netProcessor.Send(server.players[x].address, move, DeliveryMethod.ReliableOrdered);
-        }
-
-        yield return someCharacter.Move(realPath);
-        yield return new WaitUntil(() => server.player.isAvailable);
-    }
-
-    public IEnumerator Client_Move(int mpLeft, List<Hex> somePath)
-    {
-        Character character = somePath[0].character;
-        character.charMovement.movePoints_cur = mpLeft;
-        yield return character.Move(somePath);
+        yield return move.Client_Implementation(move);        
 
         yield return Reply_TaskDone("Character move");
     }
@@ -945,15 +922,15 @@ public class GameMain : MonoBehaviour
 
     private IEnumerator End_Turn(string clientName)
     {
+        currentTurn = Utility.Get_Client_byString(clientName);
+
         if (Utility.IsServer())
         {
-            currentTurn = Utility.Get_Client_byString(clientName, server.players);
             if (currentTurn == server.players[0])
                 daytime.Update_DayTime();
         }
         else
         {
-            currentTurn = Utility.Get_Client_byString(clientName, client.players);
             if (currentTurn == client.players[0])
                 daytime.Update_DayTime();
         }
@@ -1005,7 +982,7 @@ public class GameMain : MonoBehaviour
 
     public IEnumerator Client_SetCurTurn(SetCurrentTurn setTurn)
     {
-        currentTurn = Utility.Get_Client_byString(setTurn.name, client.players);
+        currentTurn = Utility.Get_Client_byString(setTurn.name);
 
         yield return Reply_TaskDone("Current turn is setted.");
     }
@@ -1046,7 +1023,7 @@ public class GameMain : MonoBehaviour
         if (server.players.Count > 2) server.player.isAvailable = false;
 
         uiIngame.Update_PlayerInfoPanel();
-        fog.Update_Fog();
+        //fog.Update_Fog();
 
         UpdateData updateData = new UpdateData();
         for (int i = 0; i < server.players.Count; i++)
@@ -1087,14 +1064,14 @@ public class GameMain : MonoBehaviour
 
         for (int i = 0; i < updatedPlayersData.Count; i++)
         {
-            Player gameClient = Utility.Get_Client_byString(updatedPlayersData[i].name, client.players);
+            Player gameClient = Utility.Get_Client_byString(updatedPlayersData[i].name);
             gameClient.race = updatedPlayersData[i].race;
             gameClient.gold = updatedPlayersData[i].gold;
             gameClient.villages = updatedPlayersData[i].villages;
         }
 
         uiIngame.Update_PlayerInfoPanel();
-        fog.Update_Fog();
+        //fog.Update_Fog();
 
         yield return Reply_TaskDone("Data updated");
     }
@@ -1310,7 +1287,7 @@ public class GameMain : MonoBehaviour
         if (someCharacter.tr != null) someCharacter.tr.Find("canMove").gameObject.SetActive(false);
 
         if (Utility.IsMyCharacter(someCharacter))
-            fog.Show_MoveHexes(someCharacter);
+            fog.UpdateFog_CharacterView(someCharacter);
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(someCharacter.hex);
         BlockActions blockActions = new BlockActions();
@@ -1335,7 +1312,7 @@ public class GameMain : MonoBehaviour
         someCharacter.charMovement.movePoints_cur = 0;
 
         if (Utility.IsMyCharacter(someCharacter))
-            fog.Show_MoveHexes(someCharacter);
+            fog.UpdateFog_CharacterView(someCharacter);
 
         yield return Reply_TaskDone("Character actions are blocked");
     }
@@ -1347,7 +1324,7 @@ public class GameMain : MonoBehaviour
         if (server.players.Count > 2) server.player.isAvailable = false;
 
         yield return charactersData.CreateCharacter(createAt, characterId, ownerName, isHero);
-        fog.Update_Fog();
+        fog.UpdateFog_PlayerView();
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(createAt);
         CreateCharacter someCharacter = new CreateCharacter();
@@ -1373,7 +1350,7 @@ public class GameMain : MonoBehaviour
         Hex createAt = gridManager.Get_GridItem_ByCoords(someCharacter.coord_x, someCharacter.coord_y).hex;
 
         yield return charactersData.CreateCharacter(createAt, someCharacter.characterId, someCharacter.ownerName, someCharacter.isHero);
-        fog.Update_Fog();
+        fog.UpdateFog_PlayerView();
 
         yield return Reply_TaskDone("Create character");
     }
@@ -1668,7 +1645,7 @@ public class GameMain : MonoBehaviour
 
     private void Setup_Fog()
     {
-        fog = new Fog(gridManager, server, client);
+        fog = new Fog(server, client, gridManager);
     }
     #endregion
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -121,8 +122,10 @@ public class UI_Ingame : MonoBehaviour
 	public Image attack3_Image_t;
 	public Text attack3_Text_t;
 
-	private List<Hex> attackPath;
-	private int selectedAttackId;
+	private Character a_Character;
+	private int a_attackId;
+	private Character t_Character;
+	private int t_attackId;
 	public Button attack_button;
 	public Button closeAttackPanel;
 	#endregion
@@ -209,11 +212,11 @@ public class UI_Ingame : MonoBehaviour
 
 	public void Update_PlayerInfoPanel()
 	{
-		Player player;
+		Player player; // REWORK
         if (Utility.IsServer())
-            player = Utility.Get_Client_byString(server.player.name, server.players);
+            player = Utility.Get_Client_byString(server.player.name);
         else
-            player = Utility.Get_Client_byString(client.player.name, client.players);
+            player = Utility.Get_Client_byString(client.player.name);
 
         pInfo_Gold_Text.text = "" + player.gold;
         pInfo_Vilage_Text.text = "" + player.villages + " / " + GameMain.inst.gridManager.villages.Count;
@@ -525,7 +528,7 @@ public class UI_Ingame : MonoBehaviour
 		rec_CharAttack_Text.text = "";
 
 		Player gameClient = null;
-		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		gameClient = ((!Utility.IsServer()) ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		switch (gameClient.race)
 		{
 			case 0: // Humans
@@ -708,7 +711,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_1_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_1_button].charCost)
 		{
@@ -723,7 +726,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_2_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_2_button].charCost)
 		{
@@ -738,7 +741,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_3_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_3_button].charCost)
 		{
@@ -753,7 +756,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_4_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_4_button].charCost)
 		{
@@ -768,7 +771,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_5_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_5_button].charCost)
 		{
@@ -783,7 +786,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_6_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_6_button].charCost)
 		{
@@ -798,7 +801,7 @@ public class UI_Ingame : MonoBehaviour
 
 		charToRecruit = recrutable_dict[recruit_7_button];
 
-		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name, client.players) : Utility.Get_Client_byString(server.player.name, server.players));
+		Player gameClient = (!Utility.IsServer() ? Utility.Get_Client_byString(client.player.name) : Utility.Get_Client_byString(server.player.name));
 		recruitButton.interactable = false;
 		if (gameClient.gold >= recrutable_dict[recruit_7_button].charCost)
 		{
@@ -838,7 +841,7 @@ public class UI_Ingame : MonoBehaviour
 	#endregion
 
 	#region Attack panel
-	public void Show_AttackPanel(List<Hex> attackPath)
+	public void Show_AttackPanel(Character attacker, Character target)
 	{
 		somePanelIsOn = true;
 
@@ -854,10 +857,9 @@ public class UI_Ingame : MonoBehaviour
 
 		attack_Canvas.SetActive(true);
 
-		this.attackPath = new List<Hex>(attackPath);
+		a_Character = attacker;
+		t_Character = target;
 
-		Character attacker = attackPath[0].character;
-		Character target = attackPath[attackPath.Count - 1].character;
 		List<CharVars.char_Attack> a_Attacks = attacker.charAttacks;
 		List<CharVars.char_Attack> t_Attacks = target.charAttacks;
 
@@ -871,7 +873,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack1_Image_a.gameObject.SetActive(true);
 				attack1_Image_a.sprite = Get_AttackTypeImage(a_Attacks[0].attackDmgType);
-				attack1_Text_a.text = Calculate_AttackValue(a_Attacks[0], target);
+				attack1_Text_a.text = Calculate_AttackValue(attacker, attacker, 0, target);
 			}
 			else
 			{
@@ -883,7 +885,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack1_Image_t.gameObject.SetActive(true);
 				attack1_Image_t.sprite = Get_AttackTypeImage(t_Attacks[0].attackDmgType);
-				attack1_Text_t.text = Calculate_AttackValue(t_Attacks[0], attacker);
+				attack1_Text_t.text = Calculate_AttackValue(attacker, target, 0, attacker);
 			}
 			else
 			{
@@ -898,7 +900,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack2_Image_a.gameObject.SetActive(true);
 				attack2_Image_a.sprite = Get_AttackTypeImage(a_Attacks[1].attackDmgType);
-				attack2_Text_a.text = Calculate_AttackValue(a_Attacks[1], target);
+				attack2_Text_a.text = Calculate_AttackValue(attacker, attacker, 1, target);
 			}
 			else
 			{
@@ -910,7 +912,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack2_Image_t.gameObject.SetActive(true);
 				attack2_Image_t.sprite = Get_AttackTypeImage(t_Attacks[1].attackDmgType);
-				attack2_Text_t.text = Calculate_AttackValue(t_Attacks[1], attacker);
+				attack2_Text_t.text = Calculate_AttackValue(attacker, target, 1, attacker);
 			}
 			else
 			{
@@ -925,7 +927,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack3_Image_a.gameObject.SetActive(true);
 				attack3_Image_a.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
-				attack3_Text_a.text = Calculate_AttackValue(a_Attacks[2], target);
+				attack3_Text_a.text = Calculate_AttackValue(attacker, attacker, 2, target);
 			}
 			else
 			{
@@ -937,7 +939,7 @@ public class UI_Ingame : MonoBehaviour
 			{
 				attack3_Image_t.gameObject.SetActive(true);
 				attack3_Image_t.sprite = Get_AttackTypeImage(a_Attacks[2].attackDmgType);
-				attack3_Text_t.text = Calculate_AttackValue(t_Attacks[2], attacker);
+				attack3_Text_t.text = Calculate_AttackValue(attacker, target, 2, attacker);
 			}
 			else
 			{
@@ -976,35 +978,24 @@ public class UI_Ingame : MonoBehaviour
 			return attack.attackType + ", " + attack.attackDmgType + " " + attack.attackDmg_cur + " x " + attack.attackCount;
 	}
 
-	private string Calculate_AttackValue(CharVars.char_Attack attack, Character target)
+	private string Calculate_AttackValue(Character firstStrikeChar, Character attacker, int attackId, Character target)
 	{
-		int attackDmg_cur = attack.attackDmg_cur;
-		int resultDmg = 0;
-		switch (attack.attackDmgType)
-		{
-			case CharVars.char_attackDmgType.Blade:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.blade_resistance);
-				break;
-			case CharVars.char_attackDmgType.Pierce:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.pierce_resistance);
-				break;
-			case CharVars.char_attackDmgType.Impact:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.impact_resistance);
-				break;
-			case CharVars.char_attackDmgType.Magic:
-				resultDmg = Convert.ToInt32((float)attackDmg_cur - (float)attackDmg_cur * target.charDef.magic_resistance);
-				break;
-		}
+		CharVars.char_Attack attack = attacker.charAttacks[attackId];
+
+		AttackResult aResult = new AttackResult();
+		aResult.a_attackId = attackId;
+		int dmg = aResult.DmgCalculation(firstStrikeChar, attacker, target);
 
 		if (attack.attackBuff != null)
-			return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount + "\n -" + attack.attackBuff.buffName;
+			return attack.attackType + ", " + attack.attackDmgType + " " + dmg + " x " + attack.attackCount + "\n -" + attack.attackBuff.buffName;
 		else
-			return attack.attackType + ", " + attack.attackDmgType + " " + resultDmg + " x " + attack.attackCount;
+			return attack.attackType + ", " + attack.attackDmgType + " " + dmg + " x " + attack.attackCount;
 	}
 
 	public void SelectAttack1()
 	{
-		selectedAttackId = 0;
+		a_attackId = 0;
+		t_attackId = 0;
 		attack_button.interactable = true;
 		attack1.interactable = false;
 		attack2.interactable = true;
@@ -1013,7 +1004,8 @@ public class UI_Ingame : MonoBehaviour
 
 	public void SelectAttack2()
 	{
-		selectedAttackId = 1;
+		a_attackId = 1;
+		t_attackId = 1;
 		attack_button.interactable = true;
 		attack1.interactable = true;
 		attack2.interactable = false;
@@ -1022,7 +1014,8 @@ public class UI_Ingame : MonoBehaviour
 
 	public void SelectAttack3()
 	{
-		selectedAttackId = 2;
+		a_attackId = 2;
+		t_attackId = 2;
 		attack_button.interactable = true;
 		attack1.interactable = true;
 		attack2.interactable = true;
@@ -1033,11 +1026,11 @@ public class UI_Ingame : MonoBehaviour
 	{
 		if (Utility.IsServer())
 		{
-			StartCoroutine(GameMain.inst.Server_Attack(attackPath, selectedAttackId));
+			StartCoroutine(GameMain.inst.Server_Attack(a_Character, a_attackId, t_Character, t_attackId));
 		}
 		else
 		{
-			GameMain.inst.Request_Attack(attackPath, selectedAttackId);
+			GameMain.inst.Request_Attack(a_Character, a_attackId, t_Character, t_attackId);
 		}
 		Hide_AttackPanel();
 	}
