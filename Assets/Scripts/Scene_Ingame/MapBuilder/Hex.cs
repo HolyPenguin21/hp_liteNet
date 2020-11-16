@@ -7,6 +7,7 @@ public class Hex : MonoBehaviour
 {
     public Character character;
     [HideInInspector] public GameObject fog;
+    [HideInInspector] public SpriteRenderer fogRenderer;
     [HideInInspector] public GameObject target;
 
     public bool isStartPoint; // set in editor
@@ -34,6 +35,7 @@ public class Hex : MonoBehaviour
     private void Start()
     {
         fog = transform.Find("HexFog").gameObject;
+        fogRenderer = fog.GetComponent<SpriteRenderer>();
         target = transform.Find("HexTarget").gameObject;
         Hide_Target();
 
@@ -45,7 +47,7 @@ public class Hex : MonoBehaviour
     #region Fog
     public void Show_Fog()
     {
-        fog.SetActive(true);
+        fogRenderer.enabled = true;
 
         if (item != null) itemObj.SetActive(false);
         if (character != null) character.tr.gameObject.SetActive(false);
@@ -53,12 +55,12 @@ public class Hex : MonoBehaviour
 
     public void Show_MoveFog()
     {
-        fog.SetActive(true);
+        fogRenderer.enabled = true;
     }
 
     public void Hide_Fog()
     {
-        fog.SetActive(false);
+        fogRenderer.enabled = false;
 
         if (item != null) itemObj.SetActive(true);
         if (character != null) character.tr.gameObject.SetActive(true);

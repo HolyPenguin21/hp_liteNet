@@ -42,5 +42,7 @@ public class Rogue : Character
 		char_Attack2.attackDmg_base = 4;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
+
+		charSpell_1 = new Blink(5);
 	}
 }

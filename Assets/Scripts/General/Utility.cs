@@ -78,7 +78,7 @@ public static class Utility
     }
     public static bool HexIsVisible(Hex hex)
     {
-        if (hex.fog.activeInHierarchy)
+        if (hex.fogRenderer.enabled)
             return false;
 
         return true;

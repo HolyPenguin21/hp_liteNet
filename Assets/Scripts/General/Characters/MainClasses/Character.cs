@@ -175,7 +175,7 @@ public abstract class Character
 	{
 		if (!hex.isVillage) return;
 
-		Buff existBuff = charBuffs.Find(i => i.buffId == 4); // Poisoned
+		Buff existBuff = charBuffs.Find(i => i.buffId == 3); // Poisoned
 		if (existBuff != null)
 		{
 			charBuffs.Remove(existBuff);
@@ -271,18 +271,15 @@ public abstract class Character
 	{
 		Item item = charItem;
 		if (item == null) return;
-		item.Item_OnRemove(this);
+		charItem.Item_OnRemove(this);
 
 		charItem = null;
 		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
 		hex.Add_Item(item);
 	}
-	public void Item_Use()
+	public IEnumerator Item_Use()
 	{
-		if (charItem == null) return;
-		if (charItem.itemActive == null) return;
-
-		GameMain.inst.StartCoroutine(charItem.itemActive.Buff_Activate(this));
+		yield return charItem.itemActive.Buff_Activate(this);
 	}
 	public void Item_Remove()
 	{
@@ -350,21 +347,21 @@ public abstract class Character
 
 	public void Recieve_ABuff_AsAttacker(ABuff aBuff, int hp_target)
 	{
-		switch (aBuff.buffId)
+		switch (aBuff)
 		{
-			case 1: // Drain
-				int drain = hp_target - charHp.hp_cur;
-				RecieveHeal(drain);
+			case ABuff_DrainLife drain:
+				int heal = hp_target - charHp.hp_cur;
+				RecieveHeal(heal);
 				break;
 		}
 	}
 
 	public void Recieve_ABuff_AsTarget(ABuff aBuff)
 	{
-		switch (aBuff.buffId)
+		switch (aBuff)
 		{
-			case 2: // Poison touch
-				Buff someBuff = charBuffs.Find(i => i.buffId == 4);
+			case ABuff_PoisonTouch poisonTouch:
+				Buff someBuff = charBuffs.Find(i => i.buffId == 3);
 				if(someBuff == null) charBuffs.Add(new Buff_Poison());
 				break;
 		}

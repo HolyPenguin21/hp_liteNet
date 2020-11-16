@@ -8,7 +8,7 @@ public class Wraith : Character
     {
         Init(tr, owner, isHero);
 
-        charImage = Resources.Load<Sprite>("Images/DarkFigure4");
+        charImage = Resources.Load<Sprite>("Images/Wraith");
         charName = "Wraith";
         charId = 23;
         charCost = 38;
@@ -33,6 +33,7 @@ public class Wraith : Character
         attack1.attackCount = 4;
         attack1.attackDmg_base = 6;
         attack1.attackDmg_cur = attack1.attackDmg_base;
+        attack1.attackBuff = new ABuff_DrainLife();
         charAttacks.Add(attack1);
 
         CharVars.char_Attack attack2 = new CharVars.char_Attack();

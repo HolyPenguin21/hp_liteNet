@@ -103,13 +103,6 @@ public class GameMain : MonoBehaviour
         hex2 = gridManager.Get_GridItem_ByCoords(8, 10).hex;
         yield return Server_CreateItem(hex2, 2); // Server is blocked
 
-        hex2 = gridManager.Get_GridItem_ByCoords(8, 22).hex;
-        yield return Server_CreateItem(hex2, 3); // Server is blocked
-
-        hex2 = gridManager.Get_GridItem_ByCoords(1, 7).hex;
-        yield return Server_CreateItem(hex2, 3); // Server is blocked
-
-
         yield return Server_UpdateData();
 
         yield return Server_ChangeTurn();
@@ -154,7 +147,7 @@ public class GameMain : MonoBehaviour
         if (server.players.Count > 2) server.player.isAvailable = false;
 
         List<Hex> attackPath = new List<Hex>(pathfinding.Get_Path(a_character.hex, t_character.hex));
-        attackPath.RemoveAt(attackPath.Count - 1); // last hex does not needed, target is there
+        attackPath.RemoveAt(attackPath.Count - 1); // last hex does not need - target is there
 
         if (attackPath.Count > 0) yield return Server_Move(a_character, attackPath[attackPath.Count - 1]);
         if (!Utility.InAttackRange(a_character.hex, t_character.hex)) yield break;
@@ -162,14 +155,7 @@ public class GameMain : MonoBehaviour
         yield return Server_BlockActions(a_character);
 
         AttackResult attackResult = new AttackResult();
-        Utility.GridCoord a_gridCoord = gridManager.Get_GridCoord_ByHex(a_character.hex);
-        Utility.GridCoord t_gridCoord = gridManager.Get_GridCoord_ByHex(t_character.hex);
-        attackResult.a_coord_x = a_gridCoord.coord_x;
-        attackResult.a_coord_y = a_gridCoord.coord_y;
-        attackResult.a_attackId = a_attackId;
-        attackResult.t_coord_x = t_gridCoord.coord_x;
-        attackResult.t_coord_y = t_gridCoord.coord_y;
-        attackResult.t_attackId = t_attackId;
+        yield return attackResult.Setup(a_character, a_attackId, t_character, t_attackId);
         attackResult.AttackData_Calculation(a_character, t_character);
         
         // Send
@@ -1220,7 +1206,7 @@ public class GameMain : MonoBehaviour
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        character.Item_Use();
+        yield return character.Item_Use();
 
         Utility.GridCoord gridCoord = gridManager.Get_GridCoord_ByHex(character.hex);
         ItemUse itemUse = new ItemUse();
@@ -1240,7 +1226,7 @@ public class GameMain : MonoBehaviour
     public IEnumerator Client_UseItem(ItemUse itemUse)
     {
         Character character = gridManager.Get_GridItem_ByCoords(itemUse.coord_x, itemUse.coord_y).hex.character;
-        character.Item_Use();
+        yield return character.Item_Use();
 
         yield return Reply_TaskDone("Item used");
     }
@@ -1590,10 +1576,6 @@ public class GameMain : MonoBehaviour
 
             case 2:
                 item = new Item_HealthPotion();
-                break;
-
-            case 3:
-                item = new Item_BlinkScroll();
                 break;
         }
 

@@ -35,6 +35,7 @@ public class Ghost : Character
         attack1.attackCount = 3;
         attack1.attackDmg_base = 4;
         attack1.attackDmg_cur = attack1.attackDmg_base;
+        attack1.attackBuff = new ABuff_DrainLife();
         charAttacks.Add(attack1);
 
         CharVars.char_Attack attack2 = new CharVars.char_Attack();

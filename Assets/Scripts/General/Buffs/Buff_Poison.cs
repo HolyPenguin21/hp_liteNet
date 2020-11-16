@@ -6,7 +6,7 @@ public class Buff_Poison : Buff
 {
     public Buff_Poison()
     {
-        base.buffId = 4;
+        base.buffId = 3;
         base.buffName = "-Poisoned";
         base.buffDescription = "Character is poisoned and will lose hp on turn.";
 

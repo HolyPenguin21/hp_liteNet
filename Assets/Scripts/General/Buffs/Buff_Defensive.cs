@@ -6,7 +6,7 @@ public class Buff_Defensive : Buff
 {
     public Buff_Defensive()
     {
-        base.buffId = 6;
+        base.buffId = 5;
         base.buffName = "Defensive";
         base.buffDescription = "Character will recieve less damage than should.";
 

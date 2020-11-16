@@ -127,7 +127,7 @@ MonoBehaviour:
     type: 3}
   necromancer: {fileID: 2664058969936173876, guid: 93c112f17106f1843b0a801e1faee12a,
     type: 3}
-  reaper: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
+  wraith: {fileID: 7758464841812439221, guid: d328246d0e98bdc42b9fff5f49fc3bf4, type: 3}
   deathblade: {fileID: 3678949775293388011, guid: 9308bd5ae6ac77941baa48505029a0c9,
     type: 3}
   walkingCorpse: {fileID: 3155023147114576335, guid: 809d89950284c2b449b15b96872b9528,

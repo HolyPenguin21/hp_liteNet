@@ -6,7 +6,7 @@ public class Buff_Berserk : Buff
 {
     public Buff_Berserk()
     {
-        base.buffId = 5;
+        base.buffId = 4;
         base.buffName = "-Berserk";
         base.buffDescription = "Character`s attack damage is increasing when he lose health.";
 
