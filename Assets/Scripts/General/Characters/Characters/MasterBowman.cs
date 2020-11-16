@@ -14,7 +14,7 @@ public class MasterBowman : Character
 		charCost = 46;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(67);
+		charHp = new CharVars.char_Hp(89); // 67
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

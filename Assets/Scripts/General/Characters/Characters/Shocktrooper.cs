@@ -14,7 +14,7 @@ public class Shocktrooper : Character
 		charCost = 35;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(52);
+		charHp = new CharVars.char_Hp(69); // 52
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

@@ -14,7 +14,7 @@ public class Ghoul : Character
         charCost = 16;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(33);
+        charHp = new CharVars.char_Hp(44); // 33
         charExp = new CharVars.char_Exp(17);
 
         charDef.dodgeChance = 0;

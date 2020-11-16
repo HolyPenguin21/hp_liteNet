@@ -14,7 +14,7 @@ public class Skeleton : Character
         charCost = 15;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(34);
+        charHp = new CharVars.char_Hp(45); // 34
         charExp = new CharVars.char_Exp(17);
 
         charDef.dodgeChance = 0;

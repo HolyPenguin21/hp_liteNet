@@ -14,7 +14,7 @@ public class Revenant : Character
         charCost = 28;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(47);
+        charHp = new CharVars.char_Hp(62); // 47
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 0;

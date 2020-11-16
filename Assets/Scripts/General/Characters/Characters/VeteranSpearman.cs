@@ -14,7 +14,7 @@ public class VeteranSpearman : Character
 		charCost = 30;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(30);
+		charHp = new CharVars.char_Hp(40); // 30
 		charExp = new CharVars.char_Exp(24);
 
 		charDef.dodgeChance = 0;

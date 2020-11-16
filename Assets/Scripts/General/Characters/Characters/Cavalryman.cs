@@ -14,7 +14,7 @@ public class Cavalryman : Character
 		charCost = 17;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(34);
+		charHp = new CharVars.char_Hp(45); // 34
 		charExp = new CharVars.char_Exp(20);
 
 		charDef.dodgeChance = 0;

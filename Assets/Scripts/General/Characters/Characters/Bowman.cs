@@ -14,7 +14,7 @@ public class Bowman : Character
 		charCost = 14;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(33);
+		charHp = new CharVars.char_Hp(44); // 33
 		charExp = new CharVars.char_Exp(19);
 
 		charDef.dodgeChance = 0;

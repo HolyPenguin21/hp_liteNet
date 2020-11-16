@@ -14,7 +14,7 @@ public class Longbowman : Character
 		charCost = 26;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(51);
+		charHp = new CharVars.char_Hp(68); // 51
 		charExp = new CharVars.char_Exp(34);
 
 		charDef.dodgeChance = 0;

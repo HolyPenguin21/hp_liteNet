@@ -14,7 +14,7 @@ public class Spearman : Character
 		charCost = 14;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(36);
+		charHp = new CharVars.char_Hp(48); // 36
 		charExp = new CharVars.char_Exp(21);
 
 		charDef.dodgeChance = 0;

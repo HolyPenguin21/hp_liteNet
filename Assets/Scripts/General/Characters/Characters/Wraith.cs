@@ -14,7 +14,7 @@ public class Wraith : Character
         charCost = 38;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(25);
+        charHp = new CharVars.char_Hp(33); // 25
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 30;

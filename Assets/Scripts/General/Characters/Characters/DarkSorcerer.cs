@@ -14,7 +14,7 @@ public class DarkSorcerer : Character
         charCost = 32;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(48);
+        charHp = new CharVars.char_Hp(64); // 48
         charExp = new CharVars.char_Exp(45);
 
         charDef.dodgeChance = 0;

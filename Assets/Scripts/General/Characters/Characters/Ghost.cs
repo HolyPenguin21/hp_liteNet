@@ -14,7 +14,7 @@ public class Ghost : Character
         charCost = 20;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(18);
+        charHp = new CharVars.char_Hp(24); // 18
         charExp = new CharVars.char_Exp(15);
 
         charDef.dodgeChance = 30;

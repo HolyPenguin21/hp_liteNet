@@ -14,7 +14,7 @@ public class BloodBat : Character
         charCost = 21;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(27);
+        charHp = new CharVars.char_Hp(36); // 27
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 20;

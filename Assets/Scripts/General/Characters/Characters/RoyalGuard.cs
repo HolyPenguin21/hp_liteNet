@@ -14,7 +14,7 @@ public class RoyalGuard : Character
 		charCost = 43;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(74);
+		charHp = new CharVars.char_Hp(98); // 74
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

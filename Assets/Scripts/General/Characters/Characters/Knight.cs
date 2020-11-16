@@ -14,7 +14,7 @@ public class Knight : Character
 		charCost = 40;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(58);
+		charHp = new CharVars.char_Hp(77); // 58
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

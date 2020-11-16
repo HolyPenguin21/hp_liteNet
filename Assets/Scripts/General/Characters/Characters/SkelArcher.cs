@@ -14,7 +14,7 @@ public class SkelArcher : Character
         charCost = 14;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(31);
+        charHp = new CharVars.char_Hp(41); // 31
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 0;

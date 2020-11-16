@@ -14,7 +14,7 @@ public class Rogue : Character
 		charCost = 24;
 
 		charType = CharVars.char_Type.night;
-		charHp = new CharVars.char_Hp(40);
+		charHp = new CharVars.char_Hp(53); // 40
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 20;

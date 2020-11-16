@@ -14,7 +14,7 @@ public class DarkAdept : Character
         charCost = 16;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(28);
+        charHp = new CharVars.char_Hp(37); // 28
         charExp = new CharVars.char_Exp(24);
 
         charDef.dodgeChance = 0;

@@ -14,7 +14,7 @@ public class WalkingCorpse : Character
         charCost = 8;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(18);
+        charHp = new CharVars.char_Hp(24); // 18
         charExp = new CharVars.char_Exp(12);
 
         charDef.dodgeChance = 0;

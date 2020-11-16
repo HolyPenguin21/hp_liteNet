@@ -14,7 +14,7 @@ public class Deathblade : Character
         charCost = 28;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(39);
+        charHp = new CharVars.char_Hp(52); // 39
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 0;

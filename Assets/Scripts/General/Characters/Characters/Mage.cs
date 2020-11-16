@@ -14,7 +14,7 @@ public class Mage : Character
 		charCost = 20;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(24);
+		charHp = new CharVars.char_Hp(32); // 24
 		charExp = new CharVars.char_Exp(27);
 
 		charDef.dodgeChance = 0;

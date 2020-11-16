@@ -14,7 +14,7 @@ public class RedMage : Character
 		charCost = 40;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(42);
+		charHp = new CharVars.char_Hp(56); // 42
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

@@ -14,7 +14,7 @@ public class Horseman : Character
 		charCost = 23;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(38);
+		charHp = new CharVars.char_Hp(50); // 38
 		charExp = new CharVars.char_Exp(22);
 
 		charDef.dodgeChance = 0;

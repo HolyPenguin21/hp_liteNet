@@ -14,7 +14,7 @@ public class Halberdier : Character
 		charCost = 44;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(72);
+		charHp = new CharVars.char_Hp(96); // 72
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

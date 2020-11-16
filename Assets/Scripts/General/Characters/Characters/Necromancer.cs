@@ -14,7 +14,7 @@ public class Necromancer : Character
         charCost = 50;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(70);
+        charHp = new CharVars.char_Hp(93); // 70
         charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 0;

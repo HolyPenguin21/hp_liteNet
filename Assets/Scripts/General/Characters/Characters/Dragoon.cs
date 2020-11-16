@@ -14,7 +14,7 @@ public class Dragoon : Character
 		charCost = 34;
 
 		charType = CharVars.char_Type.day;
-		charHp = new CharVars.char_Hp(49);
+		charHp = new CharVars.char_Hp(65); // 49
 		charExp = new CharVars.char_Exp(99);
 
 		charDef.dodgeChance = 0;

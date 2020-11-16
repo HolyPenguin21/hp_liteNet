@@ -14,7 +14,7 @@ public class VampireBat : Character
         charCost = 13;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(16);
+        charHp = new CharVars.char_Hp(21); // 16
         charExp = new CharVars.char_Exp(11);
 
         charDef.dodgeChance = 20;

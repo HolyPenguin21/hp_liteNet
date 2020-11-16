@@ -14,7 +14,7 @@ public class Pikeman : Character
         charCost = 25;
 
         charType = CharVars.char_Type.day;
-        charHp = new CharVars.char_Hp(55);
+        charHp = new CharVars.char_Hp(73); // 55
         charExp = new CharVars.char_Exp(32);
 
         charDef.dodgeChance = 0;
