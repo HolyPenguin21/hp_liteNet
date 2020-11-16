@@ -9,6 +9,7 @@ public class ABuffData : MonoBehaviour
         if (id == 1) return new ABuff_DrainLife();
         else if (id == 2) return new ABuff_PoisonTouch();
         else if (id == 3) return new ABuff_Charge();
+        else if (id == 4) return new ABuff_Marksman();
 
         return null;
     }

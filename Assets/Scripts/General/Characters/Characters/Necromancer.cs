@@ -41,6 +41,7 @@ public class Necromancer : Character
         attack2.attackCount = 2;
         attack2.attackDmg_base = 17;
         attack2.attackDmg_cur = attack2.attackDmg_base;
+        attack2.attackBuff = new ABuff_Marksman();
         charAttacks.Add(attack2);
     }
 }

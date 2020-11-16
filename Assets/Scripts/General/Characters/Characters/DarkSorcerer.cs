@@ -43,6 +43,7 @@ public class DarkSorcerer : Character
         attack2.attackCount = 2;
         attack2.attackDmg_base = 13;
         attack2.attackDmg_cur = attack2.attackDmg_base;
+        attack2.attackBuff = new ABuff_Marksman();
         charAttacks.Add(attack2);
     }
 }

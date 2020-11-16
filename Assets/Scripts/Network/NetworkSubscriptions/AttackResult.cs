@@ -166,6 +166,12 @@ public class AttackResult
     {
         // hit or miss
         int dodge = target.charDef.dodgeChance + target.hex.dodge;
+        if (attacker == firstStrikeChar)
+        {
+            if (attacker.charAttacks[a_attackId].attackBuff is ABuff_Marksman)
+                return DmgCalculation(firstStrikeChar, attacker, target);
+        }
+
         if (UnityEngine.Random.Range(0, 101) < dodge) return -1;
         else return DmgCalculation(firstStrikeChar, attacker, target);
     }
@@ -179,6 +185,27 @@ public class AttackResult
         List<Buff> t_charBuffs = target.charBuffs;
 
         int dmg = a_Attack.attackDmg_cur;
+
+        // Adjusted hexes
+        for (int x = 0; x < attacker.hex.neighbors.Count; x++)
+        {
+            Hex hex = attacker.hex.neighbors[x];
+            if (hex.character != null)
+            {
+                if (!Utility.IsEmeny(attacker, hex.character))
+                {
+                    Character allyCharacter = hex.character;
+                    if (hex.character.charBuffs.Count > 0)
+                    {
+                        for (int y = 0; y < allyCharacter.charBuffs.Count; y++)
+                        {
+                            if (hex.character.charBuffs[y] is Buff_Leadership)
+                                dmg += 1;
+                        }
+                    }
+                }
+            }
+        }
 
         // Attack Buff
         switch (a_ABuff)

@@ -43,6 +43,7 @@ public class Mage : Character
 		char_Attack2.attackCount = 3;
 		char_Attack2.attackDmg_base = 7;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
+		char_Attack2.attackBuff = new ABuff_Marksman();
 		charAttacks.Add(char_Attack2);
 
 		//charSpell_1 = new Flame(8);
