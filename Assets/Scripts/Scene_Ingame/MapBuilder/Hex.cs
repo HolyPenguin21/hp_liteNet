@@ -50,7 +50,14 @@ public class Hex : MonoBehaviour
         fogRenderer.enabled = true;
 
         if (item != null) itemObj.SetActive(false);
-        if (character != null) character.tr.gameObject.SetActive(false);
+        if (character != null)
+        {
+            character.charImageRend.enabled = false;
+            character.colorImageRend.enabled = false;
+            character.heroImageRend.enabled = false;
+            character.itemImageRend.enabled = false;
+            character.canMoveImageRend.enabled = false;
+        }
     }
 
     public void Show_MoveFog()
@@ -63,7 +70,14 @@ public class Hex : MonoBehaviour
         fogRenderer.enabled = false;
 
         if (item != null) itemObj.SetActive(true);
-        if (character != null) character.tr.gameObject.SetActive(true);
+        if (character != null)
+        {
+            character.charImageRend.enabled = true;
+            character.colorImageRend.enabled = true;
+            character.heroImageRend.enabled = true;
+            character.itemImageRend.enabled = true;
+            character.canMoveImageRend.enabled = true;
+        }
     }
     #endregion
 

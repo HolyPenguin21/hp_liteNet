@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingame_Input : MonoBehaviour
+public class IngameUI_Input : MonoBehaviour
 {
     public Hex mouseOverHex;
     public Hex selectedHex;

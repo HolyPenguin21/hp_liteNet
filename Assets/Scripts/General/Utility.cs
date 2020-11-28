@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public static class Utility
 {
@@ -85,7 +86,7 @@ public static class Utility
     }
     public static bool CharacterIsVisible(Character character)
     {
-        if (character.tr.gameObject.activeInHierarchy)
+        if (character.charImageRend.enabled)
             return true;
 
         return false;
@@ -173,5 +174,22 @@ public static class Utility
         }
 
         return true;
+    }
+
+    public static void set_InputType()
+    {
+        Text tooltipInput = GameObject.Find("Tooltip_Input_Text").GetComponent<Text>();
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
+        {
+            Settings.inputPc = false;
+            Settings.panCamera = true;
+            tooltipInput.text = "Input : Android";
+        }
+        else
+        {
+            Settings.inputPc = true;
+            Settings.panCamera = false;
+            tooltipInput.text = "Input : PC";
+        }
     }
 }

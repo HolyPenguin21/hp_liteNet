@@ -20,11 +20,12 @@ public class GameMain : MonoBehaviour
     public List<Character> allCharacters = new List<Character>();
     // Daytime
     private Daytime daytime;
-    public Utility.dayTime dayTime_cur = Utility.dayTime.night2;
+    [HideInInspector] public Utility.dayTime dayTime_cur = Utility.dayTime.night2;
     #endregion
 
     public GridManager gridManager;
-    private UI_Ingame uiIngame;
+    private UI_Ingame ui_Ingame;
+    [HideInInspector]  public IngameUI_Input ui_Input;
 
     [HideInInspector] public CharactersData charactersData;
     [HideInInspector] public EffectsData effectsData;
@@ -41,6 +42,7 @@ public class GameMain : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+
         inst = this;
     }
 
@@ -48,8 +50,11 @@ public class GameMain : MonoBehaviour
     {
         if (scene.name == "Scene_Map_Test")
         {
+            Utility.set_InputType();
+
             gridManager = GameObject.Find("GridManager").GetComponent<GridManager>();
-            uiIngame = GameObject.Find("UI").GetComponent<UI_Ingame>();
+            ui_Ingame = GameObject.Find("UI").GetComponent<UI_Ingame>();
+            ui_Input = GameObject.Find("UI").GetComponent<IngameUI_Input>();
 
             Setup_Fog();
             Setup_Pathfinding();
@@ -131,7 +136,7 @@ public class GameMain : MonoBehaviour
 
         List<Hex> attackPath = new List<Hex>(pathfinding.Get_Path(a_Hex, t_Hex));
         if (attackPath.Count <= 1 || attacker.charMovement.movePoints_cur >= attackPath[0].moveCost)
-            uiIngame.Show_AttackPanel(attacker, target);
+            ui_Ingame.Show_AttackPanel(attacker, target);
     }
 
     public void Request_Attack(Character a_character, int a_attackId, Character t_character, int t_attackId)
@@ -202,7 +207,7 @@ public class GameMain : MonoBehaviour
         }
         else if (character.owner.name == server.player.name)
         {
-            uiIngame.Show_LevelupPanel(character);
+            ui_Ingame.Show_LevelupPanel(character);
             yield return null;
         }
         else
@@ -245,7 +250,7 @@ public class GameMain : MonoBehaviour
     {
         Character character = gridManager.Get_GridItem_ByCoords(upgradeMenu.coord_x, upgradeMenu.coord_y).hex.character;
 
-        uiIngame.Show_LevelupPanel(character);
+        ui_Ingame.Show_LevelupPanel(character);
 
         yield return Reply_TaskDone("Upgrade menu opened");
     }
@@ -728,7 +733,7 @@ public class GameMain : MonoBehaviour
         character.charMovement.movePoints_cur = 0;
 
         if (Utility.IsMyCharacter(character))
-            GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(someHex);
+            ui_Input.SelectHex(someHex);
 
         if (someHex.villageOwner.name == "")
         {
@@ -768,7 +773,7 @@ public class GameMain : MonoBehaviour
             someHex.character.charMovement.movePoints_cur = 0;
 
             if (Utility.IsMyCharacter(someHex.character))
-                GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(someHex);
+                ui_Input.SelectHex(someHex);
         }
 
         someHex.villageOwner = Utility.Get_Client_byString(capVillage.ownerName);
@@ -921,7 +926,7 @@ public class GameMain : MonoBehaviour
                 daytime.Update_DayTime();
         }
 
-        uiIngame.Update_OnTurnUI();
+        ui_Ingame.Update_OnTurnUI();
 
         for (int i = 0; i < allCharacters.Count; i++)
         {
@@ -1008,7 +1013,7 @@ public class GameMain : MonoBehaviour
     {
         if (server.players.Count > 2) server.player.isAvailable = false;
 
-        uiIngame.Update_PlayerInfoPanel();
+        ui_Ingame.Update_PlayerInfoPanel();
         //fog.Update_Fog();
 
         UpdateData updateData = new UpdateData();
@@ -1056,7 +1061,7 @@ public class GameMain : MonoBehaviour
             gameClient.villages = updatedPlayersData[i].villages;
         }
 
-        uiIngame.Update_PlayerInfoPanel();
+        ui_Ingame.Update_PlayerInfoPanel();
         //fog.Update_Fog();
 
         yield return Reply_TaskDone("Data updated");
@@ -1606,7 +1611,7 @@ public class GameMain : MonoBehaviour
         charactersData = GetComponent<CharactersData>();
         charactersData.Init(this);
 
-        uiIngame.charData = charactersData;
+        ui_Ingame.charData = charactersData;
     }
 
     private void Setup_EffectsData()
@@ -1617,7 +1622,7 @@ public class GameMain : MonoBehaviour
     private void Setup_SpellData()
     {
         spellData = GetComponent<SpellData>();
-        GameObject.Find("UI").GetComponent<Ingame_Input>().spData = spellData;
+        ui_Input.spData = spellData;
     }
 
     private void Setup_ABuffData()

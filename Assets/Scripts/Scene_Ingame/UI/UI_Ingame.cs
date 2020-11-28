@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UI_Ingame : MonoBehaviour
 {
-	private Ingame_Input ingameInput;
+	private IngameUI_Input ingameInput;
 	public CharactersData charData;
 
 	private Client client;
@@ -101,9 +101,18 @@ public class UI_Ingame : MonoBehaviour
 	#region Attack panel
 	[Header("Attack panel")]
 	public GameObject attack_Canvas;
-	public Image attackerImage;
-	public Image targetImage;
-	
+	public Image ap_a_attackerImage;
+	public Text ap_a_Name;
+	public Text ap_a_Health;
+	public Text ap_a_Exp;
+	public Text ap_a_Dodge;
+
+	public Image ap_t_targetImage;
+	public Text ap_t_Name;
+	public Text ap_t_Health;
+	public Text ap_t_Exp;
+	public Text ap_t_Dodge;
+
 	public Button attack1;
 	public Image attack1_Image_a;
 	public Text attack1_Text_a;
@@ -170,7 +179,7 @@ public class UI_Ingame : MonoBehaviour
 
 	private void Awake()
 	{
-		ingameInput = GetComponent<Ingame_Input>();
+		ingameInput = GetComponent<IngameUI_Input>();
 
 		if (Utility.IsServer())
 			server = GameMain.inst.server;
@@ -863,8 +872,17 @@ public class UI_Ingame : MonoBehaviour
 		List<CharVars.char_Attack> a_Attacks = attacker.charAttacks;
 		List<CharVars.char_Attack> t_Attacks = target.charAttacks;
 
-		attackerImage.sprite = attacker.charImage;
-		targetImage.sprite = target.charImage;
+		ap_a_attackerImage.sprite = attacker.charImage;
+		ap_a_Name.text = attacker.charName;
+		ap_a_Health.text = attacker.charHp.hp_cur + " / " + attacker.charHp.hp_max;
+		ap_a_Exp.text = attacker.charExp.exp_cur + " / " + attacker.charExp.exp_max;
+		ap_a_Dodge.text = "" + attacker.hex.dodge + attacker.charDef.dodgeChance;
+
+		ap_t_targetImage.sprite = target.charImage;
+		ap_t_Name.text = target.charName;
+		ap_t_Health.text = target.charHp.hp_cur + " / " + target.charHp.hp_max;
+		ap_t_Exp.text = target.charExp.exp_cur + " / " + target.charExp.exp_max;
+		ap_t_Dodge.text = "" + target.hex.dodge + target.charDef.dodgeChance;
 
 		if (a_Attacks.Count > 0 || t_Attacks.Count > 0)
 		{

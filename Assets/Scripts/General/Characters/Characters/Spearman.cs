@@ -45,7 +45,5 @@ public class Spearman : Character
 		char_Attack2.attackDmg_base = 6;
 		char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
 		charAttacks.Add(char_Attack2);
-
-		charBuffs.Add(new Buff_Leadership());
 	}
 }

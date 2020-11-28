@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingame_Camera : MonoBehaviour
+public class IngameUI_Camera : MonoBehaviour
 {
     private float PanSpeed = 5f;
     private float ZoomSpeedTouch = 0.005f;
@@ -31,16 +31,12 @@ public class Ingame_Camera : MonoBehaviour
 
     void LateUpdate()
     {
-        if(uI_Ingame.somePanelIsOn) return;
+        if (uI_Ingame.somePanelIsOn) return;
 
-        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer) 
-        {
-            HandleTouch();
-        } 
-        else 
-        {
+        if (Settings.inputPc)
             HandleMouse();
-        }
+        else
+            HandleTouch();
     }
     
     void HandleTouch()
@@ -96,13 +92,16 @@ public class Ingame_Camera : MonoBehaviour
     {
         // On mouse down, capture it's position.
         // Otherwise, if the mouse is still down, pan the camera.
-        if (Input.GetMouseButtonDown(0))
+        if (Settings.panCamera)
         {
-            lastPanPosition = Input.mousePosition;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            PanCamera(Input.mousePosition);
+            if (Input.GetMouseButtonDown(0))
+            {
+                lastPanPosition = Input.mousePosition;
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                PanCamera(Input.mousePosition);
+            }
         }
 
         // Check for scrolling to zoom the camera

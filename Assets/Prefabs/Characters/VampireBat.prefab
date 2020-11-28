@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 6793437501745534254}
   - component: {fileID: 6793437501745534253}
   m_Layer: 0
-  m_Name: Bat_White
+  m_Name: charImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

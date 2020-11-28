@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkelArcher : Character
+public class BoneShooter : Character
 {
-    public SkelArcher(Transform tr, Player owner, bool isHero)
+    public BoneShooter(Transform tr, Player owner, bool isHero)
     {
         Init(tr, owner, isHero);
 
-        charImage = Resources.Load<Sprite>("Images/SkelArcher");
-        charName = "Skeleton Archer";
-        charId = 16;
-        charCost = 14;
+        charImage = Resources.Load<Sprite>("Images/BoneShooter");
+        charName = "Bone Shooter";
+        charId = 35;
+        charCost = 26;
 
         charType = CharVars.char_Type.night;
-        charHp = new CharVars.char_Hp(41); // 31
-        charExp = new CharVars.char_Exp(17);
+        charHp = new CharVars.char_Hp(53); // 40
+        charExp = new CharVars.char_Exp(99);
 
         charDef.dodgeChance = 0;
         charDef.blade_resistance = 0.4f;
@@ -26,14 +26,12 @@ public class SkelArcher : Character
         charMovement.moveType = CharVars.char_moveType.ground;
         charMovement.movePoints_max = 5;
 
-        upgradeList.Add(35);
-
         charAttacks = new List<CharVars.char_Attack>();
         CharVars.char_Attack char_Attack = default(CharVars.char_Attack);
         char_Attack.attackType = CharVars.char_attackType.Melee;
-        char_Attack.attackDmgType = CharVars.char_attackDmgType.Impact;
+        char_Attack.attackDmgType = CharVars.char_attackDmgType.Blade;
         char_Attack.attackCount = 2;
-        char_Attack.attackDmg_base = 3;
+        char_Attack.attackDmg_base = 6;
         char_Attack.attackDmg_cur = char_Attack.attackDmg_base;
         charAttacks.Add(char_Attack);
 
@@ -41,7 +39,7 @@ public class SkelArcher : Character
         char_Attack2.attackType = CharVars.char_attackType.Ranged;
         char_Attack2.attackDmgType = CharVars.char_attackDmgType.Pierce;
         char_Attack2.attackCount = 3;
-        char_Attack2.attackDmg_base = 6;
+        char_Attack2.attackDmg_base = 10;
         char_Attack2.attackDmg_cur = char_Attack2.attackDmg_base;
         charAttacks.Add(char_Attack2);
     }

@@ -6,6 +6,11 @@ using UnityEngine;
 public abstract class Character
 {
 	public Transform tr;
+	public SpriteRenderer charImageRend;
+	public SpriteRenderer colorImageRend;
+	public SpriteRenderer heroImageRend;
+	public SpriteRenderer itemImageRend;
+	public SpriteRenderer canMoveImageRend;
 
 	public Hex hex;
 	public Player owner;
@@ -33,8 +38,8 @@ public abstract class Character
 
 	public List<Buff> charBuffs = new List<Buff>();
 
-	public float moveAnimationSpeed = 3f;
-	public float attackAnimationSpeed = 3f;
+	public float moveAnimationSpeed = 6f;
+	public float attackAnimationSpeed = 1f;
 
 	public void Init(Transform tr_, Player owner_, bool isHero_)
 	{
@@ -50,7 +55,15 @@ public abstract class Character
 		}
 
 		// Item icon
-		if (tr != null) tr.Find("Item").gameObject.SetActive(false);
+		if (tr != null)
+		{
+			charImageRend = tr.Find("charImage").GetComponent<SpriteRenderer>();
+			colorImageRend = tr.Find("playerColor").GetComponent<SpriteRenderer>();
+			heroImageRend = tr.Find("Hero").GetComponent<SpriteRenderer>();
+			itemImageRend = tr.Find("Item").GetComponent<SpriteRenderer>();
+			canMoveImageRend = tr.Find("canMove").GetComponent<SpriteRenderer>();
+			tr.Find("Item").gameObject.SetActive(false);
+		}
 	}
 
     #region Updates
@@ -224,7 +237,7 @@ public abstract class Character
 		}
 
 		if (Utility.IsMyCharacter(this))
-			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
+			GameMain.inst.ui_Input.SelectHex(hex);
 
 		if (charMovement.movePoints_cur == 0)
 			GameMain.inst.fog.UpdateFog_PlayerView();
@@ -253,7 +266,7 @@ public abstract class Character
 		GameMain.inst.fog.UpdateFog_PlayerView();
 
 		if (Utility.IsMyCharacter(this))
-			GameObject.Find("UI").GetComponent<Ingame_Input>().SelectHex(hex);
+			GameObject.Find("UI").GetComponent<IngameUI_Input>().SelectHex(hex);
 	}
     #endregion
 
@@ -295,7 +308,7 @@ public abstract class Character
 			float t = 0f;
 			while (t < 1f)
 			{
-				t += Time.deltaTime * attackAnimationSpeed * 4;
+				t += Time.deltaTime * attackAnimationSpeed * 12;
 				yield return null;
 			}
 
@@ -314,7 +327,7 @@ public abstract class Character
 			t = 0f;
 			while (t < 1f)
 			{
-				t += Time.deltaTime * attackAnimationSpeed * 0.5f;
+				t += Time.deltaTime * attackAnimationSpeed * 1.5f;
 				yield return null;
 			}
 		}
@@ -326,7 +339,7 @@ public abstract class Character
 			while (t < 1f)
 			{
 				tr.position = Vector3.Lerp(tr.position, attackVector, t);
-				t += Time.deltaTime * attackAnimationSpeed * 2;
+				t += Time.deltaTime * attackAnimationSpeed * 6;
 				yield return null;
 			}
 			// return move
@@ -334,7 +347,7 @@ public abstract class Character
 			while (t < 1f)
 			{
 				tr.position = Vector3.Lerp(tr.position, hex.transform.position, t);
-				t += Time.deltaTime * attackAnimationSpeed;
+				t += Time.deltaTime * attackAnimationSpeed * 3;
 				yield return null;
 			}
 		}

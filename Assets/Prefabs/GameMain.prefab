@@ -134,6 +134,8 @@ MonoBehaviour:
     type: 3}
   soulless: {fileID: 5931035188004227691, guid: 95cb7872867fefb47b382ff709111605,
     type: 3}
+  boneShooter: {fileID: 8994758716978154658, guid: 93d68c9b3ae10b1438ddcf94f762306f,
+    type: 3}
   grunt: {fileID: 3422891866888101167, guid: 85a1ca95bfaa9ba438484d52173101d8, type: 3}
   fireEmber: {fileID: 7508290312353660163, guid: 69a34d8d85ca0484fad2aa759f1c4fe3,
     type: 3}

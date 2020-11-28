@@ -38,7 +38,8 @@ public class CharactersData : MonoBehaviour
 	public GameObject wraith;           // 23
 	public GameObject deathblade;       // 25
 	public GameObject walkingCorpse;    // 32
-	public GameObject soulless;			// 33
+	public GameObject soulless;         // 33
+	public GameObject boneShooter;         // 35
 	[Header("Orcs")]
 	public GameObject grunt;
 	[Header("Other")]
@@ -199,6 +200,10 @@ public class CharactersData : MonoBehaviour
 				GameObject redMageObj = Instantiate(redMage, position, Quaternion.identity);
 				character = new RedMage(redMageObj.transform, gameClient, isHero);
 				break;
+			case 35:
+				GameObject boneShooterObj = Instantiate(boneShooter, position, Quaternion.identity);
+				character = new BoneShooter(boneShooterObj.transform, gameClient, isHero);
+				break;
 		}
 
 		if (gameClient != null) Utility.Set_OwnerColor(character.tr, gameClient);
@@ -318,6 +323,9 @@ public class CharactersData : MonoBehaviour
 				break;
 			case 34:
 				result = new RedMage(null, null, false);
+				break;
+			case 35:
+				result = new BoneShooter(null, null, false);
 				break;
 		}
 		return result;

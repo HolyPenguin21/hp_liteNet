@@ -48,7 +48,7 @@ public class UI_Tooltip : MonoBehaviour
         switch (textId)
         {
             case "skill_1":
-                Spell s1 = GameObject.Find("UI").GetComponent<Ingame_Input>().selectedHex.character.charSpell_1;
+                Spell s1 = GameObject.Find("UI").GetComponent<IngameUI_Input>().selectedHex.character.charSpell_1;
                 if (s1 == null)
                 {
                     show = false;
@@ -63,7 +63,7 @@ public class UI_Tooltip : MonoBehaviour
                 break;
 
             case "skill_2":
-                Spell s2 = GameObject.Find("UI").GetComponent<Ingame_Input>().selectedHex.character.charSpell_2;
+                Spell s2 = GameObject.Find("UI").GetComponent<IngameUI_Input>().selectedHex.character.charSpell_2;
                 if (s2 == null)
                 {
                     show = false;
@@ -78,7 +78,7 @@ public class UI_Tooltip : MonoBehaviour
                 break;
 
             case "char_info":
-                Ingame_Input ingameInput = GameObject.Find("UI").GetComponent<Ingame_Input>();
+                IngameUI_Input ingameInput = GameObject.Find("UI").GetComponent<IngameUI_Input>();
                 UI_Ingame uIIngame = GameObject.Find("UI").GetComponent<UI_Ingame>();
 
                 Character c = null;
